@@ -15,19 +15,7 @@ class UserlistSerializer(serializers.ModelSerializer):
         fields=['id','Username','mobileNumber','email','role']
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    Department_name = serializers.SerializerMethodField()
-    def get_Department_name(self, obj):
-        obj_id = obj.DepartmentId
-        if obj_id:
-            try:
-                obj = Departments.objects.filter(id=obj_id).first()
-                if obj is not None:
-                   return obj.DepartmentName
-                else:
-                    return None
-            except Departments.DoesNotExist:
-                return None
-        return None
+
     class Meta:
         model= User
         fields='__all__'

@@ -72,9 +72,7 @@ class login(GenericAPIView):
                 short_name = ''.join([word[0] for word in username.split()]).upper()
 
                 role =  userexist.role_id
-                Department = userexist.DepartmentId
-                if Department is None or Department == '':
-                    Department = ''
+
 
                 Token = createtoken(useruuid,email,source)
                 
@@ -95,7 +93,7 @@ class login(GenericAPIView):
                 })
                 
                 return Response({
-                    "data" : {'token':Token,'username':username,'short_name':short_name,'user_id':useruuid,'role':role,'Department':Department},
+                    "data" : {'token':Token,'username':username,'short_name':short_name,'user_id':useruuid,'role':role,},
                     "response":{
                     "n": 1 ,
                     "msg" : "login successful",
@@ -211,9 +209,12 @@ class setnewpassword(GenericAPIView):
                     serializer.save()
                     return Response({"data" : serializer.data,"response":{"n":1,"msg":"Password set Successfully!","status":"success"}})
                 else:
-                    return Response({"data" : serializer.errors,"response":{"n":0,"msg":"serializer is not valid","status":"failure"}})
+
+                    first_key, first_value = next(iter(serializer.errors.items()))
+                    return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"user not found", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"user not found", "status":"error"}})
 
 
 class resetpassword(GenericAPIView):
@@ -237,9 +238,11 @@ class resetpassword(GenericAPIView):
                     serializer.save()
                     return Response({"data" : serializer.data,"response":{"n":1,"msg":"Password Reset Successfully!","status":"success"}})
                 else:
-                    return Response({"data" : serializer.errors,"response":{"n":0,"msg":"serializer is not valid","status":"failure"}})
+                    first_key, first_value = next(iter(serializer.errors.items()))
+                    return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"user not found", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"user not found", "status":"error"}})
         
 #role -----------------------------------------------------------------------------------------------------
 
@@ -253,7 +256,7 @@ class addrole(GenericAPIView):
         result = []
         
         if data['RoleName'] is None or data['RoleName'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide Role name", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"please provide Role name", "status":"error"}})
         
         
         # request_data['createdBy'] = request.session.get('user_id')
@@ -275,9 +278,10 @@ class addrole(GenericAPIView):
                     )
                 return Response({"data" : serializer.data,"response":{"n":1,"msg":"role added Successfully!","status":"success"}})
             else:
-                return Response({"data" : serializer.errors,"response":{"n":0,"msg":"serializer is not valid","status":"failure"}})
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"role already exist", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"role already exist", "status":"error"}})
 
 
 
@@ -322,11 +326,11 @@ class roleupdate(GenericAPIView):
             data['RoleName']=request.data.get('RoleName')
             # data['updatedBy'] =str(request.user.id)
             if data['RoleName'] is None or data['RoleName'] =='':
-                return Response({ "data":{},"response":{"n":0,"msg":"please provide Role name", "status":"failure"}})
+                return Response({ "data":{},"response":{"n":0,"msg":"please provide Role name", "status":"error"}})
         
             roleindata = Role.objects.filter(RoleName=data['RoleName'],isActive= True).exclude(id=id).first()
             if roleindata is not None:
-                return Response({"data":'',"response": {"n": 0, "msg": "role already exist","status": "failure"}})
+                return Response({"data":'',"response": {"n": 0, "msg": "role already exist","status": "error"}})
             else:
                 serializer = Roleserializer(roleexist,data=data,partial=True)
                 if serializer.is_valid():
@@ -343,9 +347,10 @@ class roleupdate(GenericAPIView):
                         )
                     return Response({"data":serializer.data,"response": {"n": 1, "msg": "role updated successfully","status": "success"}})
                 else:
-                    return Response({"data":serializer.errors,"response": {"n": 0, "msg": "role not updated ","status": "failure"}})
+                    first_key, first_value = next(iter(serializer.errors.items()))
+                    return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "role not found ","status": "failure"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "role not found ","status": "error"}})
 
 
 
@@ -382,9 +387,10 @@ class roledelete(GenericAPIView):
                 serializer.save()
                 return Response({"data":serializer.data,"response": {"n": 1, "msg": "Role deleted successfully","status": "success"}})
             else:
-                return Response({"data":serializer.errors,"response": {"n": 0, "msg": "Role not Deleted","status": "failure"}})
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "Role Not Found","status": "failure"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Role Not Found","status": "error"}})
 
 #user----------------------------------------------------------------------------------------------------
 
@@ -396,20 +402,19 @@ class createuser(GenericAPIView):
         request_data = request.data.copy()
         data['Username']=request.data.get('Username')
         if data['Username'] is None or data['Username'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide user name", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"please provide user name", "status":"error"}})
         
         
         data['textPassword']=request.data.get('textPassword')
         if data['textPassword'] is None or data['textPassword'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide user password", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"please provide user password", "status":"error"}})
         
         data['mobileNumber']=request.data.get('mobileNumber')
         if data['mobileNumber'] is None or data['mobileNumber'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide user mobile number", "status":"failure"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"please provide user mobile number", "status":"error"}})
         
         data['email']=request.data.get('email')
         data['role'] = request.data.get('role')
-        data['DepartmentId'] = request.data.get('DepartmentId')
         data['password'] = data['textPassword']
         data['isActive'] = True
         result = []
@@ -419,13 +424,7 @@ class createuser(GenericAPIView):
         roleobj = Role.objects.filter(id=data['role'],isActive=True).first()
         if roleobj is not None:
             rolename = roleobj.RoleName
-            if rolename is not None and rolename != '':
-                if rolename.lower() == 'gpl users':
-                    data['DepartmentId'] = data['DepartmentId']
-                else:
-                    data['DepartmentId'] = None
-            else:
-                data['DepartmentId'] = None
+
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "Status": "Failed"}})
 
@@ -454,8 +453,8 @@ class createuser(GenericAPIView):
                     )
                 return Response({"data":serializer.data,"response": {"n": 1, "msg": "user registered successfully","status":"success"}})
             else:
-                return Response({"data":serializer.errors,"response": {"n": 0, "msg": "user not registered successfully","status":"failure"}})
-                
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         
 class userlist(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -528,7 +527,6 @@ class userupdate(GenericAPIView):
             data['email']=request.data.get('email')
             email = data['email']
             data['role'] = request.data.get('role')
-            data['DepartmentId'] = request.data.get('DepartmentId')
             data['isActive'] = True
             result = []
             if 'result' in request.data.keys():
@@ -538,22 +536,16 @@ class userupdate(GenericAPIView):
             roleobj = Role.objects.filter(id=data['role'],isActive=True).first()
             if roleobj is not None:
                 rolename = roleobj.RoleName
-                if rolename is not None and rolename != '':
-                    if rolename.lower() == 'gpl users':
-                        data['DepartmentId'] = data['DepartmentId']
-                    else:
-                        data['DepartmentId'] = None
-                else:
-                    data['DepartmentId'] = None
+
             else:
                 return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "Status": "Failed"}})
             serializer = UserSerializer(existemp,data=data,partial=True)
             emailObject = User.objects.filter(email__in = [email.strip().capitalize(),email.strip(),email.title()],isActive__in=[True]).exclude(id=userid).first()
             mobObject = User.objects.filter(mobileNumber = mobileNumber,isActive__in=[True]).exclude(id=userid).first()
             if emailObject is not None:
-                return Response({"data":'',"response": {"n": 0, "msg": "User with this email id already exist","status": "failure"}})
+                return Response({"data":'',"response": {"n": 0, "msg": "User with this email id already exist","status": "error"}})
             elif mobObject is not None:
-                return Response({"data":'',"response": {"n": 0, "msg": "User with this mobile number already exist","status": "failure"}})
+                return Response({"data":'',"response": {"n": 0, "msg": "User with this mobile number already exist","status": "error"}})
             else:
                 if serializer.is_valid():
                     serializer.save()
@@ -570,9 +562,10 @@ class userupdate(GenericAPIView):
                         )
                     return Response({"data":serializer.data,"response": {"n": 1, "msg": "user updated successfully","status": "success"}})
                 else:
-                    return Response({"data":serializer.errors,"response": {"n": 0, "msg": "user not added ","status": "failure"}})
+                    first_key, first_value = next(iter(serializer.errors.items()))
+                    return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "user not found ","status": "failure"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "user not found ","status": "error"}})
 
 
 
@@ -590,9 +583,10 @@ class userdelete(GenericAPIView):
                 serializer.save()
                 return Response({"data":serializer.data,"response": {"n": 1, "msg": "user deleted successfully","status": "success"}})
             else:
-                return Response({"data":serializer.errors,"response": {"n": 0, "msg": "user not deleted ","status": "failure"}})
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "user not found ","status": "failure"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "user not found ","status": "error"}})
 
 
             
@@ -742,17 +736,7 @@ class listprojectmapping(GenericAPIView):
                             else:
                                 rolename = ""
 
-                            if rolename.lower() == 'auditor':
-                                i['Depart'] = 'Audit'
-                            elif rolename.lower() == 'gpl users':
-                                userDept = userobj.DepartmentId
-                                deptobj = Departments.objects.filter(id=userDept).first()
-                                if deptobj is not None:
-                                    i['Depart'] = deptobj.DepartmentName
-                                else:
-                                    i['Depart'] = ''
-                            else:
-                                i['Depart'] = ''
+
                             
                             cclist.append(i)
                           
@@ -808,41 +792,15 @@ class getmappingusers(GenericAPIView):
         ccuserobjs = User.objects.filter(isActive=True,role__in=Role.objects.filter(RoleName__iexact='GPL Users')).order_by('id')
         if ccuserobjs.exists():
             ccUserser = UserSerializer(ccuserobjs,many=True)
-            for c in ccUserser.data:
-                deptobj = Departments.objects.filter(id=c['DepartmentId']).first()
-                if deptobj is not None:
-                    c['Depart'] = deptobj.DepartmentName
-                else:
-                    c['Depart'] = ''
-                cclist.append(c)
+
         
         auditobjs = User.objects.filter(isActive=True,role__in=Role.objects.filter(RoleName__iexact='Auditor')).order_by('id')
         if auditobjs.exists():
             auditUserser = UserSerializer(auditobjs,many=True)
             for a in auditUserser.data:
-                a['Depart'] = 'Auditor'
                 cclist.append(a)
 
-        # designuserobjs = User.objects.filter(isActive=True,role= 3,DepartmentId = 2).order_by('id')
-        # if designuserobjs.exists():
-        #     designUserser = UserSerializer(designuserobjs,many=True)
-        #     designlist = designUserser.data
-        
-        # opsuserobjs = User.objects.filter(isActive=True,role= 3,DepartmentId = 3).order_by('id')
-        # if opsuserobjs.exists():
-        #     opsUserser = UserSerializer(opsuserobjs,many=True)
-        #     operationlist = opsUserser.data
-
-        # budgetinguserobjs = User.objects.filter(isActive=True,role= 3,DepartmentId = 4).order_by('id')
-        # if budgetinguserobjs.exists():
-        #     budgetingUserser = UserSerializer(budgetinguserobjs,many=True)
-        #     budgetinglist = budgetingUserser.data
-
-
-        # planuserobjs = User.objects.filter(isActive=True,DepartmentId = 5,role= 3).order_by('id')
-        # if planuserobjs.exists():
-        #     planningUserser = UserSerializer(planuserobjs,many=True)
-        #     planninglist = planningUserser.data
+       
 
 
         context = {

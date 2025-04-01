@@ -35,7 +35,6 @@ class User(AbstractBaseUser,TrackingModel):
     mobileNumber = models.BigIntegerField(null=True,blank=True)
     email = models.EmailField(null=True,blank=True)
     role = models.ForeignKey(Role,on_delete=models.CASCADE,null=True,blank=True)
-    DepartmentId = models.IntegerField(null=True,blank=True)
     source = models.CharField(max_length=255,null=True,blank=True)
     objects = UserManager()
     USERNAME_FIELD = 'email'
@@ -79,7 +78,6 @@ class UserPermissions(TrackingModel):
 class ProjectMapping(TrackingModel):
     userid = models.CharField(max_length=255,null=True, blank=True)
     roleid = models.IntegerField(null=True, blank=True)
-    departmentid = models.IntegerField(null=True, blank=True)
     projectid = models.IntegerField(null=True, blank=True)
 
 
