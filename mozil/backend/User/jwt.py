@@ -38,7 +38,7 @@ class userJWTAuthentication(BaseAuthentication):
                     "response": {
                         "n": 0,
                         "msg": 'Token not valid',
-                        "Status": "Failed"
+                        "status": "error"
                     }
                 }
             raise CustomAPIException(error_msg)        
@@ -61,7 +61,7 @@ class userJWTAuthentication(BaseAuthentication):
                             "response": {
                                 "n": 0,
                                 "msg": 'Token is expired, login again',
-                                "status": 'Failed'
+                                "status": 'error'
                             }
                     }
                     raise CustomAPIException(error_msg)              
@@ -75,7 +75,7 @@ class userJWTAuthentication(BaseAuthentication):
                             "response": {
                                 "n": 0,
                                 "msg": 'Token is expired, login again',
-                                "status": 'Failed'
+                                "status": 'error'
                             }
                     }
                     raise CustomAPIException(error_msg)              
@@ -87,7 +87,7 @@ class userJWTAuthentication(BaseAuthentication):
                         "response": {
                             "n": 0,
                             "msg": 'Token not valid',
-                            "status": 'Failed'
+                            "status": 'error'
                         }
                 }
                 raise CustomAPIException(error_msg)              
@@ -99,7 +99,7 @@ class userJWTAuthentication(BaseAuthentication):
                     "response": {
                         "n": 0,
                         "msg": 'Token is expired, login again',
-                        "Status": "Failed"
+                        "status": "error"
                     }
                 }
             raise CustomAPIException(error_msg)        
@@ -110,7 +110,7 @@ class userJWTAuthentication(BaseAuthentication):
                     "response": {
                         "n": 0,
                         "msg": "Token is invalid",
-                        "Status": "Failed"
+                        "status": "error"
                     }
                 }
             raise CustomAPIException(error_msg)        

@@ -152,16 +152,16 @@ class ChangePassword(GenericAPIView):
 
                             tokenfalse = UserToken.objects.filter(User=id,isActive=True).update(isActive=False)
                            
-                            return Response({"data":'',"response": {"n": 1, "msg": "password updated successfully","status": "success"}})
+                            return Response({"data":'',"response": {"n": 1, "msg": "Password updated successfully","status": "success"}})
                         else:
-                            return Response({"data":'',"response": {"n": 0, "msg": "password not updated ","status": "failed"}})
+                            return Response({"data":'',"response": {"n": 0, "msg": "Password not updated ","status": "error"}})
                     else:
-                        return Response({"data":'',"response": {"n": 0, "msg": "new and confirm password not matched ","status": "failed"}})
+                        return Response({"data":'',"response": {"n": 0, "msg": "New and confirm password not matched ","status": "error"}})
                 else:
-                    return Response({"data":'',"response": {"n": 0, "msg": "old password is wrong","status": "failed"}})
+                    return Response({"data":'',"response": {"n": 0, "msg": "Old password is wrong","status": "error"}})
 
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "Couldnt find id","status": "failed"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Couldnt find id","status": "error"}})
 
 
 
@@ -214,7 +214,7 @@ class setnewpassword(GenericAPIView):
                     return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
 
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"user not found", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"User not found", "status":"error"}})
 
 
 class resetpassword(GenericAPIView):
@@ -242,7 +242,7 @@ class resetpassword(GenericAPIView):
                     return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
 
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"user not found", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"User not found", "status":"error"}})
         
 #role -----------------------------------------------------------------------------------------------------
 
@@ -256,7 +256,7 @@ class addrole(GenericAPIView):
         result = []
         
         if data['RoleName'] is None or data['RoleName'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide Role name", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide Role name", "status":"error"}})
         
         
         # request_data['createdBy'] = request.session.get('user_id')
@@ -276,12 +276,12 @@ class addrole(GenericAPIView):
                         delete = i['delete'],
                         menu= i['menu_id']
                     )
-                return Response({"data" : serializer.data,"response":{"n":1,"msg":"role added Successfully!","status":"success"}})
+                return Response({"data" : serializer.data,"response":{"n":1,"msg":"Role added Successfully!","status":"success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"role already exist", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Role already exist", "status":"error"}})
 
 
 
@@ -326,11 +326,11 @@ class roleupdate(GenericAPIView):
             data['RoleName']=request.data.get('RoleName')
             # data['updatedBy'] =str(request.user.id)
             if data['RoleName'] is None or data['RoleName'] =='':
-                return Response({ "data":{},"response":{"n":0,"msg":"please provide Role name", "status":"error"}})
+                return Response({ "data":{},"response":{"n":0,"msg":"Please provide Role name", "status":"error"}})
         
             roleindata = Role.objects.filter(RoleName=data['RoleName'],isActive= True).exclude(id=id).first()
             if roleindata is not None:
-                return Response({"data":'',"response": {"n": 0, "msg": "role already exist","status": "error"}})
+                return Response({"data":'',"response": {"n": 0, "msg": "Role already exist","status": "error"}})
             else:
                 serializer = Roleserializer(roleexist,data=data,partial=True)
                 if serializer.is_valid():
@@ -345,12 +345,12 @@ class roleupdate(GenericAPIView):
                             delete = i['delete'],
                             menu= i['menu_id']
                         )
-                    return Response({"data":serializer.data,"response": {"n": 1, "msg": "role updated successfully","status": "success"}})
+                    return Response({"data":serializer.data,"response": {"n": 1, "msg": "Role updated successfully","status": "success"}})
                 else:
                     first_key, first_value = next(iter(serializer.errors.items()))
                     return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "role not found ","status": "error"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Role not found ","status": "error"}})
 
 
 
@@ -402,16 +402,16 @@ class createuser(GenericAPIView):
         request_data = request.data.copy()
         data['Username']=request.data.get('Username')
         if data['Username'] is None or data['Username'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide user name", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user name", "status":"error"}})
         
         
         data['textPassword']=request.data.get('textPassword')
         if data['textPassword'] is None or data['textPassword'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide user password", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user password", "status":"error"}})
         
         data['mobileNumber']=request.data.get('mobileNumber')
         if data['mobileNumber'] is None or data['mobileNumber'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"please provide user mobile number", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user mobile number", "status":"error"}})
         
         data['email']=request.data.get('email')
         data['role'] = request.data.get('role')
@@ -426,14 +426,14 @@ class createuser(GenericAPIView):
             rolename = roleobj.RoleName
 
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "Status": "Failed"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "status": "error"}})
 
         emailobj = User.objects.filter(isActive=True, email=data['email']).first()
         mobileobj = User.objects.filter(isActive=True, mobileNumber=data['mobileNumber']).first()        
         if emailobj is not None:
-            return Response({"data":'',"response": {"n": 0, "msg": "email already exist", "Status": "Failed"}})        
+            return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
         elif mobileobj is not None:        
-            return Response({"data":'',"response": {"n": 0, "msg": "mobile already exist", "Status": "Failed"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Mobile already exist", "status": "error"}})
         
         else:
             serializer = UserSerializer(data=data)
@@ -451,7 +451,7 @@ class createuser(GenericAPIView):
                         delete = i['delete'],
                         menu= i['menu_id']
                     )
-                return Response({"data":serializer.data,"response": {"n": 1, "msg": "user registered successfully","status":"success"}})
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User registered successfully","status":"success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
@@ -462,7 +462,7 @@ class userlist(GenericAPIView):
     def get(self,request):
         empobjects = User.objects.filter(isActive=True).order_by('id')
         serializer = CustomUserSerializer(empobjects, many=True)
-        return Response({"data":serializer.data,"response": {"n": 1, "msg": "user list shown successfully","status": "success"}})
+        return Response({"data":serializer.data,"response": {"n": 1, "msg": "User list shown successfully","status": "success"}})
 
 
 
@@ -507,9 +507,9 @@ class userbyid(GenericAPIView):
             serializer_data.update({
                 'permissions' : userser.data
             })
-            return Response({"data":serializer_data,"response": {"n": 1, "msg": "user shown successfully","status": "success"}})
+            return Response({"data":serializer_data,"response": {"n": 1, "msg": "User shown successfully","status": "success"}})
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "user not found  ","status": "success"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found  ","status": "success"}})
 
 
 class userupdate(GenericAPIView):
@@ -538,7 +538,7 @@ class userupdate(GenericAPIView):
                 rolename = roleobj.RoleName
 
             else:
-                return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "Status": "Failed"}})
+                return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "status": "error"}})
             serializer = UserSerializer(existemp,data=data,partial=True)
             emailObject = User.objects.filter(email__in = [email.strip().capitalize(),email.strip(),email.title()],isActive__in=[True]).exclude(id=userid).first()
             mobObject = User.objects.filter(mobileNumber = mobileNumber,isActive__in=[True]).exclude(id=userid).first()
@@ -560,12 +560,12 @@ class userupdate(GenericAPIView):
                             delete = i['delete'],
                             menu= i['menu_id']
                         )
-                    return Response({"data":serializer.data,"response": {"n": 1, "msg": "user updated successfully","status": "success"}})
+                    return Response({"data":serializer.data,"response": {"n": 1, "msg": "User updated successfully","status": "success"}})
                 else:
                     first_key, first_value = next(iter(serializer.errors.items()))
                     return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "user not found ","status": "error"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
 
 
 
@@ -581,12 +581,12 @@ class userdelete(GenericAPIView):
             serializer = UserSerializer(existemp,data=data,partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"data":serializer.data,"response": {"n": 1, "msg": "user deleted successfully","status": "success"}})
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User deleted successfully","status": "success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "user not found ","status": "error"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
 
 
             
@@ -631,7 +631,7 @@ class GetPermissionData(GenericAPIView):
             return Response(response_,status=200)
         else:
             response_={
-                'status':'failed',
+                'status':'error',
                 'msg':'Data not found.',
                 'data':{}
             }
@@ -664,116 +664,12 @@ class GetUserPermissionData(GenericAPIView):
             return Response(response_,status=200)
         else:
             response_={
-                'status':'failed',
+                'status':'error',
                 'msg':'Data not found.',
                 'data':{}
             }
             return Response(response_,status=200)
 
-# mappinguserlist=[1,2,3]
-class addprojectmapping(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
-    def post(self,request):
-        projectid = request.data.get('ProjectId')
-        print("projectid",projectid)
-        if projectid is not None and projectid != "":
-            projectobj = Project.objects.filter(id=int(projectid)).first()
-            if projectobj is not None:
-                mappinguserlist = request.data.get('mappinguserlist')
-                checkifexist = ProjectMapping.objects.filter(projectid=int(projectid)).delete()
-                for d in mappinguserlist:
-                    ProjectMapping.objects.create(projectid=int(projectid),userid=str(d))
-
-                response_={
-                    'status':'success',
-                    'msg':'Mapping Added Successfully.',
-                    'data':''
-                }
-                return Response(response_,status=200)
-            else:
-                response_={
-                'status':'failed',
-                'msg':'Project not found.',
-                'data':{}
-            }
-            return Response(response_,status=200)
-
-        else:
-            response_={
-                'status':'failed',
-                'msg':'Please Provide Project Id.',
-                'data':{}
-            }
-            return Response(response_,status=200)
-
-
-class listprojectmapping(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
-    def post(self,request):
-        Projectid =  request.data.get('ProjectId')
-        cclist = []
-        # designlist = []
-        # operationlist = []
-        # budgetinglist = []
-        # planninglist = []
-        # Auditorlist = []
-        if Projectid is not None and Projectid != "":
-            projectobj = Project.objects.filter(id=int(Projectid)).first()
-            if projectobj is not None:
-                userlist = ProjectMapping.objects.filter(projectid=int(Projectid)).order_by('id')
-                if userlist.exists():
-                    projectSerializer = ProjectMappingSerializer(userlist,many=True)
-                    for i in projectSerializer.data:
-                        userobj = User.objects.filter(id=str(i['userid'])).first()
-                        if userobj is not None:
-                            i['Username']=userobj.Username
-                            userrole = userobj.role_id
-                            roleobj = Role.objects.filter(id=int(userrole),isActive=True).first()
-                            if roleobj is not None:
-                                rolename = roleobj.RoleName
-                            else:
-                                rolename = ""
-
-
-                            
-                            cclist.append(i)
-                          
-
-
-                    context = {
-                        'cclist':cclist,
-                    }
-                    
-                    response_={
-                        'status':'success',
-                        'msg':'project Mapping list found  Successfully.',
-                        'data':context
-                    }
-                    return Response(response_,status=200)
-                else:
-                    response_={
-                    'status':'failed',
-                    'msg':'Project mapping not found.',
-                    'data':{}
-                    }
-                    return Response(response_,status=200)
-            else:
-                response_={
-                'status':'failed',
-                'msg':'Project not found.',
-                'data':{}
-            }
-            return Response(response_,status=200)
-
-        else:
-            response_={
-                'status':'failed',
-                'msg':'Please Provide Project Id.',
-                'data':{}
-            }
-            return Response(response_,status=200)
 
 
 
@@ -819,3 +715,113 @@ class getmappingusers(GenericAPIView):
             'data':context
         }
         return Response(response_,status=200)
+    
+class register_new_service_provider(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        data['business_name']=request.data.get('business_name')
+        if data['business_name'] is None or data['business_name'] =='':
+            data['business_name']=str(request.data.get('business_name')).lower()
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+        
+        data['parent_service']=request.data.get('parent_service')
+        if data['parent_service'] is None or data['parent_service'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+        
+        data['child_service']=request.data.get('child_service')
+        if data['child_service'] is None or data['child_service'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
+        data['mobile_number']=request.user.mobileNumber
+        data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
+        data['description'] = request.data.get('description')
+        data['website'] = request.data.get('website')
+        data['lattitude'] = request.data.get('lattitude')
+        data['longitude'] = request.data.get('longitude')
+        data['radius'] = request.data.get('radius')
+
+        data['business_logo'] = request.FILES.get('business_logo')
+        if data['business_logo'] is None or data['business_logo'] =='':
+            data['business_logo']=''
+        data['userid'] = str(request.user.id)
+        data['isActive'] = True
+
+
+        business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).first()        
+        if business_name_obj is not None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+        else:
+            serializer = ServiceProviderSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User registered successfully","status":"success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+    
+
+class update_service_provider_basic_details(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        service_provider_id=request.data.get('service_provider_id')
+        if service_provider_id is None or service_provider_id == '':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        update_obj=ServiceProvider.objects.filter(isActive=True, id=service_provider_id).first()        
+        if update_obj is None:
+            return Response({ "data":{},"response":{"n":0,"msg":"Service provider not found", "status":"error"}})
+
+
+
+        business_name=request.data.get('business_name')
+        if business_name is None or business_name =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+        else:
+            data['business_name']=str(request.data.get('business_name')).lower()
+
+
+
+
+        business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).exclude(id=str(update_obj.id)).first()        
+        if business_name_obj is not None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+        else:
+            parent_service=request.data.get('parent_service')
+            if parent_service is None or parent_service =='':
+                return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+            else:
+                data['parent_service']=parent_service
+
+            child_service=request.data.get('child_service')
+            if child_service is None or child_service =='':
+                return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
+            else:
+                data['child_service']=child_service
+
+            data['mobile_number']=request.user.mobileNumber
+            data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
+            data['description'] = request.data.get('description')
+            data['website'] = request.data.get('website')
+            data['lattitude'] = request.data.get('lattitude')
+            data['longitude'] = request.data.get('longitude')
+            data['radius'] = request.data.get('radius')
+
+            business_logo = request.FILES.get('business_logo')
+            if business_logo is not None and business_logo !='':
+                data['business_logo'] = request.FILES.get('business_logo')
+
+            data['isActive'] = True
+            serializer = ServiceProviderSerializer(update_obj,data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User registered successfully","status":"success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+    
+

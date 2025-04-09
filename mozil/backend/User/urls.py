@@ -36,9 +36,7 @@ urlpatterns = [
     path('userbyid', userbyid.as_view(), name = 'userbyid'),
 
 
-    #projectmapping
-    path('addprojectmapping', addprojectmapping.as_view(), name = 'addprojectmapping'),
-    path('listprojectmapping', listprojectmapping.as_view(), name = 'listprojectmapping'),
-    path('getmappingusers', getmappingusers.as_view(), name = 'getmappingusers'),
+    path('register_new_service_provider', register_new_service_provider.as_view(), name = 'register_new_service_provider'),
+    path('update_service_provider_basic_details', update_service_provider_basic_details.as_view(), name = 'update_service_provider_basic_details'),
 
 ]

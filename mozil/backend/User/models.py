@@ -55,7 +55,6 @@ class Menu(models.Model):
     sortOrder=models.IntegerField(null=True, blank=True)
     isshown = models.BooleanField(default=True)
 
-
 class RolePermissions(TrackingModel):
     role = models.IntegerField(null=True, blank=True)  
     add = models.BooleanField(default=False)
@@ -75,9 +74,56 @@ class UserPermissions(TrackingModel):
     menu= models.IntegerField(default=0)
 
 
-class ProjectMapping(TrackingModel):
+class ServiceProvider(TrackingModel):
     userid = models.CharField(max_length=255,null=True, blank=True)
-    roleid = models.IntegerField(null=True, blank=True)
-    projectid = models.IntegerField(null=True, blank=True)
+    parent_service = models.CharField(max_length=255,null=True,blank=True)
+    child_service = models.CharField(max_length=255,null=True,blank=True)
+    mobile_number = models.CharField(max_length=255,null=True,blank=True)
+    alternate_mobile_number = models.CharField(max_length=255,null=True,blank=True)
+    description = models.TextField(null=True, blank=True)
+    website = models.TextField(null=True, blank=True)
+    lattitude = models.CharField(max_length=255,null=True,blank=True)
+    longitude = models.CharField(max_length=255,null=True,blank=True)
+    radius = models.CharField(max_length=255,null=True,blank=True)
+    license_verification_status = models.BooleanField(default=False,null=True,blank=True)
+    mozil_guaranteed = models.BooleanField(default=False,null=True,blank=True)
+    business_logo = models.FileField(upload_to='service_provider/business_logo/', blank=True, null=True,verbose_name='business_logo Image')
+    business_name = models.CharField(max_length=255,null=True,blank=True)
+    average_rating = models.CharField(max_length=255,null=True,blank=True)
+
+class ServiceProviderWeeklySchedule(TrackingModel):
+    userid = models.CharField(max_length=255,null=True, blank=True)
+    service_provider_id = models.CharField(max_length=255,null=True, blank=True)
+    service_start_time = models.CharField(max_length=255,null=True,blank=True)
+    service_end_time = models.CharField(max_length=255,null=True,blank=True)
+    weekday_name = models.CharField(max_length=255,null=True,blank=True)
+    weekday_number = models.CharField(max_length=255,null=True,blank=True)
+
+class ServiceProviderOfferedServices(TrackingModel):
+    userid = models.CharField(max_length=255,null=True, blank=True)
+    service_provider_id = models.CharField(max_length=255,null=True, blank=True)
+    short_description =  models.TextField(null=True, blank=True)
+    long_description = models.TextField(null=True, blank=True)
+    rate = models.CharField(max_length=255,null=True,blank=True)
+    
+class ServiceProviderHighlights(TrackingModel):
+    userid = models.CharField(max_length=255,null=True, blank=True)
+    service_provider_id = models.CharField(max_length=255,null=True, blank=True)
+    name =  models.TextField(null=True, blank=True)
+    sticker = models.FileField(upload_to='service_provider/highlights/sticker/', blank=True, null=True,verbose_name='sticker Image')
+
+class ServiceProviderPortfolio(TrackingModel):
+    userid = models.CharField(max_length=255,null=True, blank=True)
+    service_provider_id = models.CharField(max_length=255,null=True, blank=True)
+    heading =  models.TextField(null=True, blank=True)
+    short_description =  models.TextField(null=True, blank=True)
+    long_description = models.TextField(null=True, blank=True)
+
+class ServiceProviderPortfolioMedia(TrackingModel):
+    userid = models.CharField(max_length=255,null=True, blank=True)
+    service_provider_id = models.CharField(max_length=255,null=True, blank=True)
+    portfolio_id = models.CharField(max_length=255,null=True, blank=True)
+    media = models.FileField(upload_to='service_provider/portfolio/media/', blank=True, null=True,verbose_name='media Image')
+
 
 

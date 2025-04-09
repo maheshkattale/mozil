@@ -12,7 +12,6 @@ class ParentServices(TrackingModel):
     def __str__(self):
         return self.Name
     
-
 class ChildServices(TrackingModel):
     Name = models.CharField(max_length=150,blank=True,null=True)
     ParentServiceId = models.CharField(max_length=150,blank=True,null=True)

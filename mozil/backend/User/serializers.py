@@ -60,7 +60,10 @@ class UserPermissionSerializer(serializers.ModelSerializer):
         model = UserPermissions
         fields = "__all__"
 
-class ProjectMappingSerializer(serializers.ModelSerializer):
+class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProjectMapping
-        fields = "__all__"
+        model = ServiceProvider
+        fields ="__all__"
+
+
+

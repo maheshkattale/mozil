@@ -18,9 +18,11 @@ from django.conf import settings
 
 env = environ.Env()
 environ.Env.read_env()
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(os.path.join(settings.BASE_DIR, "backend"))
 sys.path.append(os.path.join(settings.BASE_DIR, "frontend"))
 
@@ -60,9 +62,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'User',
+    'Advertisements',
+    'PaymentHistory',
+    'Plans',
+    'ReviewsAndRating',
     'Services',
+    'User',
 ]
+
+
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
