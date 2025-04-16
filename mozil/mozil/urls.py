@@ -25,6 +25,7 @@ urlpatterns = [
     
     # backend
     path('api/User/', include('User.urls')),
+    path('',include(('Frontend_User.urls', 'Frontend_User'),namespace='Frontend_User')),
 
 
   
