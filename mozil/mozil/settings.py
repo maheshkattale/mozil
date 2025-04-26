@@ -44,7 +44,7 @@ SECRET_KEY = 'django-insecure-q@+t3py&pg#x(qu-uz&s%ylfc)@o$s%1y5vvgqoo%k0y3cdh#1
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['16.171.65.54', '*']
 X_FRAME_OPTIONS = 'ALLOWALL'
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:8001"]
@@ -166,7 +166,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
