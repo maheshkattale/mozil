@@ -1,7 +1,7 @@
 
 from .models import *
 from rest_framework import serializers
-
+from Services.models import *
 class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -32,6 +32,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
             except Role.DoesNotExist:
                 return None
         return None
+    
+    
     class Meta:
         model= User
         fields='__all__'
@@ -64,6 +66,155 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
         fields ="__all__"
+class CustomServiceProviderSerializer(serializers.ModelSerializer):
+
+    owner_name = serializers.SerializerMethodField()
+    def get_owner_name(self, obj):
+        obj_id = str(obj.userid)
+        if obj_id:
+            try:
+                obj = User.objects.filter(id=obj_id).first()
+                if obj is not None:
+                   return obj.Username
+                else:
+                    return None
+            except User.DoesNotExist:
+                return None
+        return None
+    
+    email = serializers.SerializerMethodField()
+    def get_email(self, obj):
+        obj_id = str(obj.userid)
+        if obj_id:
+            try:
+                obj = User.objects.filter(id=obj_id).first()
+                if obj is not None:
+                   return obj.email
+                else:
+                    return None
+            except User.DoesNotExist:
+                return None
+        return None
+    
+    parent_service_name = serializers.SerializerMethodField()
+    def get_parent_service_name(self, obj):
+        obj_id = str(obj.parent_service)
+        if obj_id:
+            try:
+                obj = ParentServices.objects.filter(id=obj_id).first()
+                if obj is not None:
+                   return obj.Name
+                else:
+                    return None
+            except ParentServices.DoesNotExist:
+                return None
+        return None
+    
+    child_service_name = serializers.SerializerMethodField()
+    def get_child_service_name(self, obj):
+        obj_id = str(obj.child_service)
+        if obj_id:
+            try:
+                obj = ChildServices.objects.filter(id=obj_id).first()
+                if obj is not None:
+                   return obj.Name
+                else:
+                    return None
+            except ChildServices.DoesNotExist:
+                return None
+        return None
+
+    offered_services = serializers.SerializerMethodField()
+    def get_offered_services(self, obj):
+        obj_id = str(obj.id)
+        if obj_id:
+            try:
+                obj = ServiceProviderOfferedServices.objects.filter(service_provider_id=obj_id,isActive=True)
+                if obj.exists():
+                   offered_services_serializer=ServiceProviderOfferedServicesSerializer(obj,many=True)
+                   return offered_services_serializer.data
+                else:
+                    return []
+            except ServiceProviderOfferedServices.DoesNotExist:
+                return []
+        return []
+
+    status = serializers.SerializerMethodField()
+    def get_status(self, obj):
+        obj_id = str(obj.userid)
+        if obj_id:
+            try:
+                obj = User.objects.filter(id=obj_id).first()
+                if obj is not None:
+                   return obj.status
+                else:
+                    return None
+            except User.DoesNotExist:
+                return None
+        return None
 
 
 
+    class Meta:
+        model = ServiceProvider
+        fields ="__all__"
+
+class ServiceProviderWeeklyScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProviderWeeklySchedule
+        fields ="__all__"
+
+
+class ServiceProviderOfferedServicesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProviderOfferedServices
+        fields ="__all__"
+
+class ServiceProviderHighlightsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProviderHighlights
+        fields ="__all__"
+
+class ServiceProviderPortfolioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProviderPortfolio
+        fields ="__all__"
+class ServiceProviderPortfolioMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProviderPortfolioMedia
+        fields ="__all__"
+
+class CustomServiceProviderPortfolioSerializer(serializers.ModelSerializer):
+
+    media_list = serializers.SerializerMethodField()
+    def get_media_list(self, obj):
+        obj_id = str(obj.id)
+        if obj_id:
+            try:
+                obj = ServiceProviderPortfolioMedia.objects.filter(portfolio_id=obj_id,isActive=True)
+                if obj.exists():
+                   media_serializer=ServiceProviderPortfolioMediaSerializer(obj,many=True)
+                   return media_serializer.data
+                else:
+                    return []
+            except ServiceProviderPortfolioMedia.DoesNotExist:
+                return []
+        return []
+    
+
+
+
+
+
+
+    class Meta:
+        model = ServiceProviderPortfolio
+        fields ="__all__"
+
+
+
+
+
+
+
+        

@@ -2,47 +2,442 @@
 
 <!DOCTYPE html>
 
-<html lang="en" class="light-style layout-menu-fixed {{content_layout_class}}" data-assets-path="{% static '/' %}" data-base-url="{{url}}" data-framework="django" data-template="vertical-menu-free">
+<html lang="en" class="light-style layout-menu-fixed layout-compact" data-assets-path="{% static '/' %}"
+  data-base-url="{{url}}" data-framework="django" data-template="vertical-menu-free">
 
-  <head>
-    <title>{% block title %}{% endblock title %} | "layout/layout_blank.html" - </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <!-- Canonical SEO -->
-    <link rel="canonical" href="">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon/favicon.ico' %}" />
+<head>
+  <title>{% block title %}{% endblock title %} </title>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <link rel="canonical" href="">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicon/favicon.ico' %}" />
 
-    <!-- Include the styles partial -->
-    {% include "./partials/styles.html" %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&ampdisplay=swap" rel="stylesheet">
 
-    {% block vendor_css %}{% endblock vendor_css %}
-
-    <!--Page CSS-->
-    {% block page_css %}{% endblock page_css %}
+  <link rel="stylesheet" href="{% static 'assets/vendor/fonts/remixicon/remixicon.css' %}" />
 
 
-    <!-- Include the scripts partial (required ) -->
-    {% include "./partials/scripts_includes.html" %}
+  <link rel="stylesheet" href="{% static 'assets/vendor/libs/node-waves/node-waves.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/vendor/css/core.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/vendor/css/theme-default.css' %}" />
 
-  </head>
 
-  <body>
-    <!-- beautify ignore:end -->
+  <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}" />
 
-    {% block layout %}
-    {% endblock layout %}
+  <link rel="stylesheet" href="{% static 'assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
 
-    {% include "./partials/scripts.html" %}
 
-    <!--Vendors Javascript-->
-    {% block vendor_js %} {% endblock vendor_js %}
 
-    <!--Page Javascript-->
-    {% block page_js %} {% endblock page_js %}
+  {% block vendor_css %}{% endblock vendor_css %}
+  {% block page_css %}
+  <style>
+     .menu-sub {
+            display: none;
+            padding-left: 15px;
+        }
+        .menu-item.active > .menu-sub {
+            display: block;
+        }
+  </style>
+  {% endblock page_css %}
 
-  </body>
+
+  <script src="{% static 'assets/vendor/js/helpers.js' %}"></script>
+  <script src="{% static 'assets/js/config.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+    integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.1/jquery.twbsPagination.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo">
+          <a href="" class="app-brand-link">
+            <span class="app-brand-logo demo me-1">
+              {% include './partials/logo.html' %}
+            </span>
+            <span class="app-brand-text demo menu-text fw-semibold ms-2">Mozil</span>
+          </a>
+
+          <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+            <i class="menu-toggle-icon d-xl-block align-middle"></i>
+          </a>
+        </div>
+
+
+        <div class="menu-inner-shadow"></div>
+
+        <ul class="menu-inner py-1">
+
+          <li class="menu-item active">
+            <a href="/dashboard/home" class="menu-link" target="">
+              <i class="menu-icon tf-icons ri-dashboard-2-line"></i>
+              <div class="text-truncate" data-i18n="Dashboard">Dashboard</div>
+              <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+            </a>
+          </li>
+
+
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons ri-user-community-line"></i>
+              <i class="menu-icon tf-icons ri-group-line"></i>
+              <div class="text-truncate" data-i18n="User Management">User Management</div>
+              <span class="badge bg-danger rounded-pill ms-auto"></span>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="/users_list" class="menu-link" target="">
+
+                  <div class="text-truncate" data-i18n="Users">Users</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/roles_list" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="Roles">Roles</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/permissions_list" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="Permissions">Permissions</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+
+
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons ri-apps-2-add-line"></i>
+              <div class="text-truncate" data-i18n="Service Management">Service Management</div>
+              <span class="badge bg-danger rounded-pill ms-auto"></span>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="/services/parent_services_list" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="Parent_Services_List">Parent Services List</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/services/child_services_list" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="Child_Services_List">Child Services List</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+
+
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons ri-user-follow-line"></i>
+              <div class="text-truncate" data-i18n="Service Provider">Service Provider</div>
+              <span class="badge bg-danger rounded-pill ms-auto"></span>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="/service_provider_verification" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="service_provider_verification">Service Provider Verification
+                  </div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/service_provider_master" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="service_provider_master">Service Provider Master</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+
+
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons ri-coins-line"></i>
+              <div class="text-truncate" data-i18n="Payments">Payments</div>
+              <span class="badge bg-danger rounded-pill ms-auto"></span>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="/plan/plans_list" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="plans_list">Plan Master</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/purchase_history" class="menu-link" target="">
+                  <div class="text-truncate" data-i18n="purchase_history">Purchase History</div>
+                  <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+                </a>
+              </li>
+
+
+            </ul>
+          </li>
+          <li class="menu-item">
+            <a href="/reviews/reviews_list" class="menu-link" target="">
+              <i class="menu-icon tf-icons ri-star-half-line"></i>
+              <div class="text-truncate" data-i18n="Reviews Management">Reviews Management</div>
+              <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+            </a>
+          </li>
+        </ul>
+
+
+      </aside>
+
+
+      <div class="layout-page">
+
+
+        <nav
+          class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+          id="layout-navbar">
+          <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
+              <i class="ri-menu-fill ri-24px"></i>
+            </a>
+          </div>
+          <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+
+            <div class="navbar-nav align-items-center">
+              <div class="nav-item d-flex align-items-center">
+                <i class="ri-search-line ri-22px me-2"></i>
+                <input type="text" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
+                  aria-label="Search...">
+              </div>
+            </div>
+
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+
+
+              <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+                  <div class="avatar avatar-online">
+                    <img src="{% static 'assets/img/avatars/1.png' %}" alt class="w-px-40 h-auto rounded-circle">
+                  </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end mt-3 py-2">
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);">
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 me-2">
+                          <div class="avatar avatar-online">
+                            <img src="{% static 'assets/img/avatars/1.png' %}" alt
+                              class="w-px-40 h-auto rounded-circle">
+                          </div>
+                        </div>
+                        <div class="flex-grow-1">
+                          <h6 class="mb-0 small">John Doe</h6>
+                          <small class="text-muted">Admin</small>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <div class="dropdown-divider"></div>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);">
+                      <i class="ri-user-3-line ri-22px me-2"></i>
+                      <span class="align-middle">My Profile</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);">
+                      <i class="ri-settings-4-line ri-22px me-2"></i>
+                      <span class="align-middle">Settings</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0);">
+                      <span class="d-flex align-items-center align-middle">
+                        <i class="flex-shrink-0 ri-file-text-line ri-22px me-2"></i>
+                        <span class="flex-grow-1 align-middle ms-1">Billing</span>
+                        <span
+                          class="flex-shrink-0 badge badge-center rounded-pill bg-danger h-px-20 d-flex align-items-center justify-content-center">4</span>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <div class="dropdown-divider"></div>
+                  </li>
+                  <li>
+                    <div class="d-grid px-4 pt-2 pb-1">
+                      <a class="btn btn-danger d-flex" href="javascript:void(0);" onclick="logout()">
+                        <small class="align-middle">Logout</small>
+                        <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+
+        <div class="content-wrapper">
+          {% if is_flex %}
+          <div class="container-xxl d-flex align-items-stretch flex-grow-1 p-0">
+            {% else %}
+            <div class="container-xxl flex-grow-1 container-p-y">
+              {% endif %}
+              {% block layout %}
+
+
+              {% endblock layout %}
+
+            </div>
+            <footer class="content-footer footer bg-footer-theme">
+              <div class="container-xxl">
+                <div
+                  class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+                  <div class="text-body mb-2 mb-md-0">
+                    ©
+                    <script>
+                      document.write(new Date().getFullYear())
+
+                    </script>, made with <span class="text-danger"><i class="tf-icons ri-heart-fill"></i></span> by <a
+                      href="https://zentrotechnologies.com/" target="_blank" class="footer-link">Zentro</a>
+                  </div>
+                  <div class="d-none d-lg-inline-block">
+                    <a href="" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+                  </div>
+                </div>
+              </div>
+            </footer>
+
+            <div class="content-backdrop fade"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layout-overlay layout-menu-toggle"></div>
+      <div class="drag-target"></div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <!--Vendors Javascript-->
+  {% block vendor_js %} {% endblock vendor_js %}
+
+  <!--Page Javascript-->
+  {% block page_js %}
+  <script>
+    var hosturl = '{{hosturl}}'
+    function logout() {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      $.ajax({
+        url: hosturl + "/logout",
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+          console.log("-logout---", response)
+          if (response.response.n == 1) {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            })
+
+
+
+            window.location.href = hosturl;
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Check if Django messages exist
+      const djangoMessages = "{{ messages }}";
+
+      {% if messages %}
+      {% for message in messages %}
+      swal({
+        icon: '{{ message.tags }}',  // 'error', 'success', etc.
+        text: '{{ message }}',
+        showConfirmButton: true,
+        confirmButtonText: 'OK'
+      });
+      {% endfor %}
+      {% endif %}
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggles = document.querySelectorAll('.menu-toggle');
+        menuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentItem = this.closest('.menu-item');
+                parentItem.classList.toggle('active');
+                
+                // Close other open menus if needed
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    if (item !== parentItem) {
+                        item.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+  {% endblock page_js %}
+
+</body>
 
 </html>

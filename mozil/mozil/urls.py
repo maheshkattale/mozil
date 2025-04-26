@@ -25,7 +25,15 @@ urlpatterns = [
     
     # backend
     path('api/User/', include('User.urls')),
+    path('api/Services/', include('Services.urls')),
+    path('api/Plans/', include('Plans.urls')),
+    path('api/PaymentHistory/', include('PaymentHistory.urls')),
+    
+    #frontend
     path('',include(('Frontend_User.urls', 'Frontend_User'),namespace='Frontend_User')),
+    path('dashboard/',include(('Frontend_Dashboard.urls', 'Frontend_Dashboard'),namespace='Frontend_Dashboard')),
+    path('services/',include(('Frontend_Services.urls', 'Frontend_Services'),namespace='Frontend_Services')),
+    path('plan/',include(('Frontend_Plans.urls', 'Frontend_Plans'),namespace='Frontend_Plans')),
 
 
   

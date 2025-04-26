@@ -23,15 +23,19 @@ class addparentservice(GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         data={}
-        request_data = request.data.copy()
-        data['Name']=request.data.get('Name')
-        result = []
-        
+        data['Name']=str(request.data.get('Name')).lower()
+        data['Description']=request.data.get('Description')
+
+        icon_image=request.FILES.get('icon_image')       
+        if icon_image is not None and icon_image !='':
+            data['icon_image']=icon_image 
+
+
         if data['Name'] is None or data['Name'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide parent service name", "status":"error"}})
         
         
-        request_data['createdBy'] = request.session.get('user_id')
+        data['createdBy'] = request.session.get('user_id')
         parentserviceexist = ParentServices.objects.filter(Name=data['Name'],isActive=True).first()
         if parentserviceexist is None:
             serializer = ParentServicesSerializer(data=data)
@@ -63,11 +67,16 @@ class parentservice_list_pagination_api(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPagination
-    def get(self,request):
-        parentserviceMaster_objs = ParentServices.objects.filter(isActive=True).order_by('id')
+    # serializer_class = ParentServicesSerializer
+
+    def post(self,request):
+        parentserviceMaster_objs = ParentServices.objects.filter(isActive=True).order_by('-id')
         page4 = self.paginate_queryset(parentserviceMaster_objs)
         serializer = ParentServicesSerializer(page4,many=True)
+
         return self.get_paginated_response(serializer.data)
+    
+    
     
 class parentserviceupdate(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -80,7 +89,8 @@ class parentserviceupdate(GenericAPIView):
             result = json.loads(request.data.get('result'))
         parentserviceexist = ParentServices.objects.filter(id=id,isActive= True).first()
         if parentserviceexist is not None:
-            data['Name']=request.data.get('Name')
+            data['Name']=str(request.data.get('Name')).lower()
+            data['Description']=str(request.data.get('Description')).lower()
             # data['updatedBy'] =str(request.user.id)
             if data['Name'] is None or data['Name'] =='':
                 return Response({ "data":{},"response":{"n":0,"msg":"please provide parent service name", "status":"error"}})
@@ -89,6 +99,9 @@ class parentserviceupdate(GenericAPIView):
             if parentserviceindata is not None:
                 return Response({"data":'',"response": {"n": 0, "msg": "Parent service already exist","status": "error"}})
             else:
+                icon_image=request.FILES.get('icon_image')       
+                if icon_image is not None and icon_image !='' and icon_image !='undefined' :
+                    data['icon_image']=icon_image 
                 serializer = ParentServicesSerializer(parentserviceexist,data=data,partial=True)
                 if serializer.is_valid():
                     serializer.save()
@@ -107,7 +120,6 @@ class parentservicebyid(GenericAPIView):
         parentserviceobjects = ParentServices.objects.filter(id=id,isActive=True).first()
         if parentserviceobjects is not None:
             serializer = ParentServicesSerializer(parentserviceobjects)
-
             return Response({"data":serializer.data,"response": {"n": 1, "msg": "Parent service data shown successfully","status": "success"}})
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Parent service data not found  ","status": "success"}})
@@ -151,18 +163,23 @@ class addchildservice(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
-        data={}
-        request_data = request.data.copy()
-        data['Name']=request.data.get('Name')
-        
+        data = {}
+        request_data=request.data.copy()
+        data['Name']=str(request.data.get('Name')).lower()
+        data['ParentServiceId']=request.data.get('ParentServiceId')
+        data['Description']=request.data.get('Description')
         if data['Name'] is None or data['Name'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide child service name", "status":"error"}})
         
         if data['ParentServiceId'] is None or data['ParentServiceId'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide  Parent Service Id", "status":"error"}})
         
-        
-        request_data['createdBy'] = request.session.get('user_id')
+        icon_image=request.FILES.get('icon_image')       
+        if icon_image is not None and icon_image !='' and icon_image !='undefined' :
+            data['icon_image']=icon_image 
+
+
+        data['createdBy'] = request.session.get('user_id')
         childserviceexist = ChildServices.objects.filter(Name=data['Name'],isActive=True).first()
         if childserviceexist is None:
             serializer = ChildServicesSerializer(data=data)
@@ -194,10 +211,10 @@ class childservice_list_pagination_api(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPagination
-    def get(self,request):
+    def post(self,request):
         childserviceMaster_objs = ChildServices.objects.filter(isActive=True).order_by('id')
         page4 = self.paginate_queryset(childserviceMaster_objs)
-        serializer = ChildServicesSerializer(page4,many=True)
+        serializer = CustomChildServicesSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
     
 class childserviceupdate(GenericAPIView):
@@ -211,7 +228,9 @@ class childserviceupdate(GenericAPIView):
             result = json.loads(request.data.get('result'))
         childserviceexist = ChildServices.objects.filter(id=id,isActive= True).first()
         if childserviceexist is not None:
-            data['Name']=request.data.get('Name')
+            data['Name']=str(request.data.get('Name')).lower()
+            data['ParentServiceId']= request.data.get('ParentServiceId')
+            data['Description']= request.data.get('Description')
             # data['updatedBy'] =str(request.user.id)
             if data['Name'] is None or data['Name'] =='':
                 return Response({ "data":{},"response":{"n":0,"msg":"please provide child service name", "status":"error"}})
@@ -219,6 +238,9 @@ class childserviceupdate(GenericAPIView):
             if data['ParentServiceId'] is None or data['ParentServiceId'] =='':
                 return Response({ "data":{},"response":{"n":0,"msg":"Please provide  Parent Service Id", "status":"error"}})
         
+            icon_image=request.FILES.get('icon_image')       
+            if icon_image is not None and icon_image !='' and icon_image !='undefined' :
+                data['icon_image']=icon_image 
 
 
             childserviceindata = ChildServices.objects.filter(Name=data['Name'],isActive= True).exclude(id=id).first()

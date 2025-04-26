@@ -64,10 +64,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Advertisements',
     'PaymentHistory',
-    'Plans',
     'ReviewsAndRating',
     'Services',
     'User',
+    'Plans',
+
+    'Frontend_Dashboard',
+    'Frontend_Services',
+    'Frontend_User',
+    'Frontend_Plans',
+
 ]
 
 
@@ -100,6 +106,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'helpers.context_processors.get_session',
+
             ],
         },
     },

@@ -36,6 +36,8 @@ class User(AbstractBaseUser,TrackingModel):
     email = models.EmailField(null=True,blank=True)
     role = models.ForeignKey(Role,on_delete=models.CASCADE,null=True,blank=True)
     source = models.CharField(max_length=255,null=True,blank=True)
+    status = models.BooleanField(default=True,null=True,blank=True)
+
     objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -86,7 +88,7 @@ class ServiceProvider(TrackingModel):
     longitude = models.CharField(max_length=255,null=True,blank=True)
     radius = models.CharField(max_length=255,null=True,blank=True)
     license_verification_status = models.BooleanField(default=False,null=True,blank=True)
-    mozil_guaranteed = models.BooleanField(default=False,null=True,blank=True)
+    mozil_guarented = models.BooleanField(default=False,null=True,blank=True)
     business_logo = models.FileField(upload_to='service_provider/business_logo/', blank=True, null=True,verbose_name='business_logo Image')
     business_name = models.CharField(max_length=255,null=True,blank=True)
     average_rating = models.CharField(max_length=255,null=True,blank=True)
@@ -106,11 +108,16 @@ class ServiceProviderOfferedServices(TrackingModel):
     long_description = models.TextField(null=True, blank=True)
     rate = models.CharField(max_length=255,null=True,blank=True)
     
+
+
+
+
 class ServiceProviderHighlights(TrackingModel):
     userid = models.CharField(max_length=255,null=True, blank=True)
     service_provider_id = models.CharField(max_length=255,null=True, blank=True)
     name =  models.TextField(null=True, blank=True)
     sticker = models.FileField(upload_to='service_provider/highlights/sticker/', blank=True, null=True,verbose_name='sticker Image')
+    description = models.TextField(null=True, blank=True)
 
 class ServiceProviderPortfolio(TrackingModel):
     userid = models.CharField(max_length=255,null=True, blank=True)

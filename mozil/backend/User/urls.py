@@ -38,5 +38,39 @@ urlpatterns = [
 
     path('register_new_service_provider', register_new_service_provider.as_view(), name = 'register_new_service_provider'),
     path('update_service_provider_basic_details', update_service_provider_basic_details.as_view(), name = 'update_service_provider_basic_details'),
+    path('service_provider_list_pagination_api', service_provider_list_pagination_api.as_view(), name = 'service_provider_list_pagination_api'),
+    path('serviceproviderdelete', serviceproviderdelete.as_view(), name = 'serviceproviderdelete'),
+    path('get_service_provider_details', get_service_provider_details.as_view(), name = 'get_service_provider_details'),
+
+    path('service_provider_weekly_schedule_pagination_api', service_provider_weekly_schedule_pagination_api.as_view(), name = 'service_provider_weekly_schedule_pagination_api'),
+    path('add_service_provider_weekly_schedule', add_service_provider_weekly_schedule.as_view(), name = 'add_service_provider_weekly_schedule'),
+    path('update_service_provider_weekly_schedule', update_service_provider_weekly_schedule.as_view(), name = 'update_service_provider_weekly_schedule'),
+    path('delete_service_provider_weekly_schedule', delete_service_provider_weekly_schedule.as_view(), name = 'delete_service_provider_weekly_schedule'),
+    path('get_service_provider_weekly_schedule_by_id', get_service_provider_weekly_schedule_by_id.as_view(), name = 'get_service_provider_weekly_schedule_by_id'),
+
+    path('service_provider_offered_service_pagination_api', service_provider_offered_service_pagination_api.as_view(), name = 'service_provider_offered_service_pagination_api'),
+    path('add_service_provider_offered_service', add_service_provider_offered_service.as_view(), name = 'add_service_provider_offered_service'),
+    path('update_service_provider_offered_service', update_service_provider_offered_service.as_view(), name = 'update_service_provider_offered_service'),
+    path('delete_service_provider_offered_service', delete_service_provider_offered_service.as_view(), name = 'delete_service_provider_offered_service'),
+    path('get_service_provider_offered_service_by_id', get_service_provider_offered_service_by_id.as_view(), name = 'get_service_provider_offered_service_by_id'),
+
+
+    path('get_service_provider_highlights', get_service_provider_highlights.as_view(), name = 'get_service_provider_highlights'),
+    path('add_service_provider_highlight', add_service_provider_highlight.as_view(), name = 'add_service_provider_highlight'),
+    path('delete_service_provider_highlight', delete_service_provider_highlight.as_view(), name = 'delete_service_provider_highlight'),
+    path('edit_service_provider_highlight', edit_service_provider_highlight.as_view(), name = 'edit_service_provider_highlight'),
+
+
+
+    path('add_service_provider_portfolio', add_service_provider_portfolio.as_view(), name = 'add_service_provider_portfolio'),
+    path('get_service_provider_portfolio', get_service_provider_portfolio.as_view(), name = 'get_service_provider_portfolio'),
+    path('delete_service_provider_portfolio', delete_service_provider_portfolio.as_view(), name = 'delete_service_provider_portfolio'),
+    path('delete_portfolio_media', delete_portfolio_media.as_view(), name = 'delete_portfolio_media'),
+    path('update_service_provider_portfolio', update_service_provider_portfolio.as_view(), name = 'update_service_provider_portfolio'),
+    
+    path('change_verification', change_verification.as_view(), name = 'change_verification'),
+    path('change_guarented', change_guarented.as_view(), name = 'change_guarented'),
+    path('change_status', change_status.as_view(), name = 'change_status'),
+
 
 ]

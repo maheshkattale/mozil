@@ -1,4 +1,4 @@
-{% extends layout_path %}
+{% extends "base.html" %}
 
 {% load static %}
 {% load i18n %}
@@ -7,20 +7,20 @@
 
 {% block vendor_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'vendor/libs/apex-charts/apex-charts.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/vendor/libs/apex-charts/apex-charts.css' %}" />
 {% endblock vendor_css %}
 
 {% block vendor_js %}
 {{ block.super }}
-<script src="{% static 'vendor/libs/apex-charts/apexcharts.js' %}"></script>
+<script src="{% static 'assets/vendor/libs/apex-charts/apexcharts.js' %}"></script>
 {% endblock vendor_js %}
 
 {% block page_js %}
 {{ block.super }}
-<script src="{% static 'js/dashboards-analytics.js' %}"></script>
+<script src="{% static 'assets/js/dashboards-analytics.js' %}"></script>
 {% endblock page_js %}
 
-{% block content %}
+{% block layout %}
 <div class="row gy-6">
   <!-- Congratulations card -->
   <div class="col-md-12 col-lg-4">
@@ -32,7 +32,7 @@
         <p class="mb-2">78% of target 🚀</p>
         <a href="javascript:;" class="btn btn-sm btn-primary">View Sales</a>
       </div>
-      <img src="{% static 'img/illustrations/trophy.png' %}" class="position-absolute bottom-0 end-0 me-5 mb-5" width="83" alt="view sales">
+      <img src="{% static 'assets/img/illustrations/trophy.png' %}" class="position-absolute bottom-0 end-0 me-5 mb-5" width="83" alt="view sales">
     </div>
   </div>
   <!--/ Congratulations card -->
@@ -180,7 +180,7 @@
         <ul class="p-0 m-0">
           <li class="d-flex mb-6">
             <div class="avatar flex-shrink-0 bg-lightest rounded me-3">
-              <img src="{% static 'img/icons/misc/zipcar.png' %}" alt="zipcar">
+              <img src="{% static 'assets/img/icons/misc/zipcar.png' %}" alt="zipcar">
             </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
@@ -197,7 +197,7 @@
           </li>
           <li class="d-flex mb-6">
             <div class="avatar flex-shrink-0 bg-lightest rounded me-3">
-              <img src="{% static 'img/icons/misc/bitbank.png' %}" alt="bitbank">
+              <img src="{% static 'assets/img/icons/misc/bitbank.png' %}" alt="bitbank">
             </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
@@ -214,7 +214,7 @@
           </li>
           <li class="d-flex">
             <div class="avatar flex-shrink-0 bg-lightest rounded me-3">
-              <img src="{% static 'img/icons/misc/aviato.png' %}" alt="aviato">
+              <img src="{% static 'assets/img/icons/misc/aviato.png' %}" alt="aviato">
             </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
@@ -460,7 +460,7 @@
             <ul class="p-0 m-0">
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/payments/gumroad.png' %}" class="img-fluid" alt="gumroad" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/gumroad.png' %}" class="img-fluid" alt="gumroad" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -472,7 +472,7 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/payments/mastercard-2.png' %}" class="img-fluid" alt="mastercard" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/mastercard-2.png' %}" class="img-fluid" alt="mastercard" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -484,7 +484,7 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/payments/stripes.png' %}" class="img-fluid" alt="stripes" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/stripes.png' %}" class="img-fluid" alt="stripes" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -496,7 +496,7 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/payments/american-bank.png' %}" class="img-fluid" alt="american" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/american-bank.png' %}" class="img-fluid" alt="american" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -508,7 +508,7 @@
               </li>
               <li class="d-flex align-items-center">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/payments/citi.png' %}" class="img-fluid" alt="citi" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/citi.png' %}" class="img-fluid" alt="citi" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -532,7 +532,7 @@
             <ul class="p-0 m-0">
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/brands/google.png' %}" class="img-fluid" alt="google" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/brands/google.png' %}" class="img-fluid" alt="google" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -544,7 +544,7 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/brands/github.png' %}" class="img-fluid" alt="github" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/brands/github.png' %}" class="img-fluid" alt="github" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -556,7 +556,7 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/brands/slack.png' %}" class="img-fluid" alt="slack" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/brands/slack.png' %}" class="img-fluid" alt="slack" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -568,7 +568,7 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/payments/digital-ocean.png' %}" class="img-fluid" alt="digital" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/digital-ocean.png' %}" class="img-fluid" alt="digital" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -580,7 +580,7 @@
               </li>
               <li class="d-flex align-items-center">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'img/icons/brands/aws.png' %}" class="img-fluid" alt="aws" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/brands/aws.png' %}" class="img-fluid" alt="aws" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -616,7 +616,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/1.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Jordan Stevenson</h6>
@@ -637,7 +637,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/3.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/3.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Benedetto Rossiter</h6>
@@ -658,7 +658,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/2.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/2.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Bentlee Emblin</h6>
@@ -679,7 +679,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/5.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/5.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Bertha Biner</h6>
@@ -700,7 +700,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/4.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/4.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Beverlie Krabbe</h6>
@@ -721,7 +721,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/7.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/7.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Bradan Rosebotham</h6>
@@ -742,7 +742,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/6.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/6.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Bree Kilday</h6>
@@ -763,7 +763,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'img/avatars/1.png' %}" alt="Avatar" class="rounded-circle">
+                    <img src="{% static 'assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle">
                   </div>
                   <div>
                     <h6 class="mb-0 text-truncate">Breena Gallemore</h6>
@@ -787,4 +787,4 @@
   </div>
   <!--/ Data Tables -->
 </div>
-{% endblock %}
+{% endblock layout %}

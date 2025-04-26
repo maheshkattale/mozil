@@ -1,8 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.from rest_framework.response import Response
-from rest_framework.authentication import (BaseAuthentication,
-                                           get_authorization_header)
+from rest_framework.authentication import (BaseAuthentication,get_authorization_header)
 from rest_framework import permissions
 from rest_framework.response import Response
 import json
@@ -15,10 +14,8 @@ from django.template.loader import get_template, render_to_string
 from django.core.mail import EmailMessage
 from mozil.settings import EMAIL_HOST_USER
 from django.contrib.auth.hashers import make_password,check_password
-
 from .common import CustomPagination
 from django.db.models import Q
-
 
 def createtoken(uuid,email,source):
     token = jwt.encode(
@@ -28,7 +25,6 @@ def createtoken(uuid,email,source):
            },
         settings.SECRET_KEY, algorithm='HS256')
     return token
-
 
 class login(GenericAPIView):
     def post(self,request):
@@ -52,6 +48,16 @@ class login(GenericAPIView):
                     "response":{
                     "status":"error",
                     'msg': 'This user is not found',
+                    'n':0
+                    }}
+                           )
+        elif userexist.status == False:
+            return Response(
+                    {
+                    "data" : {'token':'','username':'','short_name':'','user_id':'','Menu':[]},
+                    "response":{
+                    "status":"error",
+                    'msg': 'This account is deactivated',
                     'n':0
                     }}
                            )
@@ -101,8 +107,6 @@ class login(GenericAPIView):
                     }
                 })
             
-
-
 class logout(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
@@ -123,9 +127,6 @@ class logout(GenericAPIView):
                         }
                     })
 
-
-    
-
 class ChangePassword(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
@@ -133,7 +134,7 @@ class ChangePassword(GenericAPIView):
         data = {}
         id = request.user.id
         if id is not None:
-            userObject = User.objects.filter(id=id,isActive=True).first()
+            userObject = User.objects.filter(id=id,isActive=True,status=True).first()
         
             if userObject:
                 password = request.data.get('oldpassword')
@@ -163,13 +164,11 @@ class ChangePassword(GenericAPIView):
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Couldnt find id","status": "error"}})
 
-
-
 class forgetpasswordmail(GenericAPIView):
     def post(self,request):
         data={}
         data['Email']=request.data.get('Email')
-        userdata = User.objects.filter(email=data['Email'],isActive=True,PasswordSet=True).first()
+        userdata = User.objects.filter(email=data['Email'],isActive=True,PasswordSet=True,status=True).first()
         if userdata is not None:
             email =   data['Email']
             data2 = {'user_id':userdata.id,'user_email':userdata.email,'frontend_url':frontend_url}
@@ -188,12 +187,11 @@ class forgetpasswordmail(GenericAPIView):
         else:
             return Response({"data":{},"response":{"n": 0,"msg" : "User not found", "status":"error"}})
 
-
 class setnewpassword(GenericAPIView):
     def post(self,request):
         data={}
         data['id']=request.data.get('id')
-        empdata = User.objects.filter(id=data['id'],isActive=True).first()
+        empdata = User.objects.filter(id=data['id'],isActive=True,status=True).first()
         if empdata is not None:
             data['Password']=request.data.get('Password')
             data['cfpassword']=request.data.get('cfpassword')
@@ -216,14 +214,13 @@ class setnewpassword(GenericAPIView):
         else:
             return Response({ "data":{},"response":{"n":0,"msg":"User not found", "status":"error"}})
 
-
 class resetpassword(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         data={}
         data['id']=request.data.get('id')
-        empdata = User.objects.filter(id=data['id'],isActive=True,PasswordSet=True).first()
+        empdata = User.objects.filter(id=data['id'],isActive=True,PasswordSet=True,status=True).first()
         if empdata is not None:
             data['Password']=request.data.get('Password')
             data['cfpassword']=request.data.get('cfpassword')
@@ -283,8 +280,6 @@ class addrole(GenericAPIView):
         else:
             return Response({ "data":{},"response":{"n":0,"msg":"Role already exist", "status":"error"}})
 
-
-
 class rolelist(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
@@ -310,8 +305,6 @@ class role_list_pagination_api(GenericAPIView):
         serializer = Roleserializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
     
-
-
 class roleupdate(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
@@ -351,8 +344,6 @@ class roleupdate(GenericAPIView):
                     return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Role not found ","status": "error"}})
-
-
 
 class rolebyid(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -424,7 +415,6 @@ class createuser(GenericAPIView):
         roleobj = Role.objects.filter(id=data['role'],isActive=True).first()
         if roleobj is not None:
             rolename = roleobj.RoleName
-
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Role does not exist", "status": "error"}})
 
@@ -440,17 +430,7 @@ class createuser(GenericAPIView):
             if serializer.is_valid():
                 serializer.save()
                 userid = serializer.data['id']
-                for i in result:
-                    print("i",i)
-                    UserPermissions.objects.create(
-                        userid = userid,
-                        role =  data['role'],
-                        add = i['create'],
-                        view = i['read'],
-                        edit = i['edit'],
-                        delete = i['delete'],
-                        menu= i['menu_id']
-                    )
+
                 return Response({"data":serializer.data,"response": {"n": 1, "msg": "User registered successfully","status":"success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
@@ -463,19 +443,6 @@ class userlist(GenericAPIView):
         empobjects = User.objects.filter(isActive=True).order_by('id')
         serializer = CustomUserSerializer(empobjects, many=True)
         return Response({"data":serializer.data,"response": {"n": 1, "msg": "User list shown successfully","status": "success"}})
-
-
-
-# class user_list_pagination_api(GenericAPIView):
-#     authentication_classes=[userJWTAuthentication]
-#     permission_classes = (permissions.IsAuthenticated,)
-#     pagination_class = CustomPagination
-#     def get(self,request):
-#         UserMaster_objs = User.objects.filter(isActive=True).order_by('Username')
-#         page4 = self.paginate_queryset(UserMaster_objs)
-#         serializer = CustomUserSerializer(page4,many=True)
-#         return self.get_paginated_response(serializer.data)
-    
 
 class user_list_pagination_api(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -490,8 +457,6 @@ class user_list_pagination_api(GenericAPIView):
         page4 = self.paginate_queryset(UserMaster_objs)
         serializer = CustomUserSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
-
-
 
 class userbyid(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -510,7 +475,6 @@ class userbyid(GenericAPIView):
             return Response({"data":serializer_data,"response": {"n": 1, "msg": "User shown successfully","status": "success"}})
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "User not found  ","status": "success"}})
-
 
 class userupdate(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -567,8 +531,6 @@ class userupdate(GenericAPIView):
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
 
-
-
 class userdelete(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
@@ -587,10 +549,7 @@ class userdelete(GenericAPIView):
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
-
-
-            
-            
+          
 #menu-----------------------------------------------------------------------------------------------
 class Menulist(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -604,10 +563,7 @@ class Menulist(GenericAPIView):
             'data':serializer.data
         }
         return Response(response_,status=200)
-
-        
-        
-        
+       
 class GetPermissionData(GenericAPIView):
     # authentication_classes=[userJWTAuthentication]
     # permission_classes = (permissions.IsAuthenticated,)
@@ -636,7 +592,6 @@ class GetPermissionData(GenericAPIView):
                 'data':{}
             }
             return Response(response_,status=200)
-
 
 class GetUserPermissionData(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -669,10 +624,6 @@ class GetUserPermissionData(GenericAPIView):
                 'data':{}
             }
             return Response(response_,status=200)
-
-
-
-
 
 class getmappingusers(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -722,45 +673,103 @@ class register_new_service_provider(GenericAPIView):
     def post(self,request):
         data={}
         request_data = request.data.copy()
-        data['business_name']=request.data.get('business_name')
-        if data['business_name'] is None or data['business_name'] =='':
-            data['business_name']=str(request.data.get('business_name')).lower()
-            return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+        if request_data['Username'] is None or request_data['Username'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
+        data['Username']=request.data.get('Username')
         
-        data['parent_service']=request.data.get('parent_service')
-        if data['parent_service'] is None or data['parent_service'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+        data['textPassword']=request.data.get('textPassword')
+        if data['textPassword'] is None or data['textPassword'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user password", "status":"error"}})
         
-        data['child_service']=request.data.get('child_service')
-        if data['child_service'] is None or data['child_service'] =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
-        data['mobile_number']=request.user.mobileNumber
-        data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
-        data['description'] = request.data.get('description')
-        data['website'] = request.data.get('website')
-        data['lattitude'] = request.data.get('lattitude')
-        data['longitude'] = request.data.get('longitude')
-        data['radius'] = request.data.get('radius')
-
-        data['business_logo'] = request.FILES.get('business_logo')
-        if data['business_logo'] is None or data['business_logo'] =='':
-            data['business_logo']=''
-        data['userid'] = str(request.user.id)
+        data['mobileNumber']=request.data.get('mobileNumber')
+        if data['mobileNumber'] is None or data['mobileNumber'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user mobile number", "status":"error"}})
+        data['email']=request.data.get('email')
+        if data['email'] is None or data['email'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
+        
+        data['password'] = data['textPassword']
         data['isActive'] = True
 
 
-        business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).first()        
-        if business_name_obj is not None:
-            return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+        emailobj = User.objects.filter(isActive=True, email=data['email']).first()
+        mobileobj = User.objects.filter(isActive=True, mobileNumber=data['mobileNumber']).first()        
+        if emailobj is not None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
+        elif mobileobj is not None:        
+            return Response({"data":'',"response": {"n": 0, "msg": "Mobile Number already exist", "status": "error"}})
         else:
-            serializer = ServiceProviderSerializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User registered successfully","status":"success"}})
+            serializer1 = UserSerializer(data=data)
+            if serializer1.is_valid():
+                data['business_name']=request.data.get('business_name')
+                if data['business_name'] is None or data['business_name'] =='':
+                    data['business_name']=str(request.data.get('business_name')).lower()
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+                
+                data['parent_service']=request.data.get('parent_service')
+                if data['parent_service'] is None or data['parent_service'] =='':
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+                
+                data['child_service']=request.data.get('child_service')
+                if data['child_service'] is None or data['child_service'] =='':
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
+                
+                data['mobile_number']= request.data.get('mobileNumber')
+                data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
+                data['description'] = request.data.get('description')
+                data['website'] = request.data.get('website')
+                data['lattitude'] = request.data.get('lattitude')
+                data['longitude'] = request.data.get('longitude')
+                data['radius'] = request.data.get('radius')
+
+                business_logo = request.FILES.get('business_logo')
+                if business_logo is not None and business_logo !='':
+                    data['business_logo']=business_logo
+                
+            
+                business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).first()        
+                if business_name_obj is not None:
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+                else:
+                    serializer1.save()
+                    userid = serializer1.data['id']
+                    data['userid'] = str(userid)
+
+                    serializer2 = ServiceProviderSerializer(data=data)
+                    if serializer2.is_valid():
+                        serializer2.save()
+                        return Response({"data":serializer2.data,"response": {"n": 1, "msg": "Service  Provider details registered successfully","status":"success"}})
+                    else:
+                        first_key, first_value = next(iter(serializer2.errors.items()))
+                        return Response({"data" : serializer2.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+            
             else:
-                first_key, first_value = next(iter(serializer.errors.items()))
-                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
-    
+                first_key, first_value = next(iter(serializer1.errors.items()))
+                return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        
+class serviceproviderdelete(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data = {}
+        userid = request.data.get('userid')
+        existemp = User.objects.filter(id=str(userid),isActive=True).first()
+        if existemp is not None:
+            data['isActive'] = False
+            serializer1 = UserSerializer(existemp,data=data,partial=True)
+            if serializer1.is_valid():
+                serializer1.save()
+                service_provider_obj = ServiceProvider.objects.filter(isActive=True, userid=str(serializer1.data['id'])).first()        
+                if service_provider_obj is not None:
+                    service_provider_obj.isActive=False
+                    service_provider_obj.save()
+
+                return Response({"data":serializer1.data,"response": {"n": 1, "msg": "Service provider deleted successfully","status": "success"}})
+            else:
+                first_key, first_value = next(iter(serializer1.errors.items()))
+                return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        else:
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
 
 class update_service_provider_basic_details(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -769,6 +778,7 @@ class update_service_provider_basic_details(GenericAPIView):
         data={}
         request_data = request.data.copy()
         service_provider_id=request.data.get('service_provider_id')
+        mobileNumber=request.data.get('mobile_number')
         if service_provider_id is None or service_provider_id == '':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
 
@@ -777,51 +787,877 @@ class update_service_provider_basic_details(GenericAPIView):
             return Response({ "data":{},"response":{"n":0,"msg":"Service provider not found", "status":"error"}})
 
 
+        if request_data['Username'] is None or request_data['Username'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
+        data['Username']=request.data.get('Username')
 
-        business_name=request.data.get('business_name')
-        if business_name is None or business_name =='':
-            return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+        
+        data['email']=request.data.get('email')
+        if data['email'] is None or data['email'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
+        
+
+        update_user_obj= User.objects.filter(isActive=True, id=str(update_obj.userid)).first()
+        emailobj = User.objects.filter(isActive=True, email=data['email']).exclude(id=str(update_obj.userid)).first()
+        mobileobj = User.objects.filter(isActive=True, mobileNumber=mobileNumber).exclude(id=str(update_obj.userid)).first()        
+        if emailobj is not None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
+        elif mobileobj is not None:        
+            return Response({"data":'',"response": {"n": 0, "msg": "Mobile Number already exist", "status": "error"}})
         else:
-            data['business_name']=str(request.data.get('business_name')).lower()
+            serializer1 = UserSerializer(update_user_obj,data=data,partial=True)
+            if serializer1.is_valid():
+                business_name=request.data.get('business_name')
+                if business_name is None or business_name =='':
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+                else:
+                    data['business_name']=str(request.data.get('business_name')).lower()
+
+                business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).exclude(id=str(update_obj.id)).first()        
+                if business_name_obj is not None:
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+                else:
+                    parent_service=request.data.get('parent_service')
+                    if parent_service is None or parent_service =='':
+                        return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+                    else:
+                        data['parent_service']=parent_service
+
+                    child_service=request.data.get('child_service')
+                    if child_service is None or child_service =='':
+                        return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
+                    else:
+                        data['child_service']=child_service
+
+                    data['mobile_number']=request.data.get('mobile_number')
+                    data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
+                    data['description'] = request.data.get('description')
+                    data['website'] = request.data.get('website')
+                    data['lattitude'] = request.data.get('lattitude')
+                    data['longitude'] = request.data.get('longitude')
+                    data['radius'] = request.data.get('radius')
+
+                    business_logo = request.FILES.get('business_logo')
+                    if business_logo is not None and business_logo !='':
+                        data['business_logo'] = request.FILES.get('business_logo')
+
+                    data['isActive'] = True
+                    serializer = ServiceProviderSerializer(update_obj,data=data,partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                        serializer1.save()
+                        return Response({"data":serializer.data,"response": {"n": 1, "msg": "Service Provider updated successfully","status":"success"}})
+                    else:
+                        first_key, first_value = next(iter(serializer.errors.items()))
+                        return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+            else:
+                first_key, first_value = next(iter(serializer1.errors.items()))
+                return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class service_provider_list_pagination_api(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = CustomPagination
+    def post(self,request):
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+        page4 = self.paginate_queryset(service_provider_objs)
+        serializer = CustomServiceProviderSerializer(page4,many=True)
+        return self.get_paginated_response(serializer.data)
+    
+class get_service_provider_details(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        service_provider_id=request.data.get('service_provider_id')
+        if service_provider_id is None or service_provider_id == '':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        ServiceProvider_obj=ServiceProvider.objects.filter(isActive=True, id=service_provider_id).first()        
+        if ServiceProvider_obj is None:
+            return Response({ "data":{},"response":{"n":0,"msg":"Service provider not found", "status":"error"}})
+
+        serializer = ServiceProviderSerializer(ServiceProvider_obj)
+        user_obj=User.objects.filter(id=str(serializer.data['userid']),isActive=True).first()
+        if user_obj is None:
+            return Response({ "data":{},"response":{"n":0,"msg":"User not found", "status":"error"}})
+
+        User_Serializer=UserSerializer(user_obj)
+        return Response({"data":{'user':User_Serializer.data,'service_provider':serializer.data},"response": {"n": 1, "msg": "Service provider found successfully","status":"success"}})
+       
+class service_provider_weekly_schedule_pagination_api(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = CustomPagination
+    def post(self,request):
+        service_provider_id=request.data.get('service_provider_id')
+        service_provider_objs = ServiceProviderWeeklySchedule.objects.filter(service_provider_id=service_provider_id,isActive=True).order_by('id')
+        page4 = self.paginate_queryset(service_provider_objs)
+        serializer = ServiceProviderWeeklyScheduleSerializer(page4,many=True)
+        return self.get_paginated_response(serializer.data)
+
+class add_service_provider_weekly_schedule(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        service_providerobj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if service_providerobj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})  
+        
+
+        data['userid']=service_providerobj.userid
+        data['weekday_name']=request.data.get('weekday_name')
+        if data['weekday_name'] is None or data['weekday_name'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide week day name", "status":"error"}})
+        
+        data['weekday_number']=request.data.get('weekday_number')
+        if data['weekday_number'] is None or data['weekday_number'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide week day number", "status":"error"}})
+        
+        data['service_start_time']=request.data.get('service_start_time')
+        if data['service_start_time'] is None or data['service_start_time'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service start time", "status":"error"}})
+        
+        data['service_end_time']=request.data.get('service_end_time')
+        if data['service_end_time'] is None or data['service_end_time'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service end time", "status":"error"}})
+
+        data['isActive'] = True
 
 
+      
 
+        serializer = ServiceProviderWeeklyScheduleSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
 
-        business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).exclude(id=str(update_obj.id)).first()        
-        if business_name_obj is not None:
-            return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Weekly schedule added successfully","status":"success"}})
         else:
-            parent_service=request.data.get('parent_service')
-            if parent_service is None or parent_service =='':
-                return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class update_service_provider_weekly_schedule(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['weekly_schedule_id']=request.data.get('weekly_schedule_id')
+        if data['weekly_schedule_id'] is None or data['weekly_schedule_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide weekly schedule id", "status":"error"}})
+        
+        update_obj = ServiceProviderWeeklySchedule.objects.filter(isActive=True, id=data['weekly_schedule_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "weekly schedule  not found", "status": "error"}})
+        
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        service_providerobj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if service_providerobj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})  
+        
+
+        data['userid']=service_providerobj.userid
+        data['weekday_name']=request.data.get('weekday_name')
+        if data['weekday_name'] is None or data['weekday_name'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide week day name", "status":"error"}})
+        
+        data['weekday_number']=request.data.get('weekday_number')
+        if data['weekday_number'] is None or data['weekday_number'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide week day number", "status":"error"}})
+        
+        data['service_start_time']=request.data.get('service_start_time')
+        if data['service_start_time'] is None or data['service_start_time'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service start time", "status":"error"}})
+        
+        data['service_end_time']=request.data.get('service_end_time')
+        if data['service_end_time'] is None or data['service_end_time'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service end time", "status":"error"}})
+
+        data['isActive'] = True
+
+
+      
+
+        serializer = ServiceProviderWeeklyScheduleSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Weekly schedule updated successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class delete_service_provider_weekly_schedule(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['weekly_schedule_id']=request.data.get('weekly_schedule_id')
+        if data['weekly_schedule_id'] is None or data['weekly_schedule_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide weekly schedule id", "status":"error"}})
+        
+        update_obj = ServiceProviderWeeklySchedule.objects.filter(isActive=True, id=data['weekly_schedule_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "weekly schedule  not found", "status": "error"}})
+        
+
+        data['isActive'] = False
+
+
+      
+
+        serializer = ServiceProviderWeeklyScheduleSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Weekly schedule deleted successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class get_service_provider_weekly_schedule_by_id(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['weekly_schedule_id']=request.data.get('weekly_schedule_id')
+        if data['weekly_schedule_id'] is None or data['weekly_schedule_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide weekly schedule id", "status":"error"}})
+        
+        update_obj = ServiceProviderWeeklySchedule.objects.filter(isActive=True, id=data['weekly_schedule_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "weekly schedule  not found", "status": "error"}})
+        
+
+
+
+      
+
+        serializer = ServiceProviderWeeklyScheduleSerializer(update_obj)
+        
+
+        return Response({"data":serializer.data,"response": {"n": 1, "msg": "Weekly schedule found successfully","status":"success"}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class service_provider_offered_service_pagination_api(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = CustomPagination
+    def post(self,request):
+        service_provider_id=request.data.get('service_provider_id')
+        service_provider_objs = ServiceProviderOfferedServices.objects.filter(service_provider_id=service_provider_id,isActive=True).order_by('id')
+        page4 = self.paginate_queryset(service_provider_objs)
+        serializer = ServiceProviderOfferedServicesSerializer(page4,many=True)
+        return self.get_paginated_response(serializer.data)
+
+class add_service_provider_offered_service(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        service_providerobj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if service_providerobj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})  
+        
+
+        data['userid']=service_providerobj.userid
+        data['short_description']=request.data.get('short_description')
+        if data['short_description'] is None or data['short_description'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide short description", "status":"error"}})
+        
+        data['long_description']=request.data.get('long_description')
+        if data['long_description'] is None or data['long_description'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide long description", "status":"error"}})
+        
+        data['rate']=request.data.get('rate')
+        if data['rate'] is None or data['rate'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service rate", "status":"error"}})
+
+        data['isActive'] = True
+
+
+      
+
+        serializer = ServiceProviderOfferedServicesSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Offered service added successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class update_service_provider_offered_service(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['offered_service_id']=request.data.get('offered_service_id')
+        if data['offered_service_id'] is None or data['offered_service_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide offered service id", "status":"error"}})
+        
+        update_obj = ServiceProviderOfferedServices.objects.filter(isActive=True, id=data['offered_service_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "offered service  not found", "status": "error"}})
+        
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        service_providerobj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if service_providerobj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})  
+        
+
+        data['userid']=service_providerobj.userid
+
+        data['short_description']=request.data.get('short_description')
+        if data['short_description'] is None or data['short_description'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide short description", "status":"error"}})
+        
+        data['long_description']=request.data.get('long_description')
+        if data['long_description'] is None or data['long_description'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide long description", "status":"error"}})
+        
+        data['rate']=request.data.get('rate')
+        if data['rate'] is None or data['rate'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service rate", "status":"error"}})
+
+        data['isActive'] = True
+
+
+      
+
+        serializer = ServiceProviderOfferedServicesSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "offered service updated successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class delete_service_provider_offered_service(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['offered_service_id']=request.data.get('offered_service_id')
+        if data['offered_service_id'] is None or data['offered_service_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide offered service id", "status":"error"}})
+        
+        update_obj = ServiceProviderOfferedServices.objects.filter(isActive=True, id=data['offered_service_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "offered service  not found", "status": "error"}})
+        
+
+        data['isActive'] = False
+
+
+      
+
+        serializer = ServiceProviderOfferedServicesSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "offered service deleted successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class get_service_provider_offered_service_by_id(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['offered_service_id']=request.data.get('offered_service_id')
+        if data['offered_service_id'] is None or data['offered_service_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide offered service id", "status":"error"}})
+        
+        update_obj = ServiceProviderOfferedServices.objects.filter(isActive=True, id=data['offered_service_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "offered service  not found", "status": "error"}})
+        
+
+
+
+      
+
+        serializer = ServiceProviderOfferedServicesSerializer(update_obj)
+        
+
+        return Response({"data":serializer.data,"response": {"n": 1, "msg": "offered service found successfully","status":"success"}})
+
+class get_service_provider_highlights(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        service_provider_id=request.data.get('service_provider_id')
+        if service_provider_id is not None:
+            highlights_obj= ServiceProviderHighlights.objects.filter(isActive=True,service_provider_id=service_provider_id).order_by('id')
+            serializer = ServiceProviderHighlightsSerializer(highlights_obj ,many=True)
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "highlights list found successfully","status": "success"}})
+        else:
+            return Response({"data":[],"response": {"n": 0, "msg": "Please provide service provider id","status": "error"}})
+
+class add_service_provider_highlight(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        service_providerobj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if service_providerobj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})  
+        
+
+        data['userid']=service_providerobj.userid
+        data['name']=request.data.get('name')
+        if data['name'] is None or data['name'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide name", "status":"error"}})
+        
+        data['description']=request.data.get('description')
+        # if data['description'] is None or data['description'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide long description", "status":"error"}})
+        
+
+        data['isActive'] = True
+
+        sticker = request.FILES.get('sticker')
+        if sticker is not None and sticker !='':
+            data['sticker']=sticker
+      
+
+        serializer = ServiceProviderHighlightsSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Highlight added successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class delete_service_provider_highlight(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['highlight_id']=request.data.get('highlight_id')
+        if data['highlight_id'] is None or data['highlight_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide highlight id", "status":"error"}})
+        
+        update_obj = ServiceProviderHighlights.objects.filter(isActive=True, id=data['highlight_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "highlight  not found", "status": "error"}})
+        
+
+        data['isActive'] = False
+
+
+      
+
+        serializer = ServiceProviderHighlightsSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "highlight deleted successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+
+class edit_service_provider_highlight(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        # request_data = request.data.copy()
+
+        data['highlight_id']=request.data.get('highlight_id')
+        if data['highlight_id'] is None or data['highlight_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide highlight id", "status":"error"}})
+        
+        update_obj = ServiceProviderHighlights.objects.filter(isActive=True, id=data['highlight_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "highlight  not found", "status": "error"}})
+        
+
+
+
+
+        
+
+        data['name']=request.data.get('name')
+        if data['name'] is None or data['name'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide name", "status":"error"}})
+        
+        data['description']=request.data.get('description')
+        # if data['description'] is None or data['description'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide long description", "status":"error"}})
+        
+
+        data['isActive'] = True
+
+        sticker = request.FILES.get('sticker')
+        if sticker is not None and sticker !='':
+            data['sticker']=sticker
+      
+
+        serializer = ServiceProviderHighlightsSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Highlight updated successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+
+class add_service_provider_portfolio(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+
+        service_providerobj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if service_providerobj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})  
+        
+
+        data['userid']=service_providerobj.userid
+        data['heading']=request.data.get('heading')
+        if data['heading'] is None or data['heading'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service heading", "status":"error"}})
+
+
+        data['short_description']=request.data.get('short_description')
+        # if data['short_description'] is None or data['short_description'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide short description", "status":"error"}})
+        
+        data['long_description']=request.data.get('long_description')
+        # if data['long_description'] is None or data['long_description'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide long description", "status":"error"}})
+        
+
+        data['isActive'] = True
+
+      
+
+        serializer = ServiceProviderPortfolioSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            media_list=request.FILES.getlist('media[]')
+            for media in media_list:
+                d1={
+                    "userid":data['userid'],
+                    "service_provider_id":data['service_provider_id'],
+                    "portfolio_id":serializer.data['id'],
+                    "media":media,
+                }
+                serializer1=ServiceProviderPortfolioMediaSerializer(data=d1)
+                if serializer1.is_valid():
+                    serializer1.save()
+
+                else:
+                    print("serializer1",serializer1.errors)
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Portfolio added successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class get_service_provider_portfolio(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        service_provider_id=request.data.get('service_provider_id')
+        if service_provider_id is not None:
+            portfolio_obj= ServiceProviderPortfolio.objects.filter(isActive=True,service_provider_id=service_provider_id).order_by('id')
+            serializer = CustomServiceProviderPortfolioSerializer(portfolio_obj ,many=True)
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "portfolio list found successfully","status": "success"}})
+        else:
+            return Response({"data":[],"response": {"n": 0, "msg": "Please provide service provider id","status": "error"}})
+
+class delete_service_provider_portfolio(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['portfolio_id']=request.data.get('portfolio_id')
+        if data['portfolio_id'] is None or data['portfolio_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide portfolio id", "status":"error"}})
+        
+        update_obj = ServiceProviderPortfolio.objects.filter(isActive=True, id=data['portfolio_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "portfolio  not found", "status": "error"}})
+        
+
+        data['isActive'] = False
+
+        serializer = ServiceProviderPortfolioSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            delete_media=ServiceProviderPortfolioMedia.objects.filter(portfolio_id=serializer.data['id']).update(isActive=False)
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "portfolio deleted successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class delete_portfolio_media(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        
+        data['media_id']=request.data.get('media_id')
+        if data['media_id'] is None or data['media_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide media id", "status":"error"}})
+        
+        update_obj = ServiceProviderPortfolioMedia.objects.filter(isActive=True, id=data['media_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "media_id  not found", "status": "error"}})
+        
+        data['isActive'] = False
+        serializer = ServiceProviderPortfolioMediaSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "portfolio media deleted successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class update_service_provider_portfolio(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        # request_data = request.data.copy()
+
+        data['portfolio_id']=request.data.get('portfolio_id')
+        if data['portfolio_id'] is None or data['portfolio_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide portfolio id", "status":"error"}})
+        
+        update_obj = ServiceProviderPortfolio.objects.filter(isActive=True, id=data['portfolio_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "portfolio  not found", "status": "error"}})
+        
+
+
+
+
+        
+
+        data['heading']=request.data.get('heading')
+        if data['heading'] is None or data['heading'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide heading", "status":"error"}})
+        
+        data['short_description']=request.data.get('short_description')
+        # if data['short_description'] is None or data['short_description'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide  short description", "status":"error"}})
+        data['long_description']=request.data.get('long_description')
+        # if data['long_description'] is None or data['long_description'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide  long description", "status":"error"}})
+        
+
+        data['isActive'] = True
+
+
+      
+
+        serializer = ServiceProviderPortfolioSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            media_list=request.FILES.getlist('media[]')
+            for media in media_list:
+                d1={
+                    "userid":serializer.data['userid'],
+                    "service_provider_id":serializer.data['service_provider_id'],
+                    "portfolio_id":serializer.data['id'],
+                    "media":media,
+                }
+                serializer1=ServiceProviderPortfolioMediaSerializer(data=d1)
+                if serializer1.is_valid():
+                    serializer1.save()
+
+                else:
+                    print("serializer1",serializer1.errors)
+
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Portfolio updated successfully","status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class change_verification(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+        
+        update_obj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})
+        if update_obj.license_verification_status:
+
+            data['license_verification_status'] = False
+            msg="Service Provider Unverified Successfully."
+        else:
+            data['license_verification_status'] = True
+            msg="Service Provider Verified Successfully."
+
+        serializer =ServiceProviderSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": msg,"status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class change_guarented(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+        
+        update_obj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})
+        if update_obj.mozil_guarented:
+
+            data['mozil_guarented'] = False
+            msg="Service Provider Status Changed To Non-Guarented Successfully."
+        else:
+            data['mozil_guarented'] = True
+            msg="Service Provider Status Changed To Guarented Successfully."
+
+        serializer =ServiceProviderSerializer(update_obj,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": msg,"status":"success"}})
+        else:
+            first_key, first_value = next(iter(serializer.errors.items()))
+            return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class change_status(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        
+        data['service_provider_id']=request.data.get('service_provider_id')
+        if data['service_provider_id'] is None or data['service_provider_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
+        
+        update_obj = ServiceProvider.objects.filter(isActive=True, id=data['service_provider_id']).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider not found", "status": "error"}})
+        
+        user_obj=User.objects.filter(id=str(update_obj.userid),isActive=True).first()
+        if user_obj is not None:
+            if user_obj.status:
+                data['status'] = False
+                msg="Service Provider Deactivated Successfully."
             else:
-                data['parent_service']=parent_service
+                data['status'] = True
+                msg="Service Provider Activated Successfully."
 
-            child_service=request.data.get('child_service')
-            if child_service is None or child_service =='':
-                return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
-            else:
-                data['child_service']=child_service
-
-            data['mobile_number']=request.user.mobileNumber
-            data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
-            data['description'] = request.data.get('description')
-            data['website'] = request.data.get('website')
-            data['lattitude'] = request.data.get('lattitude')
-            data['longitude'] = request.data.get('longitude')
-            data['radius'] = request.data.get('radius')
-
-            business_logo = request.FILES.get('business_logo')
-            if business_logo is not None and business_logo !='':
-                data['business_logo'] = request.FILES.get('business_logo')
-
-            data['isActive'] = True
-            serializer = ServiceProviderSerializer(update_obj,data=data)
+            serializer =UserSerializer(user_obj,data=data,partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User registered successfully","status":"success"}})
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": msg,"status":"success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
-    
+        else:
+            return Response({"data":{},"response": {"n": 0, "msg": 'user not found ',"status":"error"}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Parent Services - Forms{% endblock %}
+
+{% block layout %}
+<!-- Basic Layout -->
+<div class="row">
+  <div class="col-xl">
+    <div class="card mb-12">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Add Parent Service</h5> <small class="text-body float-end"></small>
+      </div>
+      <div class="card-body">
+        <form>
+          {% csrf_token %}
+          <div class="form-floating form-floating-outline mb-6">
+            <input type="text" class="form-control" id="name" placeholder="Name" value="{{parent_service.Name}}" />
+            <label for="name">Name</label>
+          </div>
+
+          <div class="form-floating form-floating-outline mb-6">
+            <textarea id="Description" class="form-control" placeholder="Please enter description."
+              style="height: 60px;">{{parent_service.Description|default:''}}</textarea>
+            <label for="Description">Description</label>
+          </div>
+          <div class="mb-4">
+            <label for="icon_image" class="form-label">Service Icon</label>
+            <input class="form-control" type="file" id="icon_image">
+          </div>
+          <div class="mb-4">
+            <img src="{{parent_service.icon_image|default:''}}" alt="No Image" width="100" height="100">
+          </div>
+          <div class="btn btn-primary" onclick="return validation()">Submit</div>
+          <div class="btn btn-danger">Cancel</div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Merged -->
+
+</div>
+{% endblock layout %}
+
+{% block page_js %}
+{{block.super}}
+
+<script>
+
+  function validation() {
+    var name = $("#name").val().trim();
+    var Description = $("#Description").val().trim();
+    var icon_image = $('#icon_image')[0].files[0];
+
+
+    if (IsValid(name)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid name",
+
+      });
+
+      $("#name").focus();
+      return false;
+    }
+    // if (IsValid(Description)) {
+    //   console.log("Description is required")
+    //   swal({
+    //         icon: "error",
+    //         title: "",
+    //         text: "Please enter valid Description",
+
+    //       });
+    //   $("#Description").focus();
+    //   return false;
+    // }
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('Name', name);
+      formData.append('Description', Description);
+      formData.append('icon_image', icon_image);
+      formData.append('parentserviceid', '{{parent_service.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/services/edit_parent_service/{{parent_service.id}}",
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+          console.log("----", response)
+          if (response.response.n == 1) {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              window.location.href = hosturl + '/services/parent_services_list';
+            });
+
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+</script>
+{%endblock page_js %}

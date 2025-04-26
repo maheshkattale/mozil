@@ -59,7 +59,7 @@
                   Remember Me
                 </label>
               </div>
-              <a href="" class="float-end mb-1">
+              <a href="/forgot_password" class="float-end mb-1">
                 <span>Forgot Password?</span>
               </a>
             </div>
@@ -68,12 +68,12 @@
             </div>
           </form>
 
-          <p class="text-center mb-5">
+          <!-- <p class="text-center mb-5">
             <span>New on our platform?</span>
             <a href="">
               <span>Create an account</span>
             </a>
-          </p>
+          </p> -->
         </div>
       </div>
       <!-- /Login -->
@@ -93,19 +93,29 @@
 <script>
   
   function validation() {
-    debugger
     var email = $("#email").val().trim();
     var password = $("#password").val().trim();
 
 
     if (IsValid(email)) {
-      console.log("Email is required")
+      swal({
+            icon: "error",
+            title: "",
+            text: "Please enter valid email or username",
+
+          });
+          
       $("#email").focus();
       return false;
     }
     if (IsValid(password)) {
       console.log("password is required")
+      swal({
+            icon: "error",
+            title: "",
+            text: "Please enter valid password",
 
+          });
       $("#password").focus();
       return false;
     }
@@ -134,7 +144,6 @@
           });
         },
         success: function (response) {
-          debugger
           console.log("----", response)
           if (response.response.n == 1) {
             // swal({
@@ -146,7 +155,7 @@
 
 
 
-            window.location.href = hosturl + 'dashboard';
+            window.location.href = hosturl + '/dashboard/home';
           }
           else {
             swal({
@@ -166,5 +175,22 @@
 
   }
 
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Check if Django messages exist
+    const djangoMessages = "{{ messages }}";
+
+    {% if messages %}
+    {% for message in messages %}
+    swal({
+      icon: '{{ message.tags }}',  // 'error', 'success', etc.
+      text: '{{ message }}',
+      showConfirmButton: true,
+      confirmButtonText: 'OK'
+    });
+    {% endfor %}
+    {% endif %}
+  });
 </script>
 {%endblock script %}

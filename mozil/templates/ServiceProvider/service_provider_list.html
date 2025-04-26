@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Services Provider - List{% endblock %}
+
+{% block layout %}
+<!-- Basic Layout -->
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-header">Services Provider</h5>
+        </div>
+        <div>
+            <a class="btn btn-primary waves-effect waves-light m-4" href="/add_service_provider">Add Service Provider</a>
+        </div>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Service Provider</th>
+                    <th>Owner</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0" id="service_provider_table_body">
+
+
+
+
+
+            </tbody>
+        </table>
+        <div class=" d-flex justify-content-end m-3" id="secondpagination-demo2">
+            <ul id="pagination-demo2" class="pagination-sm"></ul>
+        </div>
+    </div>
+</div>
+{% endblock layout %}
+
+
+{% block page_js %}
+{{block.super}}
+
+<script>
+    $(document).ready(function () {
+        Pagination()
+    });
+    function Pagination() {
+        var testflag = true;
+        $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
+        get_table_data(1);
+
+    }
+    
+    function get_table_data(p) {
+
+        var fd = new FormData()
+        fd.append('p', p)
+        fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+        $.ajax({
+            url: hosturl + "/api/User/service_provider_list_pagination_api",
+            data: fd,
+            headers: { "Authorization": "Bearer {{token}}" },
+
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                swal({
+                    icon: "info",
+                    title: "",
+                    text: "Loading...",
+                    buttons: false,
+
+                });
+            },
+            success: function (response) {
+                var infohtml = ''
+                swal.close()
+                console.log('response d', response)
+                if (response.count != 0) {
+                    var counter = parseInt(p + "1") - parseInt(10)
+
+                    $.each(response.results, function (i, o) {
+                        console.log("o", o)
+                        
+                        infohtml += `
+                            
+                                                
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex">
+                                                <div>
+                                                    ${o.business_logo ?`<img src="${hosturl + o.business_logo  }" width="35" height="35" class="mx-1" >`:``}
+                                                </div> 
+                                                <div>
+                                                    <div>${o.business_name || ''}</div>
+                                                    <div><a href="${o.website || ''}" target="_blank">Website</a></div>
+
+
+                                                </div>   
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>${o.owner_name || ''}</div>
+                                            <div>${o.email || ''}</div>
+                                            <div>${o.mobile_number || ''}</div>
+                                            
+                                        </td>
+                                        <td>
+                                            <div>Parent: ${o.parent_service_name || ''}</div>
+                                            <div>Child: ${o.child_service_name || ''}</div>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="/edit_service_provider/${o.id}"><i class="ri-pencil-line me-1"></i>
+                                                        Edit</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_service_provider('${o.userid}')"><i
+                                                            class="ri-delete-bin-6-line me-1"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            
+                            
+                            
+           
+                      `
+                      counter += 1
+                    });
+                    $('#service_provider_table_body').html(infohtml);
+                    var totalfilter = Math.ceil(parseInt(response.count) / 10);
+                    $('#pagination-demo2').twbsPagination({
+                        totalPages: totalfilter,
+                        visiblePages: 3,
+                        next: 'Next',
+                        prev: 'Prev',
+                        onPageClick: function (event, page) {
+                            var testflag = true;
+                            //fetch content and render here
+                            filternamepageno = page
+                            if (testflag == true) {
+                                testflag = false;
+                                get_table_data(page)
+                            }
+                            $('#page-content').text('Page ' + page) + ' content here';
+                        }
+                    })
+
+
+
+                    // swal({
+                    //     icon: "success",
+                    //     title: "",
+                    //     text: "Data fetched successfully !",
+                    //     button: "Close",
+                    // });
+                } else {
+                    infohtml = `
+                                <tr class="border-bottom text-center">
+                                    <td colspan="3">No Data found</td>
+                                </tr>
+                    `
+                    $('#service_provider_table_body').html(infohtml);
+
+                    swal({
+                        icon: "error",
+                        title: "",
+                        text: "No Data Found !",
+                        button: "Close",
+                    });
+                }
+
+            }
+        })
+
+    }
+
+    function delete_service_provider(id) {
+        swal({
+            title: "Are you sure?",
+            text: "you want to delete it .",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: hosturl + "/api/User/serviceproviderdelete",
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer {{token}}'
+                        },
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            'userid': id
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+    
+
+                        },
+                        success: function (response) {
+                            // Pagination()
+                            if (response['response']['n'] == 1) {
+                                swal({
+                                    icon: "success",
+                                    title: "",
+                                    text: response['response']['msg'],
+                                    button: "Close",
+                                }).then(() => {
+                                    // Code to execute after the user closes the SweetAlert dialog
+                                    Pagination(); // Reload the page
+                                });
+
+
+
+                            }
+                            else {
+                                swal({
+                                    icon: "error",
+                                    title: "",
+                                    text: response['response']['msg'],
+                                    button: "Close",
+                                }).then(() => {
+                                    // Code to execute after the user closes the SweetAlert dialog
+                                    location.reload(); // Reload the page
+                                });
+                            }
+
+
+
+
+                        }
+                    });
+
+                }
+            })
+    }
+
+
+</script>
+{%endblock page_js %}

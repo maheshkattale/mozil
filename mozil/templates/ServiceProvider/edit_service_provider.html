@@ -1,0 +1,2638 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %} Services Provider - Forms{% endblock %}
+
+{% block layout %}
+<!-- Basic Layout -->
+<div class="row">
+  <div class="col-xl">
+    <div class="card mb-12">
+      <div class="card-header d-flex justify-content-between align-items-center">
+
+        <div class="nav-align-top w-100">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
+                data-bs-target="#navs-top-basic-details" aria-controls="navs-top-basic-details" aria-selected="true"
+                id="navs-top-basic-details-tab">Basic-details</button>
+            </li>
+            <li class="nav-item">
+              <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                data-bs-target="#navs-top-servicedetails" aria-controls="navs-top-servicedetails" aria-selected="false"
+                id="navs-top-servicedetails-tab">Service Details</button>
+            </li>
+            <li class="nav-item">
+              <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                data-bs-target="#navs-top-weeklyschedule" aria-controls="navs-top-weeklyschedule" aria-selected="false"
+                id="navs-top-weeklyschedule-tab">Weekly Schedule</button>
+            </li>
+            <li class="nav-item">
+              <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                data-bs-target="#navs-top-portfolio" aria-controls="navs-top-portfolio" aria-selected="false"
+                id="navs-top-portfolio-tab">portfolio</button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="card-body">
+
+
+        <div class="tab-content p-0">
+          <div class="tab-pane fade show active" id="navs-top-basic-details" role="tabpanel">
+            <form>
+              {% csrf_token %}
+              <div class="row">
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" class="form-control" id="name" placeholder="Name"
+                    value="{{obj.user.Username|default:''}}" />
+                  <label for="name">Owner Name</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input class="form-control" type="email" placeholder="john@example.com" id="email"
+                    value="{{obj.user.email}}" />
+                  <label for="email">Email</label>
+                </div>
+
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" id="mobile_number" class="form-control phone-mask" placeholder="658 799 8941"
+                    aria-label="658 799 8941" aria-describedby="mobile_number" value="{{obj.user.mobileNumber}}" />
+                  <label class="" for="mobile_number">Phone No</label>
+                </div>
+
+
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" id="alternate_mobile_number" class="form-control phone-mask"
+                    placeholder="658 799 8941" aria-label="658 799 8941" aria-describedby="alternate_mobile_number"
+                    value="{{obj.service_provider.alternate_mobile_number}}" />
+                  <label class="" for="alternate_mobile_number">Alternate Phone No</label>
+                </div>
+
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" class="form-control" id="website" placeholder="website"
+                    value="{{obj.service_provider.website}}" />
+                  <label for="website">website</label>
+                </div>
+
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <select id="parent_service" class="form-select" aria-label="Default select example">
+                    <option value="">Select Parent Service</option>
+
+                    {% for service in parent_services %}
+                    {% if service.id|stringformat:"s" == obj.service_provider.parent_service|stringformat:"s" %}
+                    <option value="{{ service.id }}" selected>{{ service.Name }}</option>
+                    {% else %}
+                    <option value="{{ service.id }}">{{ service.Name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                  <label for="parent_service">Parent Service</label>
+
+                </div>
+
+
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <select id="child_service" class="form-select" aria-label="Default select example">
+                    <option value="">Select Child Service</option>
+
+                    {% for service in child_services %}
+                    {% if service.id|stringformat:"s" == obj.service_provider.child_service|stringformat:"s" %}
+                    <option value="{{ service.id }}" selected>{{ service.Name }}</option>
+                    {% else %}
+                    <option value="{{ service.id }}">{{ service.Name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                  <label for="child_service">Child Service</label>
+
+                </div>
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <textarea id="Description" class="form-control" placeholder="Please enter description."
+                    style="height: 60px;">{{obj.service_provider.description}}</textarea>
+                  <label for="Description">Description</label>
+                </div>
+
+
+
+
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" class="form-control" id="lattitude" placeholder="lattitude"
+                    value="{{obj.service_provider.lattitude}}" />
+                  <label for="lattitude">lattitude</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" class="form-control" id="longitude" placeholder="longitude"
+                    value="{{obj.service_provider.longitude}}" />
+                  <label for="longitude">longitude</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" class="form-control" id="radius" placeholder="radius"
+                    value="{{obj.service_provider.radius}}" />
+                  <label for="radius">radius</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-6 col-4">
+                  <input type="text" class="form-control" id="business_name" placeholder="business_Name"
+                    value="{{obj.service_provider.business_name}}" />
+                  <label for="business_name">Business Name</label>
+                </div>
+                <div class="mb-4">
+                  <label for="business_logo" class="form-label">Business Logo</label>
+                  <input class="form-control" type="file" id="business_logo">
+                </div>
+                <div class="mb-4">
+                  <img src="{{obj.service_provider.business_logo|default:''}}" alt="No Image" width="100" height="100">
+                </div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <div></div>
+                <div class="text-center">
+                  <div class="btn btn-primary" onclick="return basic_details()">Submit</div>
+                  <a class="btn btn-danger" href="/service_provider_master">Cancel</a>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-primary" onclick="switchToservicedetailsTab()">Next <i
+                      class="ri-arrow-right-s-line"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="navs-top-servicedetails" role="tabpanel">
+
+            <div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <p class="">Offered Services</p>
+                </div>
+                <div>
+                  <button class="btn btn-primary waves-effect waves-light my-1 " data-bs-toggle="modal"
+                    data-bs-target="#AddOfferedService">Add Offered Service</button>
+
+
+                  <div class="col-lg-4 col-md-6">
+                    <div class="mt-4">
+
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="AddOfferedService" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="AddOfferedServiceTitle">Add Offered Service</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row">
+                                <div class="form-floating form-floating-outline mb-6 col-12">
+                                  <input type="text" class="form-control" id="short_description"
+                                    placeholder="Short Description" />
+                                  <label for="short_description">Short Description</label>
+                                </div>
+                                <div class="form-floating form-floating-outline mb-6 col-12">
+                                  <input type="text" class="form-control" id="rate" placeholder="Rate" />
+                                  <label for="rate">Rate</label>
+                                </div>
+
+                                <div class="form-floating form-floating-outline mb-6 col-12">
+                                  <textarea name="" class="form-control" id="long_description"
+                                    placeholder="Long Description"></textarea>
+                                  <label for="long_description">Long Description</label>
+
+
+
+
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary" onclick="return add_offered_service()">Save
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+              </div>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>SR No</th>
+                    <th>Short Description</th>
+                    <th>Long Description</th>
+                    <th>Rate</th>
+
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0" id="offered_service_table_body">
+
+
+
+
+
+                </tbody>
+              </table>
+              <div class=" d-flex justify-content-end m-3" id="secondpagination-demo1">
+                <ul id="pagination-demo1" class="pagination-sm"></ul>
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+
+            <div class="d-flex justify-content-between">
+              <div>
+                <button type="button" class="btn btn-primary" onclick="switchTobasicdetailsTab()"><i
+                    class="ri-arrow-left-s-line"></i>Previous </button>
+
+              </div>
+              <div class="text-center">
+                <a class="btn btn-danger" href="/service_provider_master">Cancel</a>
+              </div>
+              <div>
+                <button type="button" class="btn btn-primary" onclick="switchToweeklyscheduleTab()">Next<i
+                    class="ri-arrow-right-s-line"></i> </button>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="tab-pane fade" id="navs-top-weeklyschedule" role="tabpanel">
+
+
+            <div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <p class="">Weekly Schedule</p>
+                </div>
+                <div>
+                  <button class="btn btn-primary waves-effect waves-light my-1 " data-bs-toggle="modal"
+                    data-bs-target="#AddWeeklySchedule">Add Weekly
+                    Schedule</button>
+
+
+                  <div class="col-lg-4 col-md-6">
+                    <div class="mt-4">
+
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="AddWeeklySchedule" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="AddWeeklyScheduleTitle">Add Weekly Schedule</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row">
+                                <div class="form-floating form-floating-outline mb-6 col-12">
+                                  <select id="week" class="form-select" aria-label="Default select example">
+                                    <option value="">Select Week</option>
+
+                                    <option value="1">Monday</option>
+                                    <option value="2">Tuesday</option>
+                                    <option value="3">Wednesday</option>
+                                    <option value="4">Thursday</option>
+                                    <option value="5">Friday</option>
+                                    <option value="6">Saturday</option>
+                                    <option value="7">Sunday</option>
+
+                                  </select>
+                                  <label for="week">Week</label>
+
+                                </div>
+                              </div>
+                              <div class="row g-4">
+                                <div class="form-floating form-floating-outline mb-6 col-6">
+                                  <input type="time" class="form-control" id="start_time" placeholder="Start Time" />
+                                  <label for="start_time">Start Time</label>
+                                </div>
+                                <div class="form-floating form-floating-outline mb-6 col-6">
+                                  <input type="time" class="form-control" id="end_time" placeholder="end Time" />
+                                  <label for="end_time">End Time</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-primary" onclick="return add_weekly_schedule()">Save
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+              </div>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>SR No</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0" id="weekly_schedule_table_body">
+
+
+
+
+
+                </tbody>
+              </table>
+              <div class=" d-flex justify-content-end m-3" id="secondpagination-demo2">
+                <ul id="pagination-demo2" class="pagination-sm"></ul>
+              </div>
+            </div>
+
+
+
+            <div class="d-flex justify-content-between">
+              <div>
+                <button type="button" class="btn btn-primary" onclick="switchToservicedetailsTab()"><i
+                    class="ri-arrow-left-s-line"></i>Previous </button>
+
+              </div>
+              <div class="text-center">
+                <a class="btn btn-danger" href="/service_provider_master">Cancel</a>
+              </div>
+              <div>
+                <button type="button" class="btn btn-primary" onclick="switchToportfolioTab()">Next<i
+                    class="ri-arrow-right-s-line"></i> </button>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="tab-pane fade" id="navs-top-portfolio" role="tabpanel">
+
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="">Highlights</p>
+              </div>
+              <div>
+                <button class="btn btn-primary waves-effect waves-light my-1 " data-bs-toggle="modal"
+                  data-bs-target="#AddHighlight">Add Highlights</button>
+                <div class="col-lg-4 col-md-6">
+                  <div class="mt-4">
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="AddHighlight" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="AddHighlightTitle">Add Highlights</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+
+                            <div class="row g-4">
+                              <div class="form-floating form-floating-outline col-12">
+                                <input type="text" class="form-control" id="highlightname" placeholder="Name" />
+                                <label for="highlightname">Name</label>
+                              </div>
+                              <div class="form-floating form-floating-outline col-12">
+                                <textarea name="" class="form-control" id="highlightdescription"
+                                  placeholder="Description"></textarea>
+                                <label for="highlightdescription">Description</label>
+
+                              </div>
+
+                              <div class="mb-6 col-12">
+
+                                <label for="sticker" class="form-label">Sticker</label>
+                                <input class="form-control" type="file" id="sticker">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary"
+                              data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="return add_highlight()">Save
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+            <div class="row" id="service_provider_highlights">
+
+            </div>
+
+
+
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="">Portfolio</p>
+              </div>
+              <div>
+                <button class="btn btn-primary waves-effect waves-light my-1 " data-bs-toggle="modal"
+                  data-bs-target="#AddPortfolio">Add Portfolio</button>
+                <div class="col-lg-4 col-md-6">
+                  <div class="mt-4">
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="AddPortfolio" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="AddPortfolioTitle">Add Portfolio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+
+                            <div class="row g-4">
+                              <div class="form-floating form-floating-outline col-12">
+                                <input type="text" class="form-control" id="portfolioheading" placeholder="Heading" />
+                                <label for="portfolioheading">Heading</label>
+                              </div>
+                              <div class="form-floating form-floating-outline col-12">
+                                <textarea name="" class="form-control" id="portfolioshortdescription"
+                                  placeholder="Short Description"></textarea>
+                                <label for="portfolioshortdescription">Short Description</label>
+
+                              </div>
+                              <div class="form-floating form-floating-outline col-12">
+                                <textarea name="" class="form-control" id="portfoliolongdescription"
+                                  placeholder="Long Description"></textarea>
+                                <label for="portfoliolongdescription">Long Description</label>
+
+                              </div>
+                              <div class="mb-6 col-12">
+
+                                <label for="media" class="form-label">Media</label>
+                                <input class="form-control" type="file" id="media" multiple>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary"
+                              data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="return add_portfolio()">Save
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+            <div class="row" id="service_provider_portfolio">
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="d-flex justify-content-between mt-2">
+              <div>
+                <button type="button" class="btn btn-primary" onclick="switchToweeklyscheduleTab()"><i
+                    class="ri-arrow-left-s-line"></i>Previous </button>
+
+              </div>
+              <div class="text-center">
+                <a class="btn btn-danger" href="/service_provider_master">Cancel</a>
+              </div>
+              <div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+  <!-- Merged -->
+
+</div>
+{% endblock layout %}
+
+{% block page_js %}
+{{block.super}}
+
+<script>
+  function switchTobasicdetailsTab() {
+    // Remove active classes from all tabs and panes
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+      pane.classList.remove('active', 'show');
+    });
+
+    // Add active class to servicedetails tab and pane
+    const basicdetailsTab = document.querySelector('#navs-top-basic-details-tab');
+    const basicdetailsPane = document.querySelector('#navs-top-basic-details');
+
+    if (basicdetailsTab) basicdetailsTab.classList.add('active');
+    if (basicdetailsPane) basicdetailsPane.classList.add('active', 'show');
+  }
+
+  function switchToservicedetailsTab() {
+    // Remove active classes from all tabs and panes
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+      pane.classList.remove('active', 'show');
+    });
+
+    // Add active class to servicedetails tab and pane
+    const servicedetailsTab = document.querySelector('#navs-top-servicedetails-tab');
+    const servicedetailsPane = document.querySelector('#navs-top-servicedetails');
+
+    if (servicedetailsTab) servicedetailsTab.classList.add('active');
+    if (servicedetailsPane) servicedetailsPane.classList.add('active', 'show');
+  }
+
+  function switchToweeklyscheduleTab() {
+    // Remove active classes from all tabs and panes
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+      pane.classList.remove('active', 'show');
+    });
+
+    // Add active class to weeklyschedule tab and pane
+    const weeklyscheduleTab = document.querySelector('#navs-top-weeklyschedule-tab');
+    const weeklyschedulePane = document.querySelector('#navs-top-weeklyschedule');
+
+    if (weeklyscheduleTab) weeklyscheduleTab.classList.add('active');
+    if (weeklyschedulePane) weeklyschedulePane.classList.add('active', 'show');
+  }
+
+  function switchToportfolioTab() {
+    // Remove active classes from all tabs and panes
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+      pane.classList.remove('active', 'show');
+    });
+
+    // Add active class to servicedetails tab and pane
+    const portfolioTab = document.querySelector('#navs-top-portfolio-tab');
+    const portfolioPane = document.querySelector('#navs-top-portfolio');
+
+    if (portfolioTab) portfolioTab.classList.add('active');
+    if (portfolioPane) portfolioPane.classList.add('active', 'show');
+  }
+
+
+  //First Tab
+
+
+  function basic_details() {
+    var name = $("#name").val().trim();
+    var email = $("#email").val().trim();
+    var mobile_number = $("#mobile_number").val().trim();
+    var alternate_mobile_number = $("#alternate_mobile_number").val().trim();
+    var website = $("#website").val();
+    var parent_service = $("#parent_service").val();
+    var child_service = $("#child_service").val();
+    var Description = $("#Description").val().trim();
+    var lattitude = $("#lattitude").val().trim();
+    var longitude = $("#longitude").val().trim();
+    var radius = $("#radius").val().trim();
+    var business_logo = $('#business_logo')[0].files[0];
+
+    var business_name = $("#business_name").val().trim();
+
+    if (IsValid(name)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid name",
+
+      });
+
+      $("#name").focus();
+      return false;
+    }
+    if (IsValid(email)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid email",
+
+      });
+
+      $("#email").focus();
+      return false;
+    }
+
+
+    if (IsValid(mobile_number)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid phone number",
+
+      });
+
+      $("#mobile_number").focus();
+      return false;
+    }
+    // if (IsValid(alternate_mobile_number)) {
+    //   swal({
+    //         icon: "error",
+    //         title: "",
+    //         text: "Please enter valid alternate phone number",
+
+    //       });
+
+    //   $("#alternate_mobile_number").focus();
+    //   return false;
+    // }
+
+    if (IsValid(parent_service)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select parent service",
+
+      });
+
+      $("#parent_service").focus();
+      return false;
+    }
+
+    if (IsValid(child_service)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select child service",
+
+      });
+
+      $("#child_service").focus();
+      return false;
+    }
+    // if (IsValid(Description)) {
+    //   swal({
+    //         icon: "error",
+    //         title: "",
+    //         text: "Please enter valid Description",
+
+    //       });
+    //   $("#Description").focus();
+    //   return false;
+    // }
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('Username', name);
+      formData.append('email', email);
+      formData.append('mobileNumber', mobile_number);
+      formData.append('alternate_mobile_number', alternate_mobile_number);
+      formData.append('website', website);
+      formData.append('parent_service', parent_service);
+      formData.append('child_service', child_service);
+      formData.append('description', Description);
+      formData.append('lattitude', lattitude);
+      formData.append('longitude', longitude);
+      formData.append('radius', radius);
+      formData.append('business_name', business_name);
+
+      formData.append('business_logo', business_logo);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/edit_service_provider/{{obj.service_provider.id}}",
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+          if (response.response.n == 1) {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              window.location.href = hosturl + '/service_provider_master';
+            });
+
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+
+  //second tab
+
+
+  $(document).ready(function () {
+    Pagination1()
+    Pagination2()
+    get_highlights_data()
+    get_portfolio_data()
+  });
+
+  function Pagination2() {
+    var testflag = true;
+    $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
+    get_table_data2(1);
+
+  }
+
+  function get_table_data2(p) {
+
+    var fd = new FormData()
+    fd.append('p', p)
+    fd.append('service_provider_id', '{{obj.service_provider.id}}')
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+    $.ajax({
+      url: hosturl + "/api/User/service_provider_weekly_schedule_pagination_api",
+      data: fd,
+      headers: { "Authorization": "Bearer {{token}}" },
+
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      beforeSend: function () {
+        swal({
+          icon: "info",
+          title: "",
+          text: "Loading...",
+          buttons: false,
+
+        });
+      },
+      success: function (response) {
+        var infohtml = ''
+        swal.close()
+        if (response.count != 0) {
+          var counter = parseInt(p + "1") - parseInt(10)
+
+          $.each(response.results, function (i, o) {
+
+            infohtml += `
+                            
+                                                
+                                    <tr>
+                                        <td>
+                                            <div>${counter || ''}</div>
+                                        </td>
+                                        <td>
+                                            <div>${o.weekday_name || ''}</div>
+                                        </td>
+                                        <td>
+                                            <div>${o.service_start_time || ''}</div>
+                                            
+                                        </td>
+                                        <td>
+                                            <div>${o.service_end_time || ''}</div>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#EditWeeklySchedule${o.id}"><i class="ri-pencil-line me-1"></i>
+                                                        Edit</a>
+                                                        
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_service_provider_weekly_schedule('${o.id}')"><i
+                                                            class="ri-delete-bin-6-line me-1"></i> Delete</a>
+                             
+                                                </div>
+                                            </div>
+
+                                                <div class="col-lg-4 col-md-6">
+                                                  <div class="mt-4">
+                                                    <div class="modal fade" id="EditWeeklySchedule${o.id}" tabindex="-1" aria-hidden="true">
+                                                      <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                          <div class="modal-header">
+                                                            <h5 class="modal-title" id="EditWeeklyScheduleTitle${o.id}">Edit Weekly Schedule</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                            <div class="row">
+                                                              <div class="form-floating form-floating-outline mb-6 col-12">
+                                                                <select id="week${o.id}" class="form-select" aria-label="Default select example">
+                                                                  <option value="">Select Week</option>
+                    
+                                                                  <option value="1"${o.weekday_number == 1 ? `selected` : ``}>Monday</option>
+                                                                  <option value="2"${o.weekday_number == 2 ? `selected` : ``}>Tuesday</option>
+                                                                  <option value="3"${o.weekday_number == 3 ? `selected` : ``}>Wednesday</option>
+                                                                  <option value="4"${o.weekday_number == 4 ? `selected` : ``}>Thursday</option>
+                                                                  <option value="5"${o.weekday_number == 5 ? `selected` : ``}>Friday</option>
+                                                                  <option value="6"${o.weekday_number == 6 ? `selected` : ``}>Saturday</option>
+                                                                  <option value="7"${o.weekday_number == 7 ? `selected` : ``}>Sunday</option>
+
+                                                                </select>
+                                                                <label for="week">Week</label>
+                                              
+                                                              </div>
+                                                            </div>
+                                                            <div class="row g-4">
+                                                              <div class="form-floating form-floating-outline mb-6 col-6">
+                                                                <input type="time" class="form-control" id="start_time${o.id}" placeholder="Start Time" value="${o.service_start_time}"/>
+                                                                <label for="start_time">Start Time</label>
+                                                              </div>
+                                                              <div class="form-floating form-floating-outline mb-6 col-6">
+                                                                <input type="time" class="form-control" id="end_time${o.id}" placeholder="end Time"  value="${o.service_end_time}"/>
+                                                                <label for="end_time">End Time</label>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" onclick="return edit_weekly_schedule(${o.id})">Save changes</button>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+
+                                        </td>
+                                    </tr>
+                            
+                            
+                            
+           
+                      `
+            counter += 1
+          });
+          $('#weekly_schedule_table_body').html(infohtml);
+          var totalfilter = Math.ceil(parseInt(response.count) / 10);
+          $('#pagination-demo2').twbsPagination({
+            totalPages: totalfilter,
+            visiblePages: 3,
+            next: 'Next',
+            prev: 'Prev',
+            onPageClick: function (event, page) {
+              var testflag = true;
+              //fetch content and render here
+              filternamepageno = page
+              if (testflag == true) {
+                testflag = false;
+                get_table_data2(page)
+              }
+              $('#page-content').text('Page ' + page) + ' content here';
+            }
+          })
+
+
+
+        } else {
+          infohtml = `
+                                <tr class="border-bottom text-center">
+                                    <td colspan="5">No Data found</td>
+                                </tr>
+                    `
+          $('#weekly_schedule_table_body').html(infohtml);
+
+          // swal({
+          //     icon: "error",
+          //     title: "",
+          //     text: "No Data Found !",
+          //     button: "Close",
+          // });
+        }
+
+      }
+    })
+
+  }
+
+  function delete_service_provider_weekly_schedule(id) {
+    swal({
+      title: "Are you sure?",
+      text: "you want to delete it .",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: hosturl + "/api/User/delete_service_provider_weekly_schedule",
+            type: 'POST',
+            headers: {
+              'Authorization': 'Bearer {{token}}'
+            },
+            data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              'weekly_schedule_id': id
+            },
+            dataType: 'json',
+            beforeSend: function () {
+
+
+
+            },
+            success: function (response) {
+              // Pagination2()
+              if (response['response']['n'] == 1) {
+                swal({
+                  icon: "success",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                }).then(() => {
+                  // Code to execute after the user closes the SweetAlert dialog
+                  Pagination2(); // Reload the page
+                });
+
+
+
+              }
+              else {
+                swal({
+                  icon: "error",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                })
+              }
+
+
+
+
+            }
+          });
+
+        }
+      })
+  }
+
+  function add_weekly_schedule() {
+
+    var week = $("#week").val();
+    var weekname = $("#week option:selected").text();
+    var start_time = $("#start_time").val();
+    var end_time = $('#end_time').val();
+
+
+
+    if (IsValid(week)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid week",
+
+      });
+
+      $("#week").focus();
+      return false;
+    }
+    if (IsValid(start_time)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid start time",
+
+      });
+
+      $("#start_time").focus();
+      return false;
+    }
+    if (IsValid(end_time)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid end time",
+
+      });
+
+      $("#end_time").focus();
+      return false;
+    }
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('weekday_number', week);
+      formData.append('service_start_time', start_time);
+      formData.append('service_end_time', end_time);
+      formData.append('weekday_name', weekname);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/api/User/add_service_provider_weekly_schedule",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#AddWeeklySchedule').modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              Pagination2()
+            });
+            $("#week").val(' ');
+            $("#start_time").val(' ');
+            $('#end_time').val(' ');
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+  function edit_weekly_schedule(id) {
+
+    var week = $("#week" + id).val();
+    var weekname = $("#week" + id + " option:selected").text();
+    var start_time = $("#start_time" + id).val();
+    var end_time = $('#end_time' + id).val();
+
+
+
+    if (IsValid(week)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid week",
+
+      });
+
+      $("#week" + id).focus();
+      return false;
+    }
+    if (IsValid(start_time)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid start time",
+
+      });
+
+      $("#start_time" + id).focus();
+      return false;
+    }
+    if (IsValid(end_time)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid end time",
+
+      });
+
+      $("#end_time" + id).focus();
+      return false;
+    }
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('weekday_number', week);
+      formData.append('weekly_schedule_id', id);
+      formData.append('service_start_time', start_time);
+      formData.append('service_end_time', end_time);
+      formData.append('weekday_name', weekname);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/api/User/update_service_provider_weekly_schedule",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#EditWeeklySchedule' + id).modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              Pagination2()
+            });
+
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+
+
+
+
+
+
+
+  function Pagination1() {
+    var testflag = true;
+    $('#secondpagination-demo1').html('<ul id="pagination-demo1" class="pagination-sm"></ul>');
+    get_table_data1(1);
+
+  }
+
+  function get_table_data1(p) {
+
+    var fd = new FormData()
+    fd.append('p', p)
+    fd.append('service_provider_id', '{{obj.service_provider.id}}')
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+    $.ajax({
+      url: hosturl + "/api/User/service_provider_offered_service_pagination_api",
+      data: fd,
+      headers: { "Authorization": "Bearer {{token}}" },
+
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      beforeSend: function () {
+        swal({
+          icon: "info",
+          title: "",
+          text: "Loading...",
+          buttons: false,
+
+        });
+      },
+      success: function (response) {
+        var infohtml = ''
+        swal.close()
+        if (response.count != 0) {
+          var counter = parseInt(p + "1") - parseInt(10)
+
+          $.each(response.results, function (i, o) {
+            infohtml += `
+                        
+                                            
+                                <tr>
+                                    <td>
+                                        <div>${counter || ''}</div>
+                                    </td>
+                                    <td>
+                                        <div>${o.short_description || ''}</div>
+                                    </td>
+                                    <td>
+                                        <div>${o.long_description || ''}</div>
+                                        
+                                    </td>
+                                    <td>
+                                        <div>${o.rate || ''}</div>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#EditOfferedService${o.id}"><i class="ri-pencil-line me-1"></i>
+                                                    Edit</a>
+                                                    
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="delete_service_provider_offered_service('${o.id}')"><i
+                                                        class="ri-delete-bin-6-line me-1"></i> Delete</a>
+                         
+                                            </div>
+                                        </div>
+
+                                            <div class="col-lg-4 col-md-6">
+                                              <div class="mt-4">
+                                                <div class="modal fade" id="EditOfferedService${o.id}" tabindex="-1" aria-hidden="true">
+                                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title" id="EditOfferedServiceTitle${o.id}">Edit Offered Service</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <div class="row">
+                                                          <div class="form-floating form-floating-outline mb-6 col-12">
+                                                            <input type="text" class="form-control" id="short_description${o.id}"
+                                                              placeholder="Short Description" value="${o.short_description}" />
+                                                            <label for="short_description">Short Description</label>
+                                                          </div>
+                                                          <div class="form-floating form-floating-outline mb-6 col-12">
+                                                            <input type="text" class="form-control" id="rate${o.id}" placeholder="Rate"  value="${o.rate}"/>
+                                                            <label for="rate">Rate</label>
+                                                          </div>
+
+                                                          <div class="form-floating form-floating-outline mb-6 col-12">
+                                                            <textarea name="" class="form-control" id="long_description${o.id}"
+                                                              placeholder="Long Description"> ${o.long_description}</textarea>
+                                                            <label for="long_description">Long Description</label>
+
+
+
+
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary" onclick="return edit_offered_service(${o.id})">Save changes</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+
+                                    </td>
+                                </tr>
+                        
+                        
+                        
+       
+                  `
+
+            counter += 1
+          });
+          $('#offered_service_table_body').html(infohtml);
+          var totalfilter = Math.ceil(parseInt(response.count) / 10);
+          $('#pagination-demo1').twbsPagination({
+            totalPages: totalfilter,
+            visiblePages: 3,
+            next: 'Next',
+            prev: 'Prev',
+            onPageClick: function (event, page) {
+              var testflag = true;
+              //fetch content and render here
+              filternamepageno = page
+              if (testflag == true) {
+                testflag = false;
+                get_table_data1(page)
+              }
+              $('#page-content').text('Page ' + page) + ' content here';
+            }
+          })
+
+
+
+        } else {
+          infohtml = `
+                            <tr class="border-bottom text-center">
+                                <td colspan="5">No Data found</td>
+                            </tr>
+                `
+          $('#offered_service_table_body').html(infohtml);
+
+        }
+
+      }
+    })
+
+  }
+
+  function add_offered_service() {
+
+    var short_description = $("#short_description").val();
+    var rate = $("#rate").val();
+    var long_description = $('#long_description').val();
+
+
+
+    if (IsValid(short_description)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid short description",
+
+      });
+
+      $("#short_description").focus();
+      return false;
+    }
+    if (IsValid(rate)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid rate",
+
+      });
+
+      $("#rate").focus();
+      return false;
+    }
+    if (IsValid(long_description)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid long description",
+
+      });
+
+      $("#long_description").focus();
+      return false;
+    }
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('long_description', long_description);
+      formData.append('rate', rate);
+      formData.append('short_description', short_description);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/api/User/add_service_provider_offered_service",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#AddOfferedService').modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              Pagination1()
+            });
+            $("#short_description").val(' ');
+            $("#rate").val(' ');
+            $('#long_description').val(' ');
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+  function edit_offered_service(id) {
+
+    var short_description = $("#short_description" + id).val();
+    var rate = $("#rate" + id).val();
+    var long_description = $('#long_description' + id).val();
+
+
+    if (IsValid(short_description)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid short description",
+
+      });
+
+      $("#short_description" + id).focus();
+      return false;
+    }
+    if (IsValid(rate)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid rate",
+
+      });
+
+      $("#rate" + id).focus();
+      return false;
+    }
+    if (IsValid(long_description)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid long description",
+
+      });
+
+      $("#long_description" + id).focus();
+      return false;
+    }
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('offered_service_id', id);
+      formData.append('long_description', long_description);
+      formData.append('rate', rate);
+      formData.append('short_description', short_description);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/api/User/update_service_provider_offered_service",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#EditOfferedService' + id).modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              Pagination1()
+            });
+
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+  function delete_service_provider_offered_service(id) {
+    swal({
+      title: "Are you sure?",
+      text: "you want to delete it .",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: hosturl + "/api/User/delete_service_provider_offered_service",
+            type: 'POST',
+            headers: {
+              'Authorization': 'Bearer {{token}}'
+            },
+            data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              'offered_service_id': id
+            },
+            dataType: 'json',
+            beforeSend: function () {
+
+
+
+            },
+            success: function (response) {
+              // Pagination2()
+              if (response['response']['n'] == 1) {
+                swal({
+                  icon: "success",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                }).then(() => {
+                  // Code to execute after the user closes the SweetAlert dialog
+                  Pagination1(); // Reload the page
+                });
+
+
+
+              }
+              else {
+                swal({
+                  icon: "error",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                })
+              }
+
+
+
+
+            }
+          });
+
+        }
+      })
+  }
+
+
+
+
+  //portfolio
+
+
+  function add_portfolio() {
+
+    var heading = $("#portfolioheading").val();
+    var short_description = $("#portfolioshortdescription").val();
+    var long_description = $("#portfoliolongdescription").val();
+    var selected_mediafiles = Array.from($('#media')[0].files);
+
+
+    if (IsValid(heading)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid heading",
+
+      });
+
+      $("#portfolioheading").focus();
+      return false;
+    }
+
+
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('heading', heading);
+      formData.append('short_description', short_description);
+      formData.append('long_description', long_description);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+      selected_mediafiles.forEach(file => {
+        formData.append('media[]', file);
+      });
+
+      $.ajax({
+        url: hosturl + "/api/User/add_service_provider_portfolio",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#AddPortfolio').modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              get_portfolio_data()
+            });
+            $("#portfolioheading").val(' ');
+            $("#portfolioshortdescription").val(' ');
+            $("#portfoliolongdescription").val(' ');
+            $('#media').val(' ');
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+  function get_portfolio_data() {
+
+    var fd = new FormData()
+    fd.append('service_provider_id', '{{obj.service_provider.id}}')
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+    $.ajax({
+      url: hosturl + "/api/User/get_service_provider_portfolio",
+      data: fd,
+      headers: { "Authorization": "Bearer {{token}}" },
+
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      beforeSend: function () {
+        swal({
+          icon: "info",
+          title: "",
+          text: "Loading...",
+          buttons: false,
+
+        });
+      },
+      success: function (response) {
+        var infohtml = ''
+        swal.close()
+        console.log('response p', response)
+        if (response.response.n == 1) {
+          var counter = 1
+
+          $.each(response.data, function (i, o) {
+            console.log("o.media_list.length", o.media_list.length)
+            infohtml += `
+          <div class="col-md-6 col-lg-4 my-3">
+            <div class="card text-center h-100">
+              <div class="d-flex justify-content-end">
+                
+                <div class="col-lg-4 col-md-6">
+                  <div class="mt-4">
+                    <div class="modal fade" id="EditPortfolio${o.id}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="EditPortfolioTitle${o.id}">Edit Portfolio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+
+                            <div class="row g-4">
+                              <div class="form-floating form-floating-outline col-12">
+                                <input type="text" class="form-control" id="portfolioheading${o.id}" placeholder="Heading" value="${o.heading}"/>
+                                <label for="portfolioheading${o.id}">Heading</label>
+                              </div>
+                              <div class="form-floating form-floating-outline col-12">
+                                <textarea name="" class="form-control" id="portfolioshortdescription${o.id}"
+                                  placeholder="Short Description">${o.short_description}</textarea>
+                                <label for="portfolioshortdescription${o.id}">Short Description</label>
+
+                              </div>
+                              <div class="form-floating form-floating-outline col-12">
+                                <textarea name="" class="form-control" id="portfoliolongdescription${o.id}"
+                                  placeholder="Long Description">${o.long_description}</textarea>
+                                <label for="portfoliolongdescription${o.id}">Long Description</label>
+
+                              </div>
+                              <div class="mb-6 col-12 text-start">
+                                <label for="media${o.id}" class="form-label">Media</label>
+                                <input class="form-control" type="file" id="media${o.id}" multiple>
+
+                              </div>
+                              <div class="d-flex flex-wrap">
+                                ${o.media_list.map((entry, index) => `
+                                  <div class="image-outer-div" id="image-outer-div${entry.id}">
+                                    <img class="image-tag" src="${entry.media || hosturl + '/static/assets/img/backgrounds/dummy.jpg'}" alt="" width="100" height="100">  
+                                    <span class="remove-media-btn" onclick="remove_media(${entry.id})"><i class="ri-close-line"></i></span>
+                                   </div>
+                                `).join("\n")}
+                              </div>
+                            </div>
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="return edit_portfolio(${o.id})">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="dropdown m-2">
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                        data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#EditPortfolio${o.id}"><i class="ri-pencil-line me-1"></i>
+                            Edit</a>
+                        <a class="dropdown-item" href="javascript:void(0);" onclick="delete_service_provider_portfolio('${o.id}')"><i
+                                class="ri-delete-bin-6-line me-1"></i> Delete</a>
+                    </div>
+                </div>
+              </div>
+
+              <div class="card-body pt-0">
+                <h5 class="card-title mb-0 text-start">${o.heading || ''}</h5>
+                <h6 class="card-subtitle text-start">${o.short_description || ''}</h6>
+              </div>
+
+
+
+    <div id="carouselExample${o.id}" class="carousel slide" data-bs-ride="carousel">
+
+      <div class="carousel-indicators">
+      ${o.media_list.length != 0 ? `
+
+        ${o.media_list.map((entry, index) => `
+          ${index == 0 ? `
+          <button type="button" data-bs-target="#carouselExample${o.id}" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide ${index}"></button>
+          `: `
+          <button type="button" data-bs-target="#carouselExample${o.id}" data-bs-slide-to="${index}" aria-label="Slide ${index}"></button>
+        `}`).join("\n")}
+      `: `
+        <button type="button" data-bs-target="#carouselExample${o.id}" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      `}
+      </div>
+
+      <div class="carousel-inner">
+        ${o.media_list.length != 0 ? `
+        ${o.media_list.map((entry, index) => `  
+          ${index == 0 ? `
+          <div class="carousel-item active">
+            <img class="d-block w-100 carousel-img" src="${entry.media}" alt="${index} slide" />
+          </div>
+          `: `
+          <div class="carousel-item">
+            <img class="d-block w-100 carousel-img" src="${entry.media}" alt="${index} slide" />
+          </div>
+        `}`).join("\n")}
+        `: `
+          <div class="carousel-item active">
+            <img class="d-block w-100 carousel-img" src="${hosturl + '/static/assets/img/backgrounds/dummy.jpg'}" alt="1 slide" />
+          </div>
+        
+        `}
+
+
+
+      </div>
+      <a class="carousel-control-prev" href="#carouselExample${o.id}" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExample${o.id}" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </a>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <img class="img-fluid" src="${o.media_list || hosturl + '/static/assets/img/backgrounds/dummy.jpg'}" alt="">
+
+              <div class="card-body">
+                <p class="card-text text-start">${o.long_description || ''}</p>
+              </div>
+
+
+
+
+
+
+
+            </div>
+          </div>
+   
+              `
+            counter += 1
+          });
+          $('#service_provider_portfolio').html(infohtml);
+
+        } else {
+          infohtml = ` <div class="text-center">No portfolio found </div>
+            `
+          $('#service_provider_portfolio').html(infohtml);
+
+        }
+
+      }
+    })
+
+  }
+
+  function delete_service_provider_portfolio(id) {
+    swal({
+      title: "Are you sure?",
+      text: "you want to delete it .",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: hosturl + "/api/User/delete_service_provider_portfolio",
+            type: 'POST',
+            headers: {
+              'Authorization': 'Bearer {{token}}'
+            },
+            data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              'portfolio_id': id
+            },
+            dataType: 'json',
+            beforeSend: function () {
+
+
+
+            },
+            success: function (response) {
+              // Pagination2()
+              if (response['response']['n'] == 1) {
+                swal({
+                  icon: "success",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                }).then(() => {
+                  // Code to execute after the user closes the SweetAlert dialog
+                  get_portfolio_data(); // Reload the page
+                });
+
+
+
+              }
+              else {
+                swal({
+                  icon: "error",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                })
+              }
+
+
+
+
+            }
+          });
+
+        }
+      })
+  }
+
+  function edit_portfolio(id) {
+
+    var heading = $("#portfolioheading"+id).val();
+    var short_description = $("#portfolioshortdescription"+id).val();
+    var long_description = $("#portfoliolongdescription"+id).val();
+    var selected_mediafiles = Array.from($('#media'+id)[0].files);
+
+
+
+    if (IsValid(heading)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid name",
+
+      });
+
+      $("#portfolioheading" + id).focus();
+      return false;
+    }
+
+
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('heading', heading);
+      formData.append('short_description', short_description);
+      formData.append('portfolio_id', id);
+      formData.append('long_description', long_description);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+      selected_mediafiles.forEach(file => {
+        formData.append('media[]', file);
+      });
+
+
+      $.ajax({
+        url: hosturl + "/api/User/update_service_provider_portfolio",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#EditPortfolio' + id).modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              get_portfolio_data()
+            });
+            $("#portfolioheading"+id).val(' ');
+            $("#portfolioshortdescription"+id).val(' ');
+            $("#portfoliolongdescription"+id).val(' ');
+            $('#media'+id).val(' ');
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+
+
+
+
+
+
+
+
+  //highlights
+  function get_highlights_data() {
+
+    var fd = new FormData()
+    fd.append('service_provider_id', '{{obj.service_provider.id}}')
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+    $.ajax({
+      url: hosturl + "/api/User/get_service_provider_highlights",
+      data: fd,
+      headers: { "Authorization": "Bearer {{token}}" },
+
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      beforeSend: function () {
+        swal({
+          icon: "info",
+          title: "",
+          text: "Loading...",
+          buttons: false,
+
+        });
+      },
+      success: function (response) {
+        var infohtml = ''
+        swal.close()
+        if (response.response.n == 1) {
+          var counter = 1
+
+          $.each(response.data, function (i, o) {
+
+            infohtml += `
+              <div class="col-md-3 col-lg-2">
+                <div class="card text-center h-100">
+                  <div class="d-flex justify-content-end">
+                    
+                    <div class="col-lg-4 col-md-6">
+                      <div class="mt-4">
+                        <div class="modal fade" id="EditHighlight${o.id}" tabindex="-1" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="EditHighlightTitle${o.id}">Edit Highlight</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+
+                                <div class="row g-4">
+                                  <div class="form-floating form-floating-outline col-12">
+                                    <input type="text" class="form-control" id="highlightname${o.id}" placeholder="Name" value="${o.name}"/>
+                                    <label for="highlightname${o.id}">Name</label>
+                                  </div>
+                                  <div class="form-floating form-floating-outline col-12">
+                                    <textarea name="" class="form-control" id="highlightdescription${o.id}"
+                                      placeholder="Description">${o.description}</textarea>
+                                    <label for="highlightdescription${o.id}">Description</label>
+
+                                  </div>
+
+                                  <div class="mb-6 col-12 text-start">
+
+                                    <label for="sticker${o.id}" class="form-label">Sticker</label>
+                                    <input class="form-control" type="file" id="sticker${o.id}">
+                                  </div>
+
+                                  <div>
+                                      <img src="${o.sticker || hosturl + '/static/assets/img/backgrounds/dummy.jpg'}" alt="" width="100" height="100">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="return edit_highlight(${o.id})">Save changes</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="dropdown m-2">
+                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                            data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#EditHighlight${o.id}"><i class="ri-pencil-line me-1"></i>
+                                Edit</a>
+                                
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="delete_service_provider_highlight('${o.id}')"><i
+                                    class="ri-delete-bin-6-line me-1"></i> Delete</a>
+      
+                        </div>
+                    </div>
+
+                    
+
+
+
+
+
+
+                  </div>
+                  <div class="card-header">
+                    <img src="${o.sticker || hosturl + '/static/assets/img/backgrounds/dummy.jpg'}" alt="" width="100" height="100">
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">${o.name}</h5>
+                    <p class="card-text">${o.description || 'NA'}</p>
+                  </div>
+
+                </div>
+              </div>
+       
+                  `
+            counter += 1
+          });
+          $('#service_provider_highlights').html(infohtml);
+
+        } else {
+          infohtml = ` <div class="text-center">No Highlights found </div>
+                `
+          $('#service_provider_highlights').html(infohtml);
+
+        }
+
+      }
+    })
+
+  }
+
+  function add_highlight() {
+
+    var name = $("#highlightname").val();
+    var description = $("#highlightdescription").val();
+    var sticker = $('#sticker')[0].files[0];
+
+
+
+    if (IsValid(name)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid name",
+
+      });
+
+      $("#highlightname").focus();
+      return false;
+    }
+
+
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('sticker', sticker);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/api/User/add_service_provider_highlight",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#AddHighlight').modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              get_highlights_data()
+            });
+            $("#highlightname").val(' ');
+            $("#highlightdescription").val(' ');
+            $('#sticker').val(' ');
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+  function delete_service_provider_highlight(id) {
+    swal({
+      title: "Are you sure?",
+      text: "you want to delete it .",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: hosturl + "/api/User/delete_service_provider_highlight",
+            type: 'POST',
+            headers: {
+              'Authorization': 'Bearer {{token}}'
+            },
+            data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              'highlight_id': id
+            },
+            dataType: 'json',
+            beforeSend: function () {
+
+
+
+            },
+            success: function (response) {
+              if (response['response']['n'] == 1) {
+                swal({
+                  icon: "success",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                }).then(() => {
+                  // Code to execute after the user closes the SweetAlert dialog
+                  get_highlights_data(); // Reload the page
+                });
+
+
+
+              }
+              else {
+                swal({
+                  icon: "error",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                })
+              }
+
+
+
+
+            }
+          });
+
+        }
+      })
+  }
+
+  function edit_highlight(id) {
+
+    var name = $("#highlightname" + id).val();
+    var description = $("#highlightdescription" + id).val();
+    var sticker = $('#sticker' + id)[0].files[0];
+
+
+
+    if (IsValid(name)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid name",
+
+      });
+
+      $("#highlightname" + id).focus();
+      return false;
+    }
+
+
+
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('sticker', sticker);
+      formData.append('highlight_id', id);
+      formData.append('service_provider_id', '{{obj.service_provider.id}}');
+
+
+      $.ajax({
+        url: hosturl + "/api/User/edit_service_provider_highlight",
+        type: 'POST',
+        headers: {
+          'Authorization': 'Bearer {{token}}'
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+
+          if (response.response.n == 1) {
+            $('#EditHighlight' + id).modal('hide');
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+              get_highlights_data()
+            });
+            $("#highlightname" + id).val(' ');
+            $("#highlightdescription" + id).val(' ');
+            $('#sticker' + id).val(' ');
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+
+  function remove_media(id) {
+    swal({
+      title: "Are you sure?",
+      text: "you want to delete it .",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: hosturl + "/api/User/delete_portfolio_media",
+            type: 'POST',
+            headers: {
+              'Authorization': 'Bearer {{token}}'
+            },
+            data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              'media_id': id
+            },
+            dataType: 'json',
+            beforeSend: function () {
+
+
+
+            },
+            success: function (response) {
+              if (response['response']['n'] == 1) {
+                $('#image-outer-div'+id).hide()
+                swal({
+                  icon: "success",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                })
+
+
+              }
+              else {
+                swal({
+                  icon: "error",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                })
+              }
+
+
+
+
+            }
+          });
+
+        }
+      })
+  }
+
+
+</script>
+{%endblock page_js %}

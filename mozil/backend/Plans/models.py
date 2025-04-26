@@ -11,6 +11,7 @@ class ServiceProviderPlanMaster(TrackingModel):
     Name = models.CharField(max_length=250,blank=True,null=True)
     days = models.CharField(max_length=250,blank=True,null=True)
     amount = models.CharField(max_length=250,blank=True,null=True)
-    
+    description = models.TextField(null=True, blank=True)
+
     def __str__(self):
         return self.Name

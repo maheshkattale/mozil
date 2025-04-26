@@ -5,6 +5,6 @@ from . import views as v
 urlpatterns = [
     # path('accessDenied',v.accessDenied, name='accessDenied'),
     # path('admin/', admin.site.urls),
-    path('dashboard', v.dashboard, name='dashboard'),
+    path('home', v.home, name='home'),
 
 ]
