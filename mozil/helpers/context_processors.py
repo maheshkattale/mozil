@@ -1,6 +1,5 @@
 import requests
-hosturl =  "http://127.0.0.1:8000"
-
+from helpers.validations import hosturl
 
 def get_session(request):
     token = request.session.get('token')

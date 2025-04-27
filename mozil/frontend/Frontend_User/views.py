@@ -9,20 +9,19 @@ import datetime
 from datetime import date
 # from project.views import statuscheck
 from rest_framework.response import Response
+from helpers.validations import hosturl
 
-
-hosturl = "http://127.0.0.1:8000/"
 
 
 # from Users.context_processers import ImageURL as imageURL
-login_url=hosturl+"api/User/login"
-logout_url=hosturl+"api/User/logout"
-forgot_password_url=hosturl+"api/User/forgot_password"
-get_parent_services_list_url=hosturl+"api/Services/parentservicelist"
-get_child_services_list_url=hosturl+"api/Services/childservicelist"
-add_service_provider_url=hosturl+"api/User/register_new_service_provider"
-get_service_provider_details_url=hosturl+"api/User/get_service_provider_details"
-edit_service_provider_url=hosturl+"api/User/update_service_provider_basic_details"
+login_url=hosturl+"/api/User/login"
+logout_url=hosturl+"/api/User/logout"
+forgot_password_url=hosturl+"/api/User/forgot_password"
+get_parent_services_list_url=hosturl+"/api/Services/parentservicelist"
+get_child_services_list_url=hosturl+"/api/Services/childservicelist"
+add_service_provider_url=hosturl+"/api/User/register_new_service_provider"
+get_service_provider_details_url=hosturl+"/api/User/get_service_provider_details"
+edit_service_provider_url=hosturl+"/api/User/update_service_provider_basic_details"
 
 
 # Create your views here.

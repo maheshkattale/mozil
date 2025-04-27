@@ -244,8 +244,8 @@ class resetpassword(GenericAPIView):
 #role -----------------------------------------------------------------------------------------------------
 
 class addrole(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         data={}
         request_data = request.data.copy()
