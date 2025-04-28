@@ -53,8 +53,29 @@ class purchase_plan_history(GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         data={}
-
         plans_obj = ServiceProviderPaymentHistory.objects.filter(userid=str(request.user.id),isActive=True)
+        if plans_obj.exists():
+            plan_serializer = CustomServiceProviderPaymentHistorySerializer(plans_obj,many=True)
+            return Response({"data":plan_serializer.data,"response": {"n": 1, "msg": "Purchased Plan found successfully","status": "success"}})
+        else:
+            return Response({"data":'',"response": {"n": 0, "msg": "Plan Not Found","status": "error"}})
+
+
+class all_purchase_plan_history(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        service_provider_id=request.data.get('service_provider_id')
+        amount=request.data.get('amount')
+        plans_obj = ServiceProviderPaymentHistory.objects.filter(isActive=True).order_by('-createdAt')
+        
+        if service_provider_id is not None and service_provider_id !='':
+            plans_obj=plans_obj.filter(userid=service_provider_id)
+        
+        if amount is not None and amount !='':
+            plans_obj=plans_obj.filter(amount__icontains=amount)
+
+
         if plans_obj.exists():
             plan_serializer = CustomServiceProviderPaymentHistorySerializer(plans_obj,many=True)
             return Response({"data":plan_serializer.data,"response": {"n": 1, "msg": "Purchased Plan found successfully","status": "success"}})

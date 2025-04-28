@@ -28,9 +28,9 @@ sys.path.append(os.path.join(settings.BASE_DIR, "frontend"))
 
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.office365.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER='maheshkattale1926@gmail.com'
-EMAIL_HOST_PASSWORD='Mahesh$@8548'
+EMAIL_HOST_PASSWORD='oczp wqwv ofak ikut'
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

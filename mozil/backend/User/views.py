@@ -15,7 +15,17 @@ from django.core.mail import EmailMessage
 from mozil.settings import EMAIL_HOST_USER
 from django.contrib.auth.hashers import make_password,check_password
 from .common import CustomPagination
-from django.db.models import Q
+import re
+import random
+from django.core.mail import send_mail
+from django.utils.timezone import make_aware
+from django.utils import timezone
+
+from django.db.models import F, FloatField, ExpressionWrapper,Q
+from django.db.models.functions import Radians, Power, Sin, Cos, ATan2, Sqrt
+import math
+
+
 
 def createtoken(uuid,email,source):
     token = jwt.encode(
@@ -75,7 +85,7 @@ class login(GenericAPIView):
             else:
                 useruuid = str(userexist.id)
                 username = userexist.Username
-                short_name = ''.join([word[0] for word in username.split()]).upper()
+                # short_name = ''.join([word[0] for word in username.split()]).upper()
 
                 role =  userexist.role_id
 
@@ -99,7 +109,7 @@ class login(GenericAPIView):
                 })
                 
                 return Response({
-                    "data" : {'token':Token,'username':username,'short_name':short_name,'user_id':useruuid,'role':role,},
+                    "data" : {'token':Token,'username':username,'short_name':username,'user_id':useruuid,'role':role,},
                     "response":{
                     "n": 1 ,
                     "msg" : "login successful",
@@ -667,7 +677,7 @@ class getmappingusers(GenericAPIView):
         }
         return Response(response_,status=200)
     
-class register_new_service_provider(GenericAPIView):
+class create_new_service_provider(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
@@ -1052,8 +1062,128 @@ class get_service_provider_weekly_schedule_by_id(GenericAPIView):
 
         return Response({"data":serializer.data,"response": {"n": 1, "msg": "Weekly schedule found successfully","status":"success"}})
 
+class register_new_service_provider(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        # if request_data['Username'] is None or request_data['Username'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
+        # data['Username']=request.data.get('Username')
+        data['email']=str(request.data.get('email')).lower()
+        if data['email'] is None or data['email'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
+        
+        data['textPassword']=request.data.get('textPassword')
+        if data['textPassword'] is None or data['textPassword'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user password", "status":"error"}})
+        
+        # data['mobileNumber']=request.data.get('mobileNumber')
+        # if data['mobileNumber'] is None or data['mobileNumber'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide user mobile number", "status":"error"}})
+
+        data['password'] = data['textPassword']
+        data['isActive'] = True
+        data['role'] = 2
 
 
+        emailobj = User.objects.filter(isActive=True, email=data['email']).first()
+        if emailobj is not None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
+        else:
+            serializer1 = UserSerializer(data=data)
+            if serializer1.is_valid():
+                data['business_name']=request.data.get('business_name')
+                if data['business_name'] is None or data['business_name'] =='':
+                    data['business_name']=str(request.data.get('business_name')).lower()
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+                
+                # data['parent_service']=request.data.get('parent_service')
+                # if data['parent_service'] is None or data['parent_service'] =='':
+                #     return Response({ "data":{},"response":{"n":0,"msg":"Please select parent service", "status":"error"}})
+                
+                # data['child_service']=request.data.get('child_service')
+                # if data['child_service'] is None or data['child_service'] =='':
+                #     return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
+                
+                # data['mobile_number']= request.data.get('mobileNumber')
+                # data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
+                # data['description'] = request.data.get('description')
+                # data['website'] = request.data.get('website')
+                # data['lattitude'] = request.data.get('lattitude')
+                # data['longitude'] = request.data.get('longitude')
+                # data['radius'] = request.data.get('radius')
+
+                # business_logo = request.FILES.get('business_logo')
+                # if business_logo is not None and business_logo !='':
+                #     data['business_logo']=business_logo
+                
+            
+                business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).first()        
+                if business_name_obj is not None:
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+                else:
+                    serializer1.save()
+                    userid = serializer1.data['id']
+                    data['userid'] = str(userid)
+
+                    serializer2 = ServiceProviderSerializer(data=data)
+                    if serializer2.is_valid():
+                        serializer2.save()
+                        return Response({"data":serializer2.data,"response": {"n": 1, "msg": "Service  Provider details registered successfully","status":"success"}})
+                    else:
+                        first_key, first_value = next(iter(serializer2.errors.items()))
+                        return Response({"data" : serializer2.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+            
+            else:
+                first_key, first_value = next(iter(serializer1.errors.items()))
+                return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+    
+
+
+class register_new_consumer(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        data['Username']=request.data.get('Username')
+        if data['Username'] is None or data['Username'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide consumer name", "status":"error"}})
+        data['email']=str(request.data.get('email')).lower()
+        if data['email'] is None or data['email'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
+        
+        data['textPassword']=request.data.get('textPassword')
+        if data['textPassword'] is None or data['textPassword'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide user password", "status":"error"}})
+        
+        # data['mobileNumber']=request.data.get('mobileNumber')
+        # if data['mobileNumber'] is None or data['mobileNumber'] =='':
+        #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide user mobile number", "status":"error"}})
+
+        data['password'] = data['textPassword']
+        data['isActive'] = True
+        data['role'] = 3
+
+        
+        role_objs = Role.objects.filter(isActive=True,id=3).first()
+        if role_objs is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Role Not exist", "status": "error"}})        
+
+        emailobj = User.objects.filter(isActive=True, email=data['email']).first()
+        if emailobj is not None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
+        else:
+            serializer1 = UserSerializer(data=data)
+            if serializer1.is_valid():
+                serializer1.save()
+                return Response({"data":serializer1.data,"response": {"n": 1, "msg": "Registration successfull", "status": "error"}})        
+            else:
+                first_key, first_value = next(iter(serializer1.errors.items()))
+                return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+    
 
 
 
@@ -1636,20 +1766,303 @@ class change_status(GenericAPIView):
             return Response({"data":{},"response": {"n": 0, "msg": 'user not found ',"status":"error"}})
 
 
+class check_business_name_availablity(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        data['business_name']=request.data.get('business_name')
+        if data['business_name'] is None or data['business_name'] =='':
+            data['business_name']=str(request.data.get('business_name')).lower()
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide business name", "status":"error"}})
+
+        business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).first()        
+        if business_name_obj is not None:
+            return Response({"data":{},"response": {"n": 0, "msg": "Business name already exist try another business name", "status": "error"}})        
+        else:
+            return Response({"data":{},"response": {"n": 1, "msg": "Business name available","status":"success"}})
+
+class check_email_availablity(GenericAPIView):
+    # authentication_classes = [userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        data = {}
+        email = request.data.get('email', '').strip().lower()
+        data['email'] = email
+
+        # Check if email is provided
+        if not email:
+            return Response({
+                "data": {}, 
+                "response": {"n": 0, "msg": "Please provide email", "status": "error"}
+            })
+
+        # Validate email format using regex
+        email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not re.match(email_regex, email):
+            return Response({
+                "data": {}, 
+                "response": {"n": 0, "msg": "Please provide valid email format", "status": "error"}
+            })
+
+        # Check if email already exists
+        email_obj = User.objects.filter(isActive=True, email=email).first()
+        if email_obj:
+            return Response({
+                "data": {}, 
+                "response": {"n": 0, "msg": "Email already exists, try another email", "status": "error"}
+            })
+        else:
+            return Response({
+                "data": {}, 
+                "response": {"n": 1, "msg": "Email available", "status": "success"}
+            })
+
+
+class send_verification_otp_mail(GenericAPIView):
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+
+        # Validate email
+        email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not email or not re.match(email_regex, email):
+            return Response({
+                "data": {}, 
+                "response": {"n": 0, "msg": "Invalid or missing email", "status": "error"}
+            },)
+
+        # Generate 6-digit OTP
+        otp = str(random.randint(100000, 999999))
+
+        # Save to DB (overwrite if email already exists)
+        EmailOTPVerification.objects.update_or_create(
+            email=email,
+            defaults={
+                'otp': otp,
+                'created_at': timezone.now()
+            }
+        )
+
+        # Send OTP via email
+        send_mail(
+            subject="Your OTP Verification Code",
+            message=f"Your OTP code is {otp}. It will expire in 10 minutes.",
+            from_email="maheshkattale1926@gmail.com",  # Update this
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
+        return Response({
+            "data": {"email": email}, 
+            "response": {"n": 1, "msg": "OTP sent successfully", "status": "success"}
+        })
+
+
+class ValidateOTP(GenericAPIView):
+    def post(self, request):
+        # Get email and OTP from request data
+        email = request.data.get("email", "").strip().lower()
+        otp = request.data.get("otp", "").strip()
+
+        # Validate email
+        email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not email or not re.match(email_regex, email):
+            return Response({
+                "data": {},
+                "response": {"n": 0, "msg": "Invalid or missing email", "status": "error"}
+            })
+
+        # Validate OTP
+        if not otp:
+            return Response({
+                "data": {},
+                "response": {"n": 0, "msg": "OTP is required", "status": "error"}
+            })
+
+        # Fetch the OTP record from the database
+        otp_record = EmailOTPVerification.objects.filter(email=email).first()
+
+        if not otp_record:
+            return Response({
+                "data": {},
+                "response": {"n": 0, "msg": "No OTP record found for this email", "status": "error"}
+            })
+
+        # Check if OTP is expired (Optional: Add expiration time like 10 minutes)
+        otp_expiry_time = otp_record.created_at + timedelta(minutes=10)
+        print("otp_expiry_time",timezone.now(),otp_expiry_time)
+        if timezone.now() > otp_expiry_time:
+
+        # if make_aware(datetime.now()) > otp_expiry_time:
+            return Response({
+                "data": {},
+                "response": {"n": 0, "msg": "OTP has expired, please request a new one", "status": "error"}
+            })
+
+        # Compare provided OTP with the stored OTP
+        if otp == otp_record.otp:
+            return Response({
+                "data": {},
+                "response": {"n": 1, "msg": "OTP validated successfully", "status": "success"}
+            })
+        else:
+            return Response({
+                "data": {},
+                "response": {"n": 0, "msg": "Invalid OTP", "status": "error"}
+            })
 
 
 
 
+class service_provider_filter_pagination_api(GenericAPIView):
+    # authentication_classes = [userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = CustomPagination
+    
+    def post(self, request):
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+        
+        # Get filter parameters from request
+        lattitude = request.data.get('lattitude')
+        longitude = request.data.get('longitude')
+        parent_service = request.data.get('parent_service')
+        child_service = request.data.get('child_service')
+        license_verification_status = request.data.get('license_verification_status')
+        mozil_guarented = request.data.get('mozil_guarented')
+        average_rating = request.data.get('average_rating')
+        
+        # Apply basic filters
+        if parent_service:
+            service_provider_objs = service_provider_objs.filter(parent_service=parent_service)
+        if child_service:
+            service_provider_objs = service_provider_objs.filter(child_service=child_service)
+        if license_verification_status:
+            service_provider_objs = service_provider_objs.filter(license_verification_status=license_verification_status)
+        if mozil_guarented:
+            service_provider_objs = service_provider_objs.filter(mozil_guarented=mozil_guarented)
+        if average_rating:
+            service_provider_objs = service_provider_objs.filter(average_rating__gte=average_rating)
+        
+        # Apply distance filter if coordinates are provided
+        if lattitude and longitude:
+            try:
+                lat = float(lattitude)
+                lng = float(longitude)
+                
+                # Earth radius in kilometers
+                earth_radius = 6371
+                
+                # Convert latitude and longitude from degrees to radians
+                lat_rad = Radians(F('lattitude'))
+                lng_rad = Radians(F('longitude'))
+                user_lat_rad = math.radians(lat)
+                user_lng_rad = math.radians(lng)
+                
+                # Haversine formula to calculate distance
+                dlat = user_lat_rad - lat_rad
+                dlng = user_lng_rad - lng_rad
+                
+                a = (Power(Sin(dlat / 2), 2) + 
+                     Cos(lat_rad) * Cos(user_lat_rad) * 
+                     Power(Sin(dlng / 2), 2))
+                
+                c = 2 * ATan2(Sqrt(a), Sqrt(1 - a))
+                distance = earth_radius * c
+                
+                # Filter for service providers within 1km
+                service_provider_objs = service_provider_objs.annotate(
+                    distance=ExpressionWrapper(distance, output_field=FloatField())
+                ).filter(distance__lte=1)
+                
+            except (ValueError, TypeError):
+                # Handle invalid coordinate values
+                pass
+        
+        # Paginate and return results
+        page = self.paginate_queryset(service_provider_objs)
+        serializer = CustomServiceProviderSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 
-
-
-
-
-
-
-
+class service_provider_filter(GenericAPIView):
+    # authentication_classes = [userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    
+    def post(self, request):
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+        
+        # Get filter parameters from request
+        lattitude = request.data.get('lattitude')
+        longitude = request.data.get('longitude')
+        parent_service = request.data.get('parent_service')
+        child_service = request.data.get('child_service')
+        license_verification_status = request.data.get('license_verification_status')
+        mozil_guarented = request.data.get('mozil_guarented')
+        average_rating = request.data.get('average_rating')
+        
+        # Apply basic filters
+        if parent_service:
+            service_provider_objs = service_provider_objs.filter(parent_service=parent_service)
+        if child_service:
+            service_provider_objs = service_provider_objs.filter(child_service=child_service)
+        if license_verification_status:
+            service_provider_objs = service_provider_objs.filter(license_verification_status=license_verification_status)
+        if mozil_guarented:
+            service_provider_objs = service_provider_objs.filter(mozil_guarented=mozil_guarented)
+        if average_rating:
+            service_provider_objs = service_provider_objs.filter(average_rating__gte=average_rating)
+        
+        # Apply distance filter if coordinates are provided
+        if lattitude and longitude:
+            try:
+                lat = float(lattitude)
+                lng = float(longitude)
+                
+                # Earth radius in kilometers
+                earth_radius = 6371
+                
+                # Convert latitude and longitude from degrees to radians
+                lat_rad = Radians(F('lattitude'))
+                lng_rad = Radians(F('longitude'))
+                user_lat_rad = math.radians(lat)
+                user_lng_rad = math.radians(lng)
+                
+                # Haversine formula to calculate distance
+                dlat = user_lat_rad - lat_rad
+                dlng = user_lng_rad - lng_rad
+                
+                a = (Power(Sin(dlat / 2), 2) + 
+                     Cos(lat_rad) * Cos(user_lat_rad) * 
+                     Power(Sin(dlng / 2), 2))
+                
+                c = 2 * ATan2(Sqrt(a), Sqrt(1 - a))
+                distance = earth_radius * c
+                
+                # Filter for service providers within 1km
+                service_provider_objs = service_provider_objs.annotate(
+                    distance=ExpressionWrapper(distance, output_field=FloatField())
+                ).filter(distance__lte=1)
+                
+            except (ValueError, TypeError):
+                # Handle invalid coordinate values
+                pass
+        
+        # Paginate and return results
+        print("service_provider_objs",service_provider_objs.count())
+        if service_provider_objs.exists():
+            serializer1 = CustomServiceProviderSerializer(service_provider_objs, many=True)
+            return Response({
+                    "data": serializer1.data,
+                    "response": {"n": 1, "msg": "service providers found successfully", "status": "success"}
+                })
+        else:
+            return Response({
+                    "data": [],
+                    "response": {"n": 0, "msg": "service providers not found", "status": "error"}
+                })
 
 
 

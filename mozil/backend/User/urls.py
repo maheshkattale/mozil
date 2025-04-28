@@ -36,7 +36,7 @@ urlpatterns = [
     path('userbyid', userbyid.as_view(), name = 'userbyid'),
 
 
-    path('register_new_service_provider', register_new_service_provider.as_view(), name = 'register_new_service_provider'),
+    path('create_new_service_provider', create_new_service_provider.as_view(), name = 'create_new_service_provider'),
     path('update_service_provider_basic_details', update_service_provider_basic_details.as_view(), name = 'update_service_provider_basic_details'),
     path('service_provider_list_pagination_api', service_provider_list_pagination_api.as_view(), name = 'service_provider_list_pagination_api'),
     path('serviceproviderdelete', serviceproviderdelete.as_view(), name = 'serviceproviderdelete'),
@@ -72,5 +72,18 @@ urlpatterns = [
     path('change_guarented', change_guarented.as_view(), name = 'change_guarented'),
     path('change_status', change_status.as_view(), name = 'change_status'),
 
+
+
+    path('check_business_name_availablity', check_business_name_availablity.as_view(), name = 'check_business_name_availablity'),
+    path('check_email_availablity', check_email_availablity.as_view(), name = 'check_email_availablity'),
+    path('send_verification_otp_mail', send_verification_otp_mail.as_view(), name = 'send_verification_otp_mail'),
+    path('ValidateOTP', ValidateOTP.as_view(), name = 'ValidateOTP'),
+    path('register_new_service_provider', register_new_service_provider.as_view(), name = 'register_new_service_provider'),
+    path('register_new_consumer', register_new_consumer.as_view(), name = 'register_new_consumer'),
+    
+    
+    
+    path('service_provider_filter', service_provider_filter.as_view(), name = 'service_provider_filter'),
+    path('service_provider_filter_pagination_api', service_provider_filter_pagination_api.as_view(), name = 'service_provider_filter_pagination_api'),
 
 ]

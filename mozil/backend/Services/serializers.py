@@ -20,7 +20,7 @@ class CustomChildServicesSerializer(serializers.ModelSerializer):
     def get_ParentServiceName(self, obj):
         obj_id = obj.ParentServiceId
         
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = ParentServices.objects.filter(id=obj_id).first()
                 if obj is not None:

@@ -93,6 +93,7 @@ class ServiceProvider(TrackingModel):
     business_name = models.CharField(max_length=255,null=True,blank=True)
     average_rating = models.CharField(max_length=255,null=True,blank=True)
 
+
 class ServiceProviderWeeklySchedule(TrackingModel):
     userid = models.CharField(max_length=255,null=True, blank=True)
     service_provider_id = models.CharField(max_length=255,null=True, blank=True)
@@ -132,5 +133,28 @@ class ServiceProviderPortfolioMedia(TrackingModel):
     portfolio_id = models.CharField(max_length=255,null=True, blank=True)
     media = models.FileField(upload_to='service_provider/portfolio/media/', blank=True, null=True,verbose_name='media Image')
 
+# class AddressForm(forms.Form):
+#     street_address = forms.CharField(label="Street Address", max_length=255)
+#     city = forms.CharField(initial="Moriches", disabled=True)
+#     state = forms.CharField(initial="NY", disabled=True)
+#     zip_code = forms.ChoiceField(
+#         label="ZIP Code",
+#         choices=[
+#             ('11934', 'Center Moriches'),
+#             ('11940', 'East Moriches'),
+#             ('11955', 'Moriches'),
+#         ]
+#     )
+#     zip_plus4 = forms.CharField(
+#         label="ZIP+4 Code (Optional)",
+#         max_length=10,
+#         required=False
+#     )
 
 
+
+
+class EmailOTPVerification(TrackingModel):
+    email = models.CharField(max_length=255,null=True, blank=True)
+    otp = models.CharField(max_length=255,null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)  

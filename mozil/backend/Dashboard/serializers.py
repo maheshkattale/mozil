@@ -1,5 +1,5 @@
 
-from .models import *
+from PaymentHistory.models import *
 from rest_framework import serializers
 from Plans.models import *
 from Plans.serializers import *
@@ -15,7 +15,7 @@ class CustomServiceProviderPaymentHistorySerializer(serializers.ModelSerializer)
     def get_plan_name(self, obj):
         obj_id = obj.plan_id
         
-        if obj_id is not None and obj_id !='' and obj_id !='None':
+        if obj_id:
             try:
                 obj = ServiceProviderPlanMaster.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -30,7 +30,7 @@ class CustomServiceProviderPaymentHistorySerializer(serializers.ModelSerializer)
     def get_plan_days(self, obj):
         obj_id = obj.plan_id
         
-        if obj_id is not None and obj_id !='' and obj_id !='None':
+        if obj_id:
             try:
                 obj = ServiceProviderPlanMaster.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -45,7 +45,7 @@ class CustomServiceProviderPaymentHistorySerializer(serializers.ModelSerializer)
     def get_plan_days(self, obj):
         obj_id = obj.plan_id
         
-        if obj_id is not None and obj_id !='' and obj_id !='None':
+        if obj_id:
             try:
                 obj = ServiceProviderPlanMaster.objects.filter(id=obj_id).first()
                 if obj is not None:

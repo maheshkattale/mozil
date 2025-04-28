@@ -22,7 +22,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     Role_name = serializers.SerializerMethodField()
     def get_Role_name(self, obj):
         obj_id = obj.role_id
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = Role.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -71,7 +71,7 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
     owner_name = serializers.SerializerMethodField()
     def get_owner_name(self, obj):
         obj_id = str(obj.userid)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = User.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -85,7 +85,7 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     def get_email(self, obj):
         obj_id = str(obj.userid)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = User.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -99,7 +99,7 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
     parent_service_name = serializers.SerializerMethodField()
     def get_parent_service_name(self, obj):
         obj_id = str(obj.parent_service)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = ParentServices.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -113,7 +113,7 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
     child_service_name = serializers.SerializerMethodField()
     def get_child_service_name(self, obj):
         obj_id = str(obj.child_service)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = ChildServices.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -127,7 +127,7 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
     offered_services = serializers.SerializerMethodField()
     def get_offered_services(self, obj):
         obj_id = str(obj.id)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = ServiceProviderOfferedServices.objects.filter(service_provider_id=obj_id,isActive=True)
                 if obj.exists():
@@ -142,7 +142,7 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     def get_status(self, obj):
         obj_id = str(obj.userid)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = User.objects.filter(id=obj_id).first()
                 if obj is not None:
@@ -189,7 +189,7 @@ class CustomServiceProviderPortfolioSerializer(serializers.ModelSerializer):
     media_list = serializers.SerializerMethodField()
     def get_media_list(self, obj):
         obj_id = str(obj.id)
-        if obj_id:
+        if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = ServiceProviderPortfolioMedia.objects.filter(portfolio_id=obj_id,isActive=True)
                 if obj.exists():
