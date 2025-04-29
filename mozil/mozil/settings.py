@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'Frontend_Services',
     'Frontend_User',
     'Frontend_Plans',
+    'Frontend_PaymentHistory',
 
 ]
 

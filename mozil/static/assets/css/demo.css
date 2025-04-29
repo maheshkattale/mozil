@@ -12,8 +12,8 @@
 }
 
 .app-brand-logo.demo svg {
-  width: 30px;
-  height: 24px;
+  width: 200px;
+  height: 200px;
 }
 
 .app-brand-text.demo {
@@ -141,4 +141,7 @@
   cursor: pointer;
   color: red;
   font-weight: 600;
+}
+.align-item-center{
+  align-items: center;
 }

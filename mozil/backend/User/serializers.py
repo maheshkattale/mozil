@@ -66,6 +66,7 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
         fields ="__all__"
+        
 class CustomServiceProviderSerializer(serializers.ModelSerializer):
 
     owner_name = serializers.SerializerMethodField()

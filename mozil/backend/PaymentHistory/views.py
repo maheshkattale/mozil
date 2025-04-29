@@ -18,7 +18,8 @@ from django.core.mail import EmailMessage
 from mozil.settings import EMAIL_HOST_USER
 from User.common import CustomPagination
 from django.db.models import Q
-
+from User.models import *
+from User.serializers import *
 
 # Create your views here.
 class purchase_plan(GenericAPIView):
@@ -81,3 +82,50 @@ class all_purchase_plan_history(GenericAPIView):
             return Response({"data":plan_serializer.data,"response": {"n": 1, "msg": "Purchased Plan found successfully","status": "success"}})
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Plan Not Found","status": "error"}})
+        
+
+
+class service_provider_purchased_plan_list_pagination_api(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = CustomPagination
+
+    def post(self,request):
+        service_provider_name=request.data.get('service_provider_name')
+        amount=request.data.get('amount')
+        plan=request.data.get('plan')
+        
+        plans_obj = ServiceProviderPaymentHistory.objects.filter(isActive=True).order_by('-createdAt')
+        
+        if service_provider_name is not None and service_provider_name !='':
+            service_provider_ids=list(ServiceProvider.objects.filter(business_name__icontains=service_provider_name,).values_list('userid',flat=True))
+            user_ids=list(User.objects.filter(Username__icontains=service_provider_name,).values_list('id',flat=True))
+            all_user_list=user_ids+service_provider_ids
+            plans_obj=plans_obj.filter(userid__in=all_user_list)
+        
+        if plan is not None and plan !='':
+            plan_ids=list(ServiceProviderPlanMaster.objects.filter(Q(Name__icontains=plan,)|Q(days__icontains=plan,)).values_list('id',flat=True))
+            plans_obj=plans_obj.filter(plan_id__in=plan_ids)
+
+        if amount is not None and amount !='':
+            plans_obj=plans_obj.filter(amount__icontains=amount)
+
+        plans_obj=plans_obj.order_by('-id').distinct('id')
+        page4 = self.paginate_queryset(plans_obj)
+        serializer = CustomServiceProviderPaymentHistorySerializer(page4,many=True)
+        return self.get_paginated_response(serializer.data)
+        # if plans_obj.exists():
+        #     plan_serializer = CustomServiceProviderPaymentHistorySerializer(plans_obj,many=True)
+        #     return Response({"data":plan_serializer.data,"response": {"n": 1, "msg": "Purchased Plan found successfully","status": "success"}})
+        # else:
+        #     return Response({"data":'',"response": {"n": 0, "msg": "Plan Not Found","status": "error"}})
+
+
+
+
+
+
+
+
+
+

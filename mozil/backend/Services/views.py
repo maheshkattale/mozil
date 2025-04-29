@@ -49,8 +49,8 @@ class addparentservice(GenericAPIView):
             return Response({ "data":{},"response":{"n":0,"msg":"Parent service already exist", "status":"error"}})
 
 class parentservicelist(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     def get(self,request):
         parentservice_objs = ParentServices.objects.filter(isActive=True).order_by('id')
         serializer = ParentServicesSerializer(parentservice_objs,many=True)
@@ -64,8 +64,8 @@ class parentservicelist(GenericAPIView):
         })
     
 class parentservice_list_pagination_api(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPagination
     # serializer_class = ParentServicesSerializer
 

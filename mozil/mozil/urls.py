@@ -34,7 +34,6 @@ urlpatterns = [
     path('dashboard/',include(('Frontend_Dashboard.urls', 'Frontend_Dashboard'),namespace='Frontend_Dashboard')),
     path('services/',include(('Frontend_Services.urls', 'Frontend_Services'),namespace='Frontend_Services')),
     path('plan/',include(('Frontend_Plans.urls', 'Frontend_Plans'),namespace='Frontend_Plans')),
+    path('payment_history/',include(('Frontend_PaymentHistory.urls', 'Frontend_PaymentHistory'),namespace='Frontend_PaymentHistory')),
 
-
-  
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

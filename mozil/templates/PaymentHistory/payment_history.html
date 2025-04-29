@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}PaymentHistory - List{% endblock %}
+
+{% block layout %}
+<!-- Basic Layout -->
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-header">Payment History</h5>
+        </div>
+        <div class="d-flex align-item-center">
+
+            <div class="form-floating form-floating-outline m-2">
+                <input type="text" class="form-control" id="ServiceProvider" placeholder="Service Provider" />
+                <label for="ServiceProvider">Service Provider</label>
+            </div>
+            <div class="form-floating form-floating-outline m-2">
+                <input type="text" class="form-control" id="Plan" placeholder="Plan" />
+                <label for="Plan">Plan</label>
+            </div>
+            <div class="form-floating form-floating-outline m-2">
+                <input type="text" class="form-control" id="Amount" placeholder="Amount" />
+                <label for="Amount">Amount</label>
+            </div>
+            <button class="btn btn-primary waves-effect waves-light m-4" onclick="Pagination()">Search</button>
+        </div>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Service Provider</th>
+                    <th>Plan Details</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0" id="plan_table_body">
+
+
+
+
+
+            </tbody>
+        </table>
+        <div class=" d-flex justify-content-end m-3" id="secondpagination-demo2">
+            <ul id="pagination-demo2" class="pagination-sm"></ul>
+        </div>
+    </div>
+</div>
+{% endblock layout %}
+
+
+{% block page_js %}
+{{block.super}}
+
+<script>
+    $(document).ready(function () {
+        Pagination()
+    });
+    function Pagination() {
+        var testflag = true;
+        $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
+        get_table_data(1);
+
+    }
+    
+    function get_table_data(p) {
+        var service_provider_name=$('#ServiceProvider').val();
+        var plan=$('#Plan').val();
+        var amount=$('#Amount').val();
+
+        var fd = new FormData()
+        fd.append('service_provider_name', service_provider_name)
+        fd.append('plan', plan)
+        fd.append('amount', amount)
+        fd.append('p', p)
+        fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+        $.ajax({
+            url: hosturl + "/api/PaymentHistory/service_provider_purchased_plan_list_pagination_api",
+            data: fd,
+            headers: { "Authorization": "Bearer {{token}}" },
+
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                swal({
+                    icon: "info",
+                    title: "",
+                    text: "Loading...",
+                    buttons: false,
+
+                });
+            },
+            success: function (response) {
+                var infohtml = ''
+                swal.close()
+                console.log('response d', response)
+                if (response.count != 0) {
+                    var counter = parseInt(p + "1") - parseInt(10)
+
+                    $.each(response.results, function (i, o) {
+                        
+                        infohtml += `
+                            
+                                                
+                                    <tr>
+                                        <td>
+                                            ${counter}
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <div>
+                                                    ${o.service_provider_details.business_logo ?`<img src="${hosturl + o.service_provider_details.business_logo  }" width="35" height="35" class="mx-1" >`:``}
+                                                </div> 
+                                                <div>
+                                                    <div><b>Business Name:</b> ${o.service_provider_details.business_name || ''}</div>
+                                                    <div><b>Owner:</b> ${o.service_provider_details.owner_name || ''}</div>
+                                                    <div><b>Email:</b> ${o.service_provider_details.email || ''}</div>
+                                                    <div><b>Phone:</b> ${o.service_provider_details.mobile_number || ''}</div>
+                                                    <div><b>Parent Category:</b> ${o.service_provider_details.parent_service_name || ''}</div>
+                                                    <div><b>Child Category:</b> ${o.service_provider_details.child_service_name || ''}</div>
+                                                    <div><a href="${o.service_provider_details.website || ''}" target="_blank">Website</a></div>
+
+
+                                                </div>   
+                                            </div>
+                                        </td>
+                                        <td>
+                                                <div>
+                                                    <div><b>Plan:</b> ${o.plan_name || ''}</div>
+                                                    <div><b>Days:</b> ${o.plan_days || ''}</div>
+                                                    <div><b>Amount:</b> ${o.amount || ''}</div>
+
+
+
+                                                </div> 
+                                            
+                                        </td>
+                                        <td>
+                                            <div> ${o.plan_description || ''}</div>
+                                        </td>
+                                        <td>
+                                            <div> ${o.status || 'Pending'}</div>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                            
+                            
+                            
+           
+                      `
+                      counter += 1
+                    });
+                    $('#plan_table_body').html(infohtml);
+                    var totalfilter = Math.ceil(parseInt(response.count) / 10);
+                    $('#pagination-demo2').twbsPagination({
+                        totalPages: totalfilter,
+                        visiblePages: 3,
+                        next: 'Next',
+                        prev: 'Prev',
+                        onPageClick: function (event, page) {
+                            var testflag = true;
+                            //fetch content and render here
+                            filternamepageno = page
+                            if (testflag == true) {
+                                testflag = false;
+                                get_table_data(page)
+                            }
+                            $('#page-content').text('Page ' + page) + ' content here';
+                        }
+                    })
+
+
+
+                    // swal({
+                    //     icon: "success",
+                    //     title: "",
+                    //     text: "Data fetched successfully !",
+                    //     button: "Close",
+                    // });
+                } else {
+                    infohtml = `
+                                <tr class="border-bottom text-center">
+                                    <td colspan="5">No Data found</td>
+                                </tr>
+                    `
+                    $('#plan_table_body').html(infohtml);
+
+                    swal({
+                        icon: "error",
+                        title: "",
+                        text: "No Data Found !",
+                        button: "Close",
+                    });
+                }
+
+            }
+        })
+
+    }
+
+    function delete_plan(id) {
+        swal({
+            title: "Are you sure?",
+            text: "you want to delete it .",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: hosturl + "/api/PaymentHistory/plandelete",
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer {{token}}'
+                        },
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            'plan_id': id
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+    
+
+                        },
+                        success: function (response) {
+                            // Pagination()
+                            if (response['response']['n'] == 1) {
+                                swal({
+                                    icon: "success",
+                                    title: "",
+                                    text: response['response']['msg'],
+                                    button: "Close",
+                                }).then(() => {
+                                    // Code to execute after the user closes the SweetAlert dialog
+                                    Pagination(); // Reload the page
+                                });
+
+
+
+                            }
+                            else {
+                                swal({
+                                    icon: "error",
+                                    title: "",
+                                    text: response['response']['msg'],
+                                    button: "Close",
+                                }).then(() => {
+                                    // Code to execute after the user closes the SweetAlert dialog
+                                    location.reload(); // Reload the page
+                                });
+                            }
+
+
+
+
+                        }
+                    });
+
+                }
+            })
+    }
+
+
+</script>
+{%endblock page_js %}
