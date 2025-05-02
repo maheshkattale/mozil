@@ -193,10 +193,13 @@ class addchildservice(GenericAPIView):
             return Response({ "data":{},"response":{"n":0,"msg":"child service already exist", "status":"error"}})
 
 class childservicelist(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     def get(self,request):
+        ParentServiceId=request.data.get('ParentServiceId')
         childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
+        if ParentServiceId is not None and ParentServiceId !='':
+            childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
         serializer = ChildServicesSerializer(childservice_objs,many=True)
         return Response({
             "data" : serializer.data,
@@ -208,12 +211,16 @@ class childservicelist(GenericAPIView):
         })
     
 class childservice_list_pagination_api(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPagination
     def post(self,request):
-        childserviceMaster_objs = ChildServices.objects.filter(isActive=True).order_by('id')
-        page4 = self.paginate_queryset(childserviceMaster_objs)
+        ParentServiceId=request.data.get('ParentServiceId')
+        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
+        if ParentServiceId is not None and ParentServiceId !='':
+            childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
+
+        page4 = self.paginate_queryset(childservice_objs)
         serializer = CustomChildServicesSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
     

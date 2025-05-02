@@ -912,6 +912,9 @@ class add_service_provider_weekly_schedule(GenericAPIView):
     def post(self,request):
         data={}
         request_data = request.data.copy()
+
+
+
         data['service_provider_id']=request.data.get('service_provider_id')
         if data['service_provider_id'] is None or data['service_provider_id'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
@@ -1140,6 +1143,34 @@ class register_new_service_provider(GenericAPIView):
                 first_key, first_value = next(iter(serializer1.errors.items()))
                 return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class register_new_consumer(GenericAPIView):
@@ -1738,7 +1769,7 @@ class change_status(GenericAPIView):
     def post(self,request):
         data={}
         
-        data['service_provider_id']=request.data.get('service_provider_id')
+        data['service_provider_id']=str(request.data.get('service_provider_id'))
         if data['service_provider_id'] is None or data['service_provider_id'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide service provider id", "status":"error"}})
         
@@ -1764,6 +1795,40 @@ class change_status(GenericAPIView):
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
             return Response({"data":{},"response": {"n": 0, "msg": 'user not found ',"status":"error"}})
+
+
+class change_user_status(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        
+        data['id']=str(request.data.get('id'))
+        if data['id'] is None or data['id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide User id", "status":"error"}})
+        
+        user_obj = User.objects.filter(isActive=True, id=data['id']).first()
+        if user_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found", "status": "error"}})
+        
+        if user_obj is not None:
+            if user_obj.status:
+                data['status'] = False
+                msg="User Deactivated Successfully."
+            else:
+                data['status'] = True
+                msg="User Activated Successfully."
+
+            serializer =UserSerializer(user_obj,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": msg,"status":"success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        else:
+            return Response({"data":{},"response": {"n": 0, "msg": 'user not found ',"status":"error"}})
+
 
 
 class check_business_name_availablity(GenericAPIView):

@@ -146,4 +146,21 @@ def service_provider_verification(request):
 
 
 
+def users_list(request):
+    token = request.session.get('token',False)
+    if token:
+
+        return render(request, 'Users/users_list.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+
+
+
+
+
+
+
+
 

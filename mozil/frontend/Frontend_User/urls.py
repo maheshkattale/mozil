@@ -15,6 +15,7 @@ urlpatterns = [
 
 
     path('service_provider_verification', v.service_provider_verification, name='service_provider_verification'),
+    path('users_list', v.users_list, name='users_list'),
 
 
 

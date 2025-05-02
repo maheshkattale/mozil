@@ -35,7 +35,6 @@ urlpatterns = [
     path('userdelete', userdelete.as_view(), name = 'userdelete'),
     path('userbyid', userbyid.as_view(), name = 'userbyid'),
 
-
     path('create_new_service_provider', create_new_service_provider.as_view(), name = 'create_new_service_provider'),
     path('update_service_provider_basic_details', update_service_provider_basic_details.as_view(), name = 'update_service_provider_basic_details'),
     path('service_provider_list_pagination_api', service_provider_list_pagination_api.as_view(), name = 'service_provider_list_pagination_api'),
@@ -71,6 +70,7 @@ urlpatterns = [
     path('change_verification', change_verification.as_view(), name = 'change_verification'),
     path('change_guarented', change_guarented.as_view(), name = 'change_guarented'),
     path('change_status', change_status.as_view(), name = 'change_status'),
+    path('change_user_status', change_user_status.as_view(), name = 'change_user_status'),
 
 
 
