@@ -18,4 +18,6 @@ urlpatterns = [
     path('childservicedelete', childservicedelete.as_view(), name = 'childservicedelete'),
     path('childservicebyid', childservicebyid.as_view(), name = 'childservicebyid'),
 
+    path('parent_child_service_list', parent_child_service_list.as_view(), name = 'parent_child_service_list'),
+
 ]

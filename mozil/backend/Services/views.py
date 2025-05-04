@@ -30,7 +30,11 @@ class addparentservice(GenericAPIView):
         if icon_image is not None and icon_image !='':
             data['icon_image']=icon_image 
 
+        featured_image=request.FILES.get('featured_image')       
+        if featured_image is not None and featured_image !='':
+            data['featured_image']=featured_image 
 
+            
         if data['Name'] is None or data['Name'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide parent service name", "status":"error"}})
         
@@ -93,7 +97,7 @@ class parentserviceupdate(GenericAPIView):
             data['Description']=str(request.data.get('Description')).lower()
             # data['updatedBy'] =str(request.user.id)
             if data['Name'] is None or data['Name'] =='':
-                return Response({ "data":{},"response":{"n":0,"msg":"please provide parent service name", "status":"error"}})
+                return Response({ "data":{},"response":{"n":0,"msg":"Please provide parent service name", "status":"error"}})
         
             parentserviceindata = ParentServices.objects.filter(Name=data['Name'],isActive= True).exclude(id=id).first()
             if parentserviceindata is not None:
@@ -102,6 +106,10 @@ class parentserviceupdate(GenericAPIView):
                 icon_image=request.FILES.get('icon_image')       
                 if icon_image is not None and icon_image !='' and icon_image !='undefined' :
                     data['icon_image']=icon_image 
+                featured_image=request.FILES.get('featured_image')       
+                if featured_image is not None and featured_image !='' and featured_image !='undefined' :
+                    data['featured_image']=featured_image 
+
                 serializer = ParentServicesSerializer(parentserviceexist,data=data,partial=True)
                 if serializer.is_valid():
                     serializer.save()
@@ -185,12 +193,12 @@ class addchildservice(GenericAPIView):
             serializer = ChildServicesSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"data" : serializer.data,"response":{"n":1,"msg":"child service added Successfully!","status":"success"}})
+                return Response({"data" : serializer.data,"response":{"n":1,"msg":"Child service added Successfully!","status":"success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})           
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"child service already exist", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Child service already exist", "status":"error"}})
 
 class childservicelist(GenericAPIView):
     # authentication_classes=[userJWTAuthentication]
@@ -205,7 +213,7 @@ class childservicelist(GenericAPIView):
             "data" : serializer.data,
             "response":{
                 "n":1,
-                "msg":"child services found Successfully",
+                "msg":"Child services found Successfully",
                 "status":"success"
                 }
         })
@@ -216,7 +224,7 @@ class childservice_list_pagination_api(GenericAPIView):
     pagination_class = CustomPagination
     def post(self,request):
         ParentServiceId=request.data.get('ParentServiceId')
-        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
+        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('updatedAt')
         if ParentServiceId is not None and ParentServiceId !='':
             childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
 
@@ -240,7 +248,7 @@ class childserviceupdate(GenericAPIView):
             data['Description']= request.data.get('Description')
             # data['updatedBy'] =str(request.user.id)
             if data['Name'] is None or data['Name'] =='':
-                return Response({ "data":{},"response":{"n":0,"msg":"please provide child service name", "status":"error"}})
+                return Response({ "data":{},"response":{"n":0,"msg":"Please provide child service name", "status":"error"}})
 
             if data['ParentServiceId'] is None or data['ParentServiceId'] =='':
                 return Response({ "data":{},"response":{"n":0,"msg":"Please provide  Parent Service Id", "status":"error"}})
@@ -252,17 +260,17 @@ class childserviceupdate(GenericAPIView):
 
             childserviceindata = ChildServices.objects.filter(Name=data['Name'],isActive= True).exclude(id=id).first()
             if childserviceindata is not None:
-                return Response({"data":'',"response": {"n": 0, "msg": "child service already exist","status": "error"}})
+                return Response({"data":'',"response": {"n": 0, "msg": "Child service already exist","status": "error"}})
             else:
                 serializer = ChildServicesSerializer(childserviceexist,data=data,partial=True)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response({"data":serializer.data,"response": {"n": 1, "msg": "child service updated successfully","status": "success"}})
+                    return Response({"data":serializer.data,"response": {"n": 1, "msg": "Child service updated successfully","status": "success"}})
                 else:
                     first_key, first_value = next(iter(serializer.errors.items()))
                     return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "child service not found ","status": "error"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Child service not found ","status": "error"}})
 
 class childservicebyid(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -273,9 +281,9 @@ class childservicebyid(GenericAPIView):
         if childserviceobjects is not None:
             serializer = ChildServicesSerializer(childserviceobjects)
 
-            return Response({"data":serializer.data,"response": {"n": 1, "msg": "child service data shown successfully","status": "success"}})
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Child service data shown successfully","status": "success"}})
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "child service data not found  ","status": "success"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Child service data not found  ","status": "success"}})
 
 class childservicedelete(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -289,9 +297,48 @@ class childservicedelete(GenericAPIView):
             serializer = ChildServicesSerializer(existchildservice,data=data,partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"data":serializer.data,"response": {"n": 1, "msg": "child service deleted successfully","status": "success"}})
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "Child service deleted successfully","status": "success"}})
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
-            return Response({"data":'',"response": {"n": 0, "msg": "child service Not Found","status": "error"}})
+            return Response({"data":'',"response": {"n": 0, "msg": "Child service Not Found","status": "error"}})
+
+
+class parent_child_service_list(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        ParentServiceId=request.data.get('ParentServiceId')
+        if ParentServiceId is not None and ParentServiceId !='':
+            parent_service_obj=ParentServices.objects.filter(id=ParentServiceId,isActive=True).first()
+            if parent_service_obj is not None:
+                parent_serializer = ParentServicesSerializer(parent_service_obj)
+                childservice_objs = ChildServices.objects.filter(ParentServiceId=ParentServiceId,isActive=True).order_by('id')
+                serializer = ChildServicesSerializer(childservice_objs,many=True)
+                return Response({
+                    "data" : {'parent_service':parent_serializer.data,'child_service':serializer.data},
+                    "response":{
+                        "n":1,
+                        "msg":"Child services found Successfully",
+                        "status":"success"
+                        }
+                })
+            else:
+                return Response({
+                "data" : [],
+                "response":{
+                    "n":0,
+                    "msg":"parent services not  found",
+                    "status":"success"
+                    }
+            })
+        else:
+             return Response({
+                "data" : [],
+                "response":{
+                    "n":0,
+                    "msg":"Please provide parent services id",
+                    "status":"success"
+                    }
+            })

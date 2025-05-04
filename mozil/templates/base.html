@@ -96,7 +96,6 @@
 
           <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons ri-user-community-line"></i>
               <i class="menu-icon tf-icons ri-group-line"></i>
               <div class="text-truncate" data-i18n="User Management">User Management</div>
               <span class="badge bg-danger rounded-pill ms-auto"></span>
@@ -205,6 +204,14 @@
               <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
             </a>
           </li>
+
+          <li class="menu-item">
+            <a href="/advertisement/advertisements_list" class="menu-link" target="">
+              <i class="menu-icon tf-icons ri-advertisement-line"></i>
+              <div class="text-truncate" data-i18n="Advertisement">Advertisement</div>
+              <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
+            </a>
+          </li>
         </ul>
 
 
@@ -252,8 +259,8 @@
                           </div>
                         </div>
                         <div class="flex-grow-1">
-                          <h6 class="mb-0 small">John Doe</h6>
-                          <small class="text-muted">Admin</small>
+                          <h6 class="mb-0 small">{{user_name}}</h6>
+                          <small class="text-muted">{{role_name}}</small>
                         </div>
                       </div>
                     </a>
@@ -261,7 +268,7 @@
                   <li>
                     <div class="dropdown-divider"></div>
                   </li>
-                  <li>
+                  <!-- <li>
                     <a class="dropdown-item" href="javascript:void(0);">
                       <i class="ri-user-3-line ri-22px me-2"></i>
                       <span class="align-middle">My Profile</span>
@@ -282,7 +289,7 @@
                           class="flex-shrink-0 badge badge-center rounded-pill bg-danger h-px-20 d-flex align-items-center justify-content-center">4</span>
                       </span>
                     </a>
-                  </li>
+                  </li> -->
                   <li>
                     <div class="dropdown-divider"></div>
                   </li>
@@ -444,6 +451,8 @@
         });
       });
     });
+  
+  
   </script>
   {% endblock page_js %}
 

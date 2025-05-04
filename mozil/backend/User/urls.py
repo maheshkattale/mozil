@@ -52,11 +52,13 @@ urlpatterns = [
     path('update_service_provider_offered_service', update_service_provider_offered_service.as_view(), name = 'update_service_provider_offered_service'),
     path('delete_service_provider_offered_service', delete_service_provider_offered_service.as_view(), name = 'delete_service_provider_offered_service'),
     path('get_service_provider_offered_service_by_id', get_service_provider_offered_service_by_id.as_view(), name = 'get_service_provider_offered_service_by_id'),
+    path('service_provider_offered_service', service_provider_offered_service.as_view(), name = 'service_provider_offered_service'),
 
 
     path('get_service_provider_highlights', get_service_provider_highlights.as_view(), name = 'get_service_provider_highlights'),
     path('add_service_provider_highlight', add_service_provider_highlight.as_view(), name = 'add_service_provider_highlight'),
     path('delete_service_provider_highlight', delete_service_provider_highlight.as_view(), name = 'delete_service_provider_highlight'),
+    path('get_service_provider_highlight_by_id', get_service_provider_highlight_by_id.as_view(), name = 'get_service_provider_highlight_by_id'),
     path('edit_service_provider_highlight', edit_service_provider_highlight.as_view(), name = 'edit_service_provider_highlight'),
 
 
@@ -66,6 +68,7 @@ urlpatterns = [
     path('delete_service_provider_portfolio', delete_service_provider_portfolio.as_view(), name = 'delete_service_provider_portfolio'),
     path('delete_portfolio_media', delete_portfolio_media.as_view(), name = 'delete_portfolio_media'),
     path('update_service_provider_portfolio', update_service_provider_portfolio.as_view(), name = 'update_service_provider_portfolio'),
+    path('get_service_provider_portfolio_by_id', get_service_provider_portfolio_by_id.as_view(), name = 'get_service_provider_portfolio_by_id'),
     
     path('change_verification', change_verification.as_view(), name = 'change_verification'),
     path('change_guarented', change_guarented.as_view(), name = 'change_guarented'),
@@ -85,5 +88,6 @@ urlpatterns = [
     
     path('service_provider_filter', service_provider_filter.as_view(), name = 'service_provider_filter'),
     path('service_provider_filter_pagination_api', service_provider_filter_pagination_api.as_view(), name = 'service_provider_filter_pagination_api'),
-
+    path('service_finder', service_finder.as_view(), name = 'service_finder'),
+    path('view_service_provider_all_details', view_service_provider_all_details.as_view(), name = 'view_service_provider_all_details'),
 ]

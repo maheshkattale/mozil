@@ -29,6 +29,10 @@
                 <label for="icon_image" class="form-label">Service  Icon</label>
                 <input class="form-control" type="file" id="icon_image">
             </div>
+            <div class="mb-4">
+              <label for="featured_image" class="form-label">Service Featured Image</label>
+              <input class="form-control" type="file" id="featured_image">
+            </div>
             <div class="btn btn-primary" onclick="return validation()">Submit</div>
             <div class="btn btn-danger">Cancel</div>
           </form>
@@ -49,6 +53,7 @@
     var name = $("#name").val().trim();
     var Description = $("#Description").val().trim();
     var icon_image = $('#icon_image')[0].files[0];
+    var featured_image = $('#featured_image')[0].files[0];
 
 
     if (IsValid(name)) {
@@ -80,6 +85,7 @@
       formData.append('Name', name);
       formData.append('Description', Description);
       formData.append('icon_image', icon_image);
+      formData.append('featured_image', featured_image);
 
 
       $.ajax({

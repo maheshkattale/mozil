@@ -36,10 +36,13 @@ def login(request):
 
         login_request = requests.post(login_url, data=data)
         login_response = login_request.json()
-
+        print("login_response",login_response)
         if login_response['response']['n'] == 1:
             token = login_response['data']['token']
             request.session['token'] = token 
+            request.session['role_id'] = login_response['data']['role'] 
+            request.session['role_name'] = login_response['data']['role_name']  
+            request.session['user_name'] = login_response['data']['username']   
             return HttpResponse(json.dumps(login_response),content_type='application/json')
         else:
             # messages.error(request, login_response['response']['msg'])

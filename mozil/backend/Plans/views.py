@@ -77,7 +77,7 @@ class addplan(GenericAPIView):
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})           
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"plan already exist", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Plan already exist", "status":"error"}})
 
 class plandelete(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
