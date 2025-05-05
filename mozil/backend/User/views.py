@@ -816,8 +816,9 @@ class update_service_provider_basic_details(GenericAPIView):
         if update_obj is None:
             return Response({ "data":{},"response":{"n":0,"msg":"Service provider not found", "status":"error"}})
 
+        data['Username']=request.data.get('Username')
 
-        if request_data['Username'] is None or request_data['Username'] =='':
+        if data['Username'] is None or data['Username'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
         data['Username']=request.data.get('Username')
 
@@ -830,6 +831,7 @@ class update_service_provider_basic_details(GenericAPIView):
         update_user_obj= User.objects.filter(isActive=True, id=str(update_obj.userid)).first()
         emailobj = User.objects.filter(isActive=True, email=data['email']).exclude(id=str(update_obj.userid)).first()
         mobileobj = User.objects.filter(isActive=True, mobileNumber=mobileNumber).exclude(id=str(update_obj.userid)).first()        
+   
         if emailobj is not None:
             return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
         elif mobileobj is not None:        
@@ -872,6 +874,7 @@ class update_service_provider_basic_details(GenericAPIView):
                         data['business_logo'] = request.FILES.get('business_logo')
 
                     data['isActive'] = True
+                    
                     serializer = ServiceProviderSerializer(update_obj,data=data,partial=True)
                     if serializer.is_valid():
                         serializer.save()
