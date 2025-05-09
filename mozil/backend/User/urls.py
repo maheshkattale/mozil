@@ -90,4 +90,10 @@ urlpatterns = [
     path('service_provider_filter_pagination_api', service_provider_filter_pagination_api.as_view(), name = 'service_provider_filter_pagination_api'),
     path('service_finder', service_finder.as_view(), name = 'service_finder'),
     path('view_service_provider_all_details', view_service_provider_all_details.as_view(), name = 'view_service_provider_all_details'),
+
+
+    path('parent_service_suggestive_search', parent_service_suggestive_search.as_view(), name = 'parent_service_suggestive_search'),
+    path('get_service_provider_media_list', get_service_provider_media_list.as_view(), name = 'get_service_provider_media_list'),
+
+
 ]

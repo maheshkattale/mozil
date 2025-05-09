@@ -2401,11 +2401,208 @@ class view_service_provider_all_details(GenericAPIView):
                     "response": {"n": 0, "msg": "service providers id not found", "status": "error"}
                 })
 
+# class parent_service_suggestive_search(GenericAPIView):
+#     # authentication_classes = [userJWTAuthentication]
+#     # permission_classes = (permissions.IsAuthenticated,)
+    
+#     def post(self, request):
+
+#         service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+#         # Get filter parameters from request
+#         search=request.data.get('search')
+#         if search is not None and search !='':
+
+#             service_provider_ids1=list(ServiceProvider.objects.filter(business_name__icontains=search,isActive=True).values_list('id',flat=True))
+#             service_provider_ids2=list(ServiceProviderOfferedServices.objects.filter(short_description__icontains=search,isActive=True).values_list('service_provider_id',flat=True))
+#             service_provider_ids3=list(ServiceProviderHighlights.objects.filter(name__icontains=search,isActive=True).values_list('service_provider_id',flat=True))
+#             service_provider_ids=service_provider_ids1+service_provider_ids2+service_provider_ids3
+            
+#             print("service_provider_ids",service_provider_ids)
 
 
 
 
+#             parent_service_ids=list(ParentServices.objects.filter(Name__icontains=search,isActive=True).values_list('id',flat=True))
+#             child_service_ids=list(ChildServices.objects.filter(Name__icontains=search,isActive=True).values_list('id',flat=True))
+            
+#             if parent_service_ids !=[]:
+#                 service_provider_objs=service_provider_objs.filter(parent_service__in=parent_service_ids)
 
+#             if child_service_ids !=[]:
+#                 service_provider_objs=service_provider_objs.filter(child_service__in=child_service_ids)
+
+ 
+#             if service_provider_ids !=[]:
+#                 service_provider_objs=service_provider_objs.filter(id__in=service_provider_ids)
+
+
+        
+
+#         existing_parent_service_ids=list(service_provider_objs.values_list('parent_service',flat=True))
+#         parent_services_objs=ParentServices.objects.filter(id__in=existing_parent_service_ids,isActive=True)
+#         if parent_services_objs.exists():
+#             parent_service_serializer=ParentServicesSerializer(parent_services_objs,many=True)
+
+#             parent_service_serializer_list=parent_service_serializer.data
+#             for parent_service in parent_service_serializer_list:
+#                 parent_service_provider_objs=service_provider_objs.filter(parent_service=parent_service['id'],isActive=True)
+#                 parent_service_provider_serializer=CustomServiceProviderSerializer(parent_service_provider_objs,many=True)
+#                 parent_service['service_providers_list']=parent_service_provider_serializer.data
+                
+#                 # print("par",parent_service)
+
+
+
+#             return Response({
+#                     "data": parent_service_serializer_list,
+#                     "response": {"n": 1, "msg": "service providers found successfully", "status": "success"}
+#                 })
+#         else:
+#             return Response({
+#                     "data": [],
+#                     "response": {"n": 0, "msg": "service providers not found", "status": "error"}
+#                 })
+
+
+
+class parent_service_suggestive_search(GenericAPIView):
+    # authentication_classes = [userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    
+    def post(self, request):
+        search = request.data.get('search', '').strip()
+        
+        if not search:
+            return Response({
+                "data": [],
+                "response": {"n": 0, "msg": "Please provide a search term", "status": "error"}
+            })
+
+        # Start with all active service providers
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True)
+        # print("0",service_provider_objs.count())
+        
+        # Get distinct service provider IDs that match any of our criteria
+        service_provider_ids = set()
+
+        # Search in business name
+        service_provider_ids.update(
+            ServiceProvider.objects.filter(
+                business_name__icontains=search,
+                isActive=True
+            ).values_list('id', flat=True)
+        )
+        # print("1",service_provider_ids)
+
+        # Search in offered services
+        service_provider_ids.update(
+            ServiceProviderOfferedServices.objects.filter(
+                short_description__icontains=search,
+                isActive=True
+            ).values_list('service_provider_id', flat=True)
+        )
+        # print("2",service_provider_ids)
+
+
+        # Search in highlights
+        service_provider_ids.update(
+            ServiceProviderHighlights.objects.filter(
+                name__icontains=search,
+                isActive=True
+            ).values_list('service_provider_id', flat=True)
+        )
+        # print("3",service_provider_ids)
+
+        # Search in parent services (convert IDs to strings for CharField comparison)
+        parent_service_ids = ParentServices.objects.filter(
+            Name__icontains=search,
+            isActive=True
+        ).values_list('id', flat=True)
+        # print("4",service_provider_ids)
+        
+        service_provider_ids.update(
+            ServiceProvider.objects.filter(
+                parent_service__in=[str(pid) for pid in parent_service_ids],
+                isActive=True
+            ).values_list('id', flat=True)
+        )
+        # print("5",service_provider_ids)
+
+        # Search in child services (convert IDs to strings for CharField comparison)
+        child_service_ids = ChildServices.objects.filter(
+            Name__icontains=search,
+            isActive=True
+        ).values_list('id', flat=True)
+        # print("6",service_provider_ids)
+        
+        service_provider_ids.update(
+            ServiceProvider.objects.filter(
+                child_service__in=[str(cid) for cid in child_service_ids],
+                isActive=True
+            ).values_list('id', flat=True)
+        )
+        # print("7",service_provider_ids)
+
+        # Get all matching service providers
+        service_provider_objs = ServiceProvider.objects.filter(
+            id__in=service_provider_ids,
+            isActive=True
+        ).distinct()
+        # print("8",service_provider_ids)
+
+        # Get all unique parent services from the matching providers
+        parent_service_ids = service_provider_objs.values_list(
+            'parent_service',
+            flat=True
+        ).distinct()
+        # print("9",service_provider_ids)
+
+        # Convert string IDs back to integers for ParentServices query
+        parent_services_objs = ParentServices.objects.filter(
+            id__in=[int(pid) for pid in parent_service_ids if pid and pid.isdigit()],
+            isActive=True
+        )
+        # print("10",service_provider_ids)
+
+
+        if not parent_services_objs.exists():
+            return Response({
+                "data": [],
+                "response": {"n": 0, "msg": "No service providers found", "status": "error"}
+            })
+
+        # Serialize the response
+        parent_service_serializer = ParentServicesSerializer(parent_services_objs, many=True)
+        parent_service_data = parent_service_serializer.data
+
+        # Add service providers to each parent service
+        for parent_service in parent_service_data:
+            providers = service_provider_objs.filter(
+                parent_service=str(parent_service['id'])
+            )
+            provider_serializer = CustomServiceProviderSerializer(providers, many=True)
+            parent_service['service_providers_list'] = provider_serializer.data
+
+        return Response({
+            "data": parent_service_data,
+            "response": {
+                "n": len(parent_service_data),
+                "msg": "Service providers found successfully",
+                "status": "success"
+            }
+        })
+
+class get_service_provider_media_list(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        service_provider_id=request.data.get('service_provider_id')
+        if service_provider_id is not None:
+            portfolio_obj= ServiceProviderPortfolioMedia.objects.filter(isActive=True,service_provider_id=service_provider_id).order_by('id')
+            serializer = ServiceProviderPortfolioMediaSerializer(portfolio_obj ,many=True)
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Media list found successfully","status": "success"}})
+        else:
+            return Response({"data":[],"response": {"n": 0, "msg": "Please provide service provider id","status": "error"}})
 
 
 
