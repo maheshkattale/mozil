@@ -53,13 +53,13 @@
                 </div>
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input class="form-control" type="email" placeholder="john@example.com" id="email"
-                    value="{{obj.user.email}}" />
+                    value="{{obj.user.email|default:''}}" />
                   <label for="email">Email</label>
                 </div>
 
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" id="mobile_number" class="form-control phone-mask" placeholder="658 799 8941"
-                    aria-label="658 799 8941" aria-describedby="mobile_number" value="{{obj.user.mobileNumber}}" />
+                    aria-label="658 799 8941" aria-describedby="mobile_number" value="{{obj.user.mobileNumber|default:''}}" />
                   <label class="" for="mobile_number">Phone No</label>
                 </div>
 
@@ -67,13 +67,13 @@
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" id="alternate_mobile_number" class="form-control phone-mask"
                     placeholder="658 799 8941" aria-label="658 799 8941" aria-describedby="alternate_mobile_number"
-                    value="{{obj.service_provider.alternate_mobile_number}}" />
+                    value="{{obj.service_provider.alternate_mobile_number|default:''}}" />
                   <label class="" for="alternate_mobile_number">Alternate Phone No</label>
                 </div>
 
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" class="form-control" id="website" placeholder="website"
-                    value="{{obj.service_provider.website}}" />
+                    value="{{obj.service_provider.website|default:''}}" />
                   <label for="website">website</label>
                 </div>
 
@@ -111,7 +111,7 @@
                 </div>
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <textarea id="Description" class="form-control" placeholder="Please enter description."
-                    style="height: 60px;">{{obj.service_provider.description}}</textarea>
+                    style="height: 60px;">{{obj.service_provider.description|default:''}}</textarea>
                   <label for="Description">Description</label>
                 </div>
 
@@ -120,22 +120,22 @@
 
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" class="form-control" id="lattitude" placeholder="lattitude"
-                    value="{{obj.service_provider.lattitude}}" />
+                    value="{{obj.service_provider.lattitude|default:''}}" />
                   <label for="lattitude">lattitude</label>
                 </div>
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" class="form-control" id="longitude" placeholder="longitude"
-                    value="{{obj.service_provider.longitude}}" />
+                    value="{{obj.service_provider.longitude|default:''}}" />
                   <label for="longitude">longitude</label>
                 </div>
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" class="form-control" id="radius" placeholder="radius"
-                    value="{{obj.service_provider.radius}}" />
+                    value="{{obj.service_provider.radius|default:''}}" />
                   <label for="radius">radius</label>
                 </div>
                 <div class="form-floating form-floating-outline mb-6 col-4">
                   <input type="text" class="form-control" id="business_name" placeholder="business_Name"
-                    value="{{obj.service_provider.business_name}}" />
+                    value="{{obj.service_provider.business_name|default:''}}" />
                   <label for="business_name">Business Name</label>
                 </div>
                 <div class="mb-4">
@@ -803,7 +803,7 @@
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
       formData.append('Username', name);
       formData.append('email', email);
-      formData.append('mobileNumber', mobile_number);
+      formData.append('mobile_number', mobile_number);
       formData.append('alternate_mobile_number', alternate_mobile_number);
       formData.append('website', website);
       formData.append('parent_service', parent_service);

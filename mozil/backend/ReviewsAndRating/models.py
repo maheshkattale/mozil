@@ -8,11 +8,12 @@ from django.db.models.deletion import CASCADE
 
 
 class ReviewsAndRating(TrackingModel):
-    rating_count = models.CharField(max_length=250,blank=True,null=True)
+    rating_count = models.FloatField(default=0, blank=True, null=True)
     description = models.TextField(blank=True,null=True)
     userid = models.CharField(max_length=250,blank=True,null=True) #rating submited byy
     service_provider_id = models.CharField(max_length=250,blank=True,null=True) #rating submited byy
     status = models.CharField(default="Pending",max_length=250,blank=True,null=True)
+
 
 class ReviewsAndRatingMedia(TrackingModel):
     service_provider_id = models.CharField(max_length=255,null=True, blank=True)

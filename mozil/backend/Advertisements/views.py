@@ -26,6 +26,10 @@ class advertisement_list_pagination_api(GenericAPIView):
 
     def post(self,request):
         advertisements_objs = AdvertisementsMaster.objects.filter(isActive=True).order_by('-id')
+        search = request.data.get('search')
+        if search is not None and search != '':
+            advertisements_objs = advertisements_objs.filter(Q(heading__icontains=search) | Q(short_description__icontains=search)| Q(long_description__icontains=search))
+        
         page4 = self.paginate_queryset(advertisements_objs)
         serializer = AdvertisementsMasterSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
@@ -45,6 +49,36 @@ class advertisement_list(GenericAPIView):
                 }
         })
     
+class active_advertisement_list(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request):
+        today = datetime.now().strftime('%Y-%m-%d')  # adjust format if needed
+
+        advertisements_objs = AdvertisementsMaster.objects.filter(
+            isActive=True,
+            start_date__lte=today,  # start date is less than or equal to today
+            end_date__gte=today    # end date is greater than or equal to today
+        ).order_by('id')
+        search = request.GET.get('search')
+        print("search",search)
+        if search:
+            advertisements_objs = advertisements_objs.filter(
+                Q(heading__icontains=search) |
+                Q(short_description__icontains=search) |
+                Q(long_description__icontains=search)
+            )
+
+        serializer = AdvertisementsMasterSerializer(advertisements_objs,many=True)
+        return Response({
+            "data" : serializer.data,
+            "response":{
+                "n":1,
+                "msg":"Advertisements found Successfully",
+                "status":"success"
+                }
+        })
+
 
 class addadvertisement(GenericAPIView):
     authentication_classes=[userJWTAuthentication]

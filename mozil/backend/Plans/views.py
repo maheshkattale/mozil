@@ -26,6 +26,10 @@ class service_provider_plan_list_pagination_api(GenericAPIView):
 
     def post(self,request):
         plans_objs = ServiceProviderPlanMaster.objects.filter(isActive=True).order_by('-id')
+        search = request.data.get('search')
+        if search is not None and search != '':
+            plans_objs = plans_objs.filter(Q(Name__icontains=search) | Q(description__icontains=search)| Q(amount__icontains=search)| Q(days__icontains=search))
+
         page4 = self.paginate_queryset(plans_objs)
         serializer = ServiceProviderPlanMasterSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)

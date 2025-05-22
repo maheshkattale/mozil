@@ -33,6 +33,7 @@ urlpatterns = [
     path('userlist', userlist.as_view(), name = 'userlist'),
     path('userupdate', userupdate.as_view(), name = 'userupdate'),
     path('userdelete', userdelete.as_view(), name = 'userdelete'),
+    path('userdeleteundo', userdeleteundo.as_view(), name = 'userdeleteundo'),
     path('userbyid', userbyid.as_view(), name = 'userbyid'),
 
     path('create_new_service_provider', create_new_service_provider.as_view(), name = 'create_new_service_provider'),
@@ -40,6 +41,7 @@ urlpatterns = [
     path('service_provider_list_pagination_api', service_provider_list_pagination_api.as_view(), name = 'service_provider_list_pagination_api'),
     path('serviceproviderdelete', serviceproviderdelete.as_view(), name = 'serviceproviderdelete'),
     path('get_service_provider_details', get_service_provider_details.as_view(), name = 'get_service_provider_details'),
+    path('serviceproviderdeleteonly', serviceproviderdeleteonly.as_view(), name = 'serviceproviderdeleteonly'),
 
     path('service_provider_weekly_schedule_pagination_api', service_provider_weekly_schedule_pagination_api.as_view(), name = 'service_provider_weekly_schedule_pagination_api'),
     path('add_service_provider_weekly_schedule', add_service_provider_weekly_schedule.as_view(), name = 'add_service_provider_weekly_schedule'),

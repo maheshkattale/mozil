@@ -13,6 +13,11 @@
             <h5 class="card-header">Services Provider Verification</h5>
         </div>
         <div>
+            <div class="d-flex align-items-center">
+                <i class="ri-search-line ri-22px me-2"></i>
+                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
+                    aria-label="Search..." onkeyup="Pagination()" />
+            </div>
         </div>
     </div>
     <div class="table-responsive text-nowrap">
@@ -57,11 +62,15 @@
         get_table_data(1);
 
     }
-    
-    function get_table_data(p) {
 
+    function get_table_data(p) {
+        var search = $('#search').val()
+        if (search == undefined) {
+            search = ''
+        }
         var fd = new FormData()
         fd.append('p', p)
+        fd.append('search', search)
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({
             url: hosturl + "/api/User/service_provider_list_pagination_api",
@@ -98,7 +107,7 @@
                                         <td>
                                             <div class="d-flex">
                                                 <div>
-                                                    ${o.business_logo ?`<img src="${hosturl + o.business_logo  }" width="35" height="35" class="mx-1" >`:``}
+                                                    ${o.business_logo ? `<img src="${hosturl + o.business_logo}" width="35" height="35" class="mx-1" >` : ``}
                                                 </div> 
                                                 <div>
                                                     <div><b>Business Name:</b> ${o.business_name || ''}</div>
@@ -121,23 +130,23 @@
                                         </td>
                                         <td>
                                             <div class="form-check form-switch mb-2">
-                                            <input class="form-check-input" type="checkbox" id="verification${o.id}" ${o.license_verification_status?`checked`:``} onchange="change_verification('${o.id}',this);">
-                                            <label class="form-check-label" for="verification${o.id}">${o.license_verification_status?`Verified`:`Unverified`}</label>
+                                            <input class="form-check-input" type="checkbox" id="verification${o.id}" ${o.license_verification_status ? `checked` : ``} onchange="change_verification('${o.id}',this);">
+                                            <label class="form-check-label" for="verification${o.id}">${o.license_verification_status ? `Verified` : `Unverified`}</label>
                                             </div>
                                             
                                         </td>
                                         <td>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="guarented${o.id}" ${o.mozil_guarented?`checked`:``} onchange="change_guarented('${o.id}',this);" />
+                                                <input class="form-check-input" type="checkbox" value="" id="guarented${o.id}" ${o.mozil_guarented ? `checked` : ``} onchange="change_guarented('${o.id}',this);" />
                                                 <label class="form-check-label" for="guarented${o.id}">
-                                                ${o.mozil_guarented?`Guarenteed`:`Non-Guarented`}
+                                                ${o.mozil_guarented ? `Guarenteed` : `Non-Guarented`}
                                                 </label>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form-check form-switch mb-2">
-                                            <input class="form-check-input" type="checkbox" id="status${o.id}" ${o.status?`checked`:``}  onchange="change_status('${o.id}',this)">
-                                            <label class="form-check-label" for="status${o.id}" >${o.status?`Active`:`Deactive`}</label>
+                                            <input class="form-check-input" type="checkbox" id="status${o.id}" ${o.status ? `checked` : ``}  onchange="change_status('${o.id}',this)">
+                                            <label class="form-check-label" for="status${o.id}" >${o.status ? `Active` : `Deactive`}</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -147,7 +156,7 @@
            
                       `
 
-                      counter += 1
+                        counter += 1
                     });
                     $('#service_provider_table_body').html(infohtml);
                     var totalfilter = Math.ceil(parseInt(response.count) / 10);
@@ -192,8 +201,8 @@
 
     }
 
-    function change_verification(id,input) {
-        
+    function change_verification(id, input) {
+
 
         swal({
             title: "Are you sure?",
@@ -217,12 +226,12 @@
                         dataType: 'json',
                         beforeSend: function () {
 
-    
+
 
                         },
                         success: function (response) {
                             if (response['response']['n'] == 1) {
-                                $('#verification'+id).prop('checked',response['data']['license_verification_status'])
+                                $('#verification' + id).prop('checked', response['data']['license_verification_status'])
                                 const label = $(`label[for="verification${id}"]`);
                                 if (response['data']['license_verification_status']) {
                                     label.text('Verified');
@@ -254,21 +263,21 @@
                         }
                     });
 
-                }else{
-                    if (input.checked){
-                        $('#verification'+id).prop('checked',false)
-                    }else{
-                        $('#verification'+id).prop('checked',true)
+                } else {
+                    if (input.checked) {
+                        $('#verification' + id).prop('checked', false)
+                    } else {
+                        $('#verification' + id).prop('checked', true)
 
                     }
-          
+
                 }
             })
     }
 
 
-    function change_guarented(id,input) {
-        
+    function change_guarented(id, input) {
+
         swal({
             title: "Are you sure?",
             text: "you want to change guarented status.",
@@ -291,12 +300,12 @@
                         dataType: 'json',
                         beforeSend: function () {
 
-    
+
 
                         },
                         success: function (response) {
                             if (response['response']['n'] == 1) {
-                                $('#guarented'+id).prop('checked',response['data']['mozil_guarented'])
+                                $('#guarented' + id).prop('checked', response['data']['mozil_guarented'])
                                 const label = $(`label[for="guarented${id}"]`);
                                 if (response['data']['mozil_guarented']) {
                                     label.text('Guarented');
@@ -328,20 +337,20 @@
                         }
                     });
 
-                }else{
-                    if (input.checked){
-                        $('#guarented'+id).prop('checked',false)
-                    }else{
-                        $('#guarented'+id).prop('checked',true)
+                } else {
+                    if (input.checked) {
+                        $('#guarented' + id).prop('checked', false)
+                    } else {
+                        $('#guarented' + id).prop('checked', true)
 
                     }
-          
+
                 }
             })
     }
 
-    function change_status(id,input) {
-        
+    function change_status(id, input) {
+
 
         swal({
             title: "Are you sure?",
@@ -365,12 +374,12 @@
                         dataType: 'json',
                         beforeSend: function () {
 
-    
+
 
                         },
                         success: function (response) {
                             if (response['response']['n'] == 1) {
-                                $('#status'+id).prop('checked',response['data']['status'])
+                                $('#status' + id).prop('checked', response['data']['status'])
                                 const label = $(`label[for="status${id}"]`);
                                 if (response['data']['status']) {
                                     label.text('Active');
@@ -402,14 +411,14 @@
                         }
                     });
 
-                }else{
-                    if (input.checked){
-                        $('#status'+id).prop('checked',false)
-                    }else{
-                        $('#status'+id).prop('checked',true)
+                } else {
+                    if (input.checked) {
+                        $('#status' + id).prop('checked', false)
+                    } else {
+                        $('#status' + id).prop('checked', true)
 
                     }
-          
+
                 }
             })
     }

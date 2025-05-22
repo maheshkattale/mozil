@@ -75,6 +75,12 @@ class parentservice_list_pagination_api(GenericAPIView):
 
     def post(self,request):
         parentserviceMaster_objs = ParentServices.objects.filter(isActive=True).order_by('-id')
+        search = request.data.get('search')
+        if search is not None and search !='':
+            parentserviceMaster_objs = parentserviceMaster_objs.filter(
+                Q(Name__icontains=search) | Q(Description__icontains=search)
+            )
+        
         page4 = self.paginate_queryset(parentserviceMaster_objs)
         serializer = ParentServicesSerializer(page4,many=True)
 
@@ -227,6 +233,11 @@ class childservice_list_pagination_api(GenericAPIView):
         childservice_objs = ChildServices.objects.filter(isActive=True).order_by('updatedAt')
         if ParentServiceId is not None and ParentServiceId !='':
             childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
+        search = request.data.get('search')
+        if search is not None and search !='':
+            childservice_objs = childservice_objs.filter(
+                Q(Name__icontains=search) | Q(Description__icontains=search)
+            )
 
         page4 = self.paginate_queryset(childservice_objs)
         serializer = CustomChildServicesSerializer(page4,many=True)

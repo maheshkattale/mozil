@@ -13,6 +13,13 @@
             <h5 class="card-header">Users</h5>
         </div>
         <div>
+            <div class="">
+              <div class="d-flex align-items-center">
+                <i class="ri-search-line ri-22px me-2"></i>
+                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
+                  aria-label="Search..." onkeyup="Pagination()" />
+              </div>
+            </div>
         </div>
     </div>
     <div class="table-responsive text-nowrap">
@@ -56,9 +63,13 @@
     }
     
     function get_table_data(p) {
-
+        var search = $('#search').val()
+        if (search == undefined) {
+            search = ''
+        }
         var fd = new FormData()
         fd.append('p', p)
+        fd.append('searchtext', search)
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({
             url: hosturl + "/api/User/user_list_pagination_api",

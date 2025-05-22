@@ -38,5 +38,6 @@ urlpatterns = [
     path('plan/',include(('Frontend_Plans.urls', 'Frontend_Plans'),namespace='Frontend_Plans')),
     path('payment_history/',include(('Frontend_PaymentHistory.urls', 'Frontend_PaymentHistory'),namespace='Frontend_PaymentHistory')),
     path('advertisement/',include(('Frontend_Advertisements.urls', 'Frontend_Advertisements'),namespace='Frontend_Advertisements')),
+    path('reviews/',include(('Frontend_ReviewsAndRating.urls', 'Frontend_ReviewsAndRating'),namespace='Frontend_ReviewsAndRating')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

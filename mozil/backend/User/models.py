@@ -94,6 +94,7 @@ class ServiceProvider(TrackingModel):
     average_rating = models.CharField(max_length=255,null=True,blank=True)
 
 
+
 class ServiceProviderWeeklySchedule(TrackingModel):
     userid = models.CharField(max_length=255,null=True, blank=True)
     service_provider_id = models.CharField(max_length=255,null=True, blank=True)

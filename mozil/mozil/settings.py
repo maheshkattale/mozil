@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'Frontend_Plans',
     'Frontend_PaymentHistory',
     'Frontend_Advertisements',
+    'Frontend_ReviewsAndRating',
 
 
 ]

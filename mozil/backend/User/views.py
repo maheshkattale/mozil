@@ -26,7 +26,8 @@ from django.db.models import F, FloatField, ExpressionWrapper,Q
 from django.db.models.functions import Radians, Power, Sin, Cos, ATan2, Sqrt
 import math
 
-
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 
 def createtoken(uuid,email,source):
     token = jwt.encode(
@@ -579,7 +580,26 @@ class userdelete(GenericAPIView):
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
-          
+
+class userdeleteundo(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data = {}
+        userID = request.data.get('userID')
+        existemp = User.objects.filter(id=userID,isActive=False).first()
+        if existemp is not None:
+            data['isActive'] = True
+            serializer = UserSerializer(existemp,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User retrived successfully","status": "success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        else:
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
+                
 #menu-----------------------------------------------------------------------------------------------
 class Menulist(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -793,13 +813,32 @@ class serviceproviderdelete(GenericAPIView):
                 if service_provider_obj is not None:
                     service_provider_obj.isActive=False
                     service_provider_obj.save()
-
                 return Response({"data":serializer1.data,"response": {"n": 1, "msg": "Service provider deleted successfully","status": "success"}})
             else:
                 first_key, first_value = next(iter(serializer1.errors.items()))
                 return Response({"data" : serializer1.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
+
+class serviceproviderdeleteonly(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data = {}
+        service_provider_id = request.data.get('service_provider_id')
+        if service_provider_id is not None and service_provider_id !='':
+            service_provider_obj = ServiceProvider.objects.filter(isActive=True, id=service_provider_id).first()        
+            if service_provider_obj is not None:
+                service_provider_obj.isActive=False
+                service_provider_obj.save()
+                return Response({"data":[],"response": {"n": 1, "msg": "Service provider deleted successfully","status": "success"}})
+            else:
+                return Response({"data":'',"response": {"n": 0, "msg": "service provider  not found ","status": "error"}})
+        else:
+            return Response({"data":'',"response": {"n": 0, "msg": "service provider id not found ","status": "error"}})
+
+
+
 
 class update_service_provider_basic_details(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -827,7 +866,7 @@ class update_service_provider_basic_details(GenericAPIView):
         if data['email'] is None or data['email'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
         
-
+        
         update_user_obj= User.objects.filter(isActive=True, id=str(update_obj.userid)).first()
         emailobj = User.objects.filter(isActive=True, email=data['email']).exclude(id=str(update_obj.userid)).first()
         mobileobj = User.objects.filter(isActive=True, mobileNumber=mobileNumber).exclude(id=str(update_obj.userid)).first()        
@@ -892,7 +931,13 @@ class service_provider_list_pagination_api(GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPagination
     def post(self,request):
+
         service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+        search=request.data.get("search")
+        if search is not None and search != '':
+            service_provider_objs = ServiceProvider.objects.filter(Q(business_name__icontains=search,isActive=True)| Q(mobile_number__icontains =search,isActive=True)).order_by('business_name')
+        else:
+            service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('business_name')
         page4 = self.paginate_queryset(service_provider_objs)
         serializer = CustomServiceProviderSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
@@ -1094,9 +1139,14 @@ class register_new_service_provider(GenericAPIView):
     def post(self,request):
         data={}
         request_data = request.data.copy()
+        logined_user_id = str(request.data.get('logined_user_id', ''))
+
         # if request_data['Username'] is None or request_data['Username'] =='':
         #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
         # data['Username']=request.data.get('Username')
+
+        
+        data['Username']=str(request.data.get('Username')).lower()
         data['email']=str(request.data.get('email')).lower()
         if data['email'] is None or data['email'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
@@ -1104,21 +1154,39 @@ class register_new_service_provider(GenericAPIView):
         data['textPassword']=request.data.get('textPassword')
         if data['textPassword'] is None or data['textPassword'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide user password", "status":"error"}})
-        
+
+
         # data['mobileNumber']=request.data.get('mobileNumber')
         # if data['mobileNumber'] is None or data['mobileNumber'] =='':
         #     return Response({ "data":{},"response":{"n":0,"msg":"Please provide user mobile number", "status":"error"}})
 
-        data['password'] = data['textPassword']
         data['isActive'] = True
         data['role'] = 2
 
 
-        emailobj = User.objects.filter(isActive=True, email=data['email']).first()
+        emailobj = User.objects.filter(isActive=True, email=data['email'])
+        if logined_user_id is not None and logined_user_id !='':
+            emailobj=emailobj.exclude(id=logined_user_id).first()
+        else:
+            emailobj=emailobj.first()
+
         if emailobj is not None:
             return Response({"data":'',"response": {"n": 0, "msg": "Email already exist", "status": "error"}})        
         else:
-            serializer1 = UserSerializer(data=data)
+            if logined_user_id is not None and logined_user_id !='':
+                update_user_obj=User.objects.filter(isActive=True, id=logined_user_id).first()
+                if update_user_obj is not None:
+                    data['password'] = make_password(data['textPassword'])
+
+                    serializer1 = UserSerializer(update_user_obj,data=data,partial=True)
+                else:
+                    data['password'] = data['textPassword']
+
+                    serializer1 = UserSerializer(data=data)
+
+            else:
+                data['password'] = data['textPassword']
+                serializer1 = UserSerializer(data=data)
             if serializer1.is_valid():
                 data['business_name']=request.data.get('business_name')
                 if data['business_name'] is None or data['business_name'] =='':
@@ -1150,10 +1218,15 @@ class register_new_service_provider(GenericAPIView):
                 if business_name_obj is not None:
                     return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
                 else:
+
+                    already_exist_service_provider_obj = ServiceProvider.objects.filter(isActive=True, userid=logined_user_id).first()        
+                    if already_exist_service_provider_obj is not None:
+                        return Response({"data":'',"response": {"n": 0, "msg": "This user is already register as service provider", "status": "error"}})     
+                    
                     serializer1.save()
                     userid = serializer1.data['id']
                     data['userid'] = str(userid)
-
+                    
                     serializer2 = ServiceProviderSerializer(data=data)
                     if serializer2.is_valid():
                         serializer2.save()
@@ -1193,8 +1266,6 @@ class register_consumer_as_service_provider(GenericAPIView):
 
         # data['password'] = data['textPassword']
         data['role'] = 2
-
-
         update_user_obj = User.objects.filter(isActive=True, id=str(request.user.id)).first()
         if update_user_obj is None:
             return Response({"data":'',"response": {"n": 0, "msg": "user not found", "status": "error"}})        
@@ -1211,10 +1282,10 @@ class register_consumer_as_service_provider(GenericAPIView):
                 if business_name_obj is not None:
                     return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
                 else:
+                    already_exists_service_provider=ServiceProvider.objects.filter(isActive=True, userid=str(request.user.id)).first()  
+                    if already_exists_service_provider is not None:
+                        return Response({"data":'',"response": {"n": 0, "msg": "This user already exists as service provider", "status": "error"}})        
 
-
-                    already_exists_service_provider=ServiceProvider.objects.filter(isActive=True, userid=serializer1.data['id']).first()  
-                    
                     serializer1.save()
                     userid = serializer1.data['id']
                     data['userid'] = str(userid)
@@ -1264,6 +1335,8 @@ class register_new_consumer(GenericAPIView):
     def post(self,request):
         data={}
         request_data = request.data.copy()
+        
+        
         data['Username']=request.data.get('Username')
         if data['Username'] is None or data['Username'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide consumer name", "status":"error"}})
@@ -2000,6 +2073,7 @@ class check_email_availablity(GenericAPIView):
     def post(self, request):
         data = {}
         email = request.data.get('email', '').strip().lower()
+        logined_user_id = str(request.data.get('logined_user_id', ''))
         data['email'] = email
 
         # Check if email is provided
@@ -2018,7 +2092,18 @@ class check_email_availablity(GenericAPIView):
             })
 
         # Check if email already exists
-        email_obj = User.objects.filter(isActive=True, email=email).first()
+
+        print("logined_user_id",logined_user_id)
+        email_obj = User.objects.filter(isActive=True, email=email)
+        if logined_user_id is not None and logined_user_id !='':
+            email_obj=email_obj.exclude(id=logined_user_id).first()
+        else:
+            email_obj=email_obj.first()
+
+
+
+
+
         if email_obj:
             return Response({
                 "data": {}, 
@@ -2054,15 +2139,23 @@ class send_verification_otp_mail(GenericAPIView):
                 'created_at': timezone.now()
             }
         )
-
-        # Send OTP via email
-        send_mail(
+        html_content = render_to_string('Mails/otp_email_template.html', {'otp': otp})
+        msg = EmailMultiAlternatives(
             subject="Your OTP Verification Code",
-            message=f"Your OTP code is {otp}. It will expire in 10 minutes.",
-            from_email="maheshkattale1926@gmail.com",  # Update this
-            recipient_list=[email],
-            fail_silently=False,
+            body=f"Your OTP code is {otp}. It will expire in 10 minutes.",  # Fallback text version
+            from_email="maheshkattale1926@gmail.com",
+            to=[email],
         )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send(fail_silently=False)
+        # Send OTP via email
+        # send_mail(
+        #     subject="Your OTP Verification Code",
+        #     message=f"Your OTP code is {otp}. It will expire in 10 minutes.",
+        #     from_email="maheshkattale1926@gmail.com",  # Update this
+        #     recipient_list=[email],
+        #     fail_silently=False,
+        # )
 
         return Response({
             "data": {"email": email}, 

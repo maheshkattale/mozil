@@ -22946,8 +22946,10 @@ html:not(.layout-footer-fixed) .content-wrapper {
 }
 
 .menu-vertical .app-brand {
-  padding-right: 1.2rem;
-  padding-left: 1.575rem;
+  /* padding-right: 1.2rem;
+  padding-left: 1.575rem; */
+      padding-right: 3.2rem;
+    padding-left: 0px;
 }
 
 .menu-horizontal .app-brand,
