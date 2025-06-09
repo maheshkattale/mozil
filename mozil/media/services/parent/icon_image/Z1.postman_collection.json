@@ -1,0 +1,3111 @@
+{
+	"info": {
+		"_postman_id": "57779799-7901-4ee6-96bb-11fff2dbb473",
+		"name": "Z1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23729869",
+		"_collection_link": "https://galactic-spaceship-175239.postman.co/workspace/My-Workspace~65d7ed24-cbc3-4ef5-8065-0d9ab544c590/collection/23729869-57779799-7901-4ee6-96bb-11fff2dbb473?action=share&source=collection_link&creator=23729869"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.environment.set(\"token\",response.data.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "s2@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "source",
+									"value": "Mobile",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/login",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/logout",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "oldpassword",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "newpassword",
+									"value": "54321",
+									"type": "text"
+								},
+								{
+									"key": "confirmpassword",
+									"value": "54321",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/changepassword",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"changepassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgetpasswordmail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Email",
+									"value": "mozil@zentrotechnologies.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/forgetpasswordmail",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"forgetpasswordmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "set new password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "750d3591-61b6-453f-9247-b6c8de5ed7ff",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "cfpassword",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/setnewpassword",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"setnewpassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "750d3591-61b6-453f-9247-b6c8de5ed7ff",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "cfpassword",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/resetpassword",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"resetpassword"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Master",
+			"item": [
+				{
+					"name": "createuser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Username",
+									"value": "maheshkattale",
+									"type": "text"
+								},
+								{
+									"key": "textPassword",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "mobileNumber",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mahesh@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "DepartmentId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/createuser",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"createuser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uatgodrej}}api/User/userlist",
+							"host": [
+								"{{uatgodrej}}api"
+							],
+							"path": [
+								"User",
+								"userlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user list pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hosturl}}api/User/user_list_pagination_api",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"user_list_pagination_api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userID",
+									"value": "d0932b44-32c7-4873-9b70-af689bccbdee",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{uatgodrej}}api/User/userbyid",
+							"host": [
+								"{{uatgodrej}}api"
+							],
+							"path": [
+								"User",
+								"userbyid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userID",
+									"value": "2781252b-5000-4ba2-b3de-f5d8fba6db2c",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}/api/User/userdelete",
+							"host": [
+								"{{mozil}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"userdelete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user undo delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userID",
+									"value": "2781252b-5000-4ba2-b3de-f5d8fba6db2c",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}/api/User/userdelete",
+							"host": [
+								"{{mozil}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"userdelete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userid",
+									"value": "c9bf44a7-6927-444c-a7b4-efc10f6b6aef",
+									"type": "text"
+								},
+								{
+									"key": "Username",
+									"value": "Mahesh B Kattale",
+									"type": "text"
+								},
+								{
+									"key": "mobileNumber",
+									"value": "88877665533",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "firoz@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "DepartmentId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/userupdate",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"userupdate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role master",
+			"item": [
+				{
+					"name": "add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RoleName\": \"newrole3\",\r\n    \"result\": [\r\n        {\r\n            \"create\": true,\r\n            \"read\": true,\r\n            \"edit\": false,\r\n            \"delete\": true,\r\n            \"menu_id\": 2\r\n        },\r\n        {\r\n            \"create\": false,\r\n            \"read\": true,\r\n            \"edit\": false,\r\n            \"delete\": true,\r\n            \"menu_id\": 3\r\n        },\r\n        {\r\n            \"create\": true,\r\n            \"read\": false,\r\n            \"edit\": false,\r\n            \"delete\": true,\r\n            \"menu_id\": 5\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hosturl}}/api/User/addrole",
+							"host": [
+								"{{hosturl}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"addrole"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "role update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "roleid",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "RoleName",
+									"value": "fgdcs6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}/api/User/roleupdate",
+							"host": [
+								"{{hosturl}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"roleupdate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "role  delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "roleid",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}/api/User/roledelete",
+							"host": [
+								"{{hosturl}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"roledelete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "role by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "roleid",
+									"value": "6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}/api/User/rolebyid",
+							"host": [
+								"{{hosturl}}"
+							],
+							"path": [
+								"api",
+								"User",
+								"rolebyid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rolelist",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/User/rolelist",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"User",
+								"rolelist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rolelist pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hosturl}}api/User/role_list_pagination_api",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"role_list_pagination_api"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service Provider Registration",
+			"item": [
+				{
+					"name": "business name availablity check",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "business_name",
+									"value": "mozil",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/check_business_name_availablity",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"check_business_name_availablity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "email availablity check",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "mahesh@gmail.com1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/check_email_availablity",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"check_email_availablity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send  verification otp mail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "kattalemahesh@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/send_verification_otp_mail",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"send_verification_otp_mail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "zentrotechnologies@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "793401",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/ValidateOTP",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"ValidateOTP"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register new service provider",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "s1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "textPassword",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "business_name",
+									"value": "s1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/register_new_service_provider",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"register_new_service_provider"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Plan",
+			"item": [
+				{
+					"name": "plan list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mozil}}api/Plans/service_provider_plan_list",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"Plans",
+								"service_provider_plan_list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchase",
+			"item": [
+				{
+					"name": "Purchase Plan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "plan_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}api/PaymentHistory/purchase_plan",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"PaymentHistory",
+								"purchase_plan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "purchase plan history",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "plan_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/PaymentHistory/purchase_plan_history",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"PaymentHistory",
+								"purchase_plan_history"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cunsumer Registration",
+			"item": [
+				{
+					"name": "check email availablity",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "1@1233.ksjdb",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/check_email_availablity",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"check_email_availablity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send  verification otp mail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "zentrotechnologies@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/send_verification_otp_mail",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"send_verification_otp_mail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "zentrotechnologies@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "793401",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/ValidateOTP",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"ValidateOTP"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register new consumer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "s1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "textPassword",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "business_name",
+									"value": "s1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/register_new_consumer",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"register_new_consumer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "service provider filter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "parent_service",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "child_service",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "license_verification_status",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "mozil_guarented",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "average_rating",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/service_provider_filter",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"service_provider_filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service finder",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "parent_service",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "child_service",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "license_verification_status",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "mozil_guarented",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "average_rating",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "search",
+									"value": "mozil",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}api/User/service_finder",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"User",
+								"service_finder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parent service suggestive search",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"value": "restraurant",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}api/User/parent_service_suggestive_search",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"User",
+								"parent_service_suggestive_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view service provider all details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "service_provider_id",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/User/view_service_provider_all_details",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"User",
+								"view_service_provider_all_details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get service provider media list",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "service_provider_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}api/User/get_service_provider_media_list",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"User",
+								"get_service_provider_media_list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Services",
+			"item": [
+				{
+					"name": "Parent Services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mozil}}api/Services/parentservicelist",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"Services",
+								"parentservicelist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Child Services",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ParentServiceId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/Services/childservicelist",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"Services",
+								"childservicelist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parent child service list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ParentServiceId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/Services/parent_child_service_list",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"Services",
+								"parent_child_service_list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Child Services Pagination",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "ParentServiceId",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/Services/childservice_list_pagination_api",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"Services",
+								"childservice_list_pagination_api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Parent Services Pagination",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{hosturl}}api/Services/parentservice_list_pagination_api",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"Services",
+								"parentservice_list_pagination_api"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service Provider Profile",
+			"item": [
+				{
+					"name": "Schedule",
+					"item": [
+						{
+							"name": "add new schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "weekday_name",
+											"value": "Monday",
+											"type": "text"
+										},
+										{
+											"key": "weekday_number",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "service_start_time",
+											"value": "12:00",
+											"type": "text"
+										},
+										{
+											"key": "service_end_time",
+											"value": "13:00",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/add_service_provider_weekly_schedule",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"add_service_provider_weekly_schedule"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_service_provider_weekly_schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "weekday_name",
+											"value": "Monday",
+											"type": "text"
+										},
+										{
+											"key": "weekday_number",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "service_start_time",
+											"value": "12:00",
+											"type": "text"
+										},
+										{
+											"key": "service_end_time",
+											"value": "13:00",
+											"type": "text"
+										},
+										{
+											"key": "weekly_schedule_id",
+											"value": "26",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/update_service_provider_weekly_schedule",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"update_service_provider_weekly_schedule"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "weekly_schedule_id",
+											"value": "16",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/delete_service_provider_weekly_schedule",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"delete_service_provider_weekly_schedule"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_service_provider_weekly_schedule_by_id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "weekly_schedule_id",
+											"value": "27",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/get_service_provider_weekly_schedule_by_id",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"get_service_provider_weekly_schedule_by_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "scheules list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/service_provider_weekly_schedule_pagination_api",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"service_provider_weekly_schedule_pagination_api"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Service Details",
+					"item": [
+						{
+							"name": "add offered services",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "short_description",
+											"value": "abc3]",
+											"type": "text"
+										},
+										{
+											"key": "long_description",
+											"value": "XYZ",
+											"type": "text"
+										},
+										{
+											"key": "rate",
+											"value": "100",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/add_service_provider_offered_service",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"add_service_provider_offered_service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update offered services",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "short_description",
+											"value": "abc",
+											"type": "text"
+										},
+										{
+											"key": "long_description",
+											"value": "XYZ",
+											"type": "text"
+										},
+										{
+											"key": "rate",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "offered_service_id",
+											"value": "19",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/update_service_provider_offered_service",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"update_service_provider_offered_service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete offered services",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "offered_service_id",
+											"value": "19",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/delete_service_provider_offered_service",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"delete_service_provider_offered_service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by id offered services",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "offered_service_id",
+											"value": "18",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/get_service_provider_offered_service_by_id",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"get_service_provider_offered_service_by_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get offered services pagination",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/service_provider_offered_service_pagination_api",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"service_provider_offered_service_pagination_api"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get offered services",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/service_provider_offered_service",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"service_provider_offered_service"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Highlights",
+					"item": [
+						{
+							"name": "add new highlights",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "abc",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "sticker",
+											"type": "file",
+											"src": "/C:/Users/mahes/Downloads/ChatGPT Image Apr 13, 2025, 01_16_04 AM.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/add_service_provider_highlight",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"add_service_provider_highlight"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update highlights",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "abc2",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "sticker",
+											"type": "file",
+											"src": "/C:/Users/mahes/Downloads/ChatGPT Image Apr 13, 2025, 01_16_04 AM.png"
+										},
+										{
+											"key": "highlight_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/edit_service_provider_highlight",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"edit_service_provider_highlight"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete highlights",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "highlight_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/delete_service_provider_highlight",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"delete_service_provider_highlight"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get highlights by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "highlight_id",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/get_service_provider_highlight_by_id",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"get_service_provider_highlight_by_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get service provider highlights",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/get_service_provider_highlights",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"get_service_provider_highlights"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Portfolio",
+					"item": [
+						{
+							"name": "add new portfolio",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "heading",
+											"value": "abc1",
+											"type": "text"
+										},
+										{
+											"key": "short_description",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "long_description",
+											"type": "file",
+											"src": "/C:/Users/mahes/Downloads/ChatGPT Image Apr 13, 2025, 01_16_04 AM.png"
+										},
+										{
+											"key": "media[]",
+											"type": "file",
+											"src": [
+												"/C:/Users/mahes/Downloads/WhatsApp Image 2024-06-20 at 23.19.22 (1).jpeg",
+												"/C:/Users/mahes/Downloads/WhatsApp Image 2024-06-20 at 23.19.22.jpeg"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/add_service_provider_portfolio",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"add_service_provider_portfolio"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update portfolio",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "heading",
+											"value": "abc2",
+											"type": "text"
+										},
+										{
+											"key": "short_description",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "media[]",
+											"type": "file",
+											"src": "/C:/Users/mahes/Downloads/ChatGPT Image Apr 13, 2025, 01_16_04 AM.png"
+										},
+										{
+											"key": "portfolio_id",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "long_description",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/update_service_provider_portfolio",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"update_service_provider_portfolio"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete portfolio",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "portfolio_id",
+											"value": "19",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/delete_service_provider_portfolio",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"delete_service_provider_portfolio"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete portfolio media",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "media_id",
+											"value": "19",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/delete_portfolio_media",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"delete_portfolio_media"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get portfolio by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "portfolio_id",
+											"value": "11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/get_service_provider_portfolio_by_id",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"get_service_provider_portfolio_by_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get service provider portfolio",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/get_service_provider_portfolio",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"get_service_provider_portfolio"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Basic details",
+					"item": [
+						{
+							"name": "update service provider basic details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "service_provider_id",
+											"value": "15",
+											"type": "text"
+										},
+										{
+											"key": "Username",
+											"value": "abc",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "abc@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "mobile_number",
+											"value": "1234567891",
+											"type": "text"
+										},
+										{
+											"key": "business_name",
+											"value": "abc1",
+											"type": "text"
+										},
+										{
+											"key": "parent_service",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "child_service",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "alternate_mobile_number",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "lattitude",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "radius",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "business_logo",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hosturl}}api/User/update_service_provider_basic_details",
+									"host": [
+										"{{hosturl}}api"
+									],
+									"path": [
+										"User",
+										"update_service_provider_basic_details"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Advertisements",
+			"item": [
+				{
+					"name": "get advertisements",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{hosturl}}api/Advertisements/active_advertisement_list",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"Advertisements",
+								"active_advertisement_list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews And Rating",
+			"item": [
+				{
+					"name": "addreviews and rating",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, ",
+									"type": "text"
+								},
+								{
+									"key": "rating_count",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "service_provider_id",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "media[]",
+									"type": "file",
+									"src": [
+										"/C:/Users/mahes/Downloads/cocktail-7333245_1280.jpg",
+										"/C:/Users/mahes/Downloads/drink-5833675_1280.jpg",
+										"/C:/Users/mahes/Downloads/chinese-food-5233516_1280.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/addreviews_and_rating",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"addreviews_and_rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update reviews and rating",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, ",
+									"type": "text"
+								},
+								{
+									"key": "rating_count",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "service_provider_id",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "media[]",
+									"type": "file",
+									"src": [
+										"/C:/Users/mahes/Downloads/cocktail-7333245_1280.jpg",
+										"/C:/Users/mahes/Downloads/drink-5833675_1280.jpg",
+										"/C:/Users/mahes/Downloads/chinese-food-5233516_1280.jpg"
+									]
+								},
+								{
+									"key": "reviews_and_rating_id",
+									"value": "11",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/updatereviews_and_rating",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"updatereviews_and_rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service provider reviews and rating list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "service_provider_id",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/service_provider_reviews_and_rating_list",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"service_provider_reviews_and_rating_list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user reviews and rating list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "]",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/user_submited_reviews_and_rating_list",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"user_submited_reviews_and_rating_list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user submited reviews and rating  list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "]",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/user_submited_reviews_and_rating_list_pagination_api",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"user_submited_reviews_and_rating_list_pagination_api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "service provider reviews and rating list pagination",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "service_provider_id",
+									"value": "15",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/service_provider_reviews_and_rating_list_pagination_api",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"service_provider_reviews_and_rating_list_pagination_api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete ratting",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reviews_and_rating_id",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/reviews_and_ratingdelete",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"reviews_and_ratingdelete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get reviews and rating by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reviews_and_rating_id",
+									"value": "11",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{hosturl}}api/ReviewsAndRating/reviews_and_ratingbyid",
+							"host": [
+								"{{hosturl}}api"
+							],
+							"path": [
+								"ReviewsAndRating",
+								"reviews_and_ratingbyid"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "New Folder",
+			"item": []
+		},
+		{
+			"name": "Service Provider CRUD",
+			"item": [
+				{
+					"name": "delete service provider",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "service_provider_id",
+									"value": "29",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{mozil}}api/User/serviceproviderdeleteonly",
+							"host": [
+								"{{mozil}}api"
+							],
+							"path": [
+								"User",
+								"serviceproviderdeleteonly"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

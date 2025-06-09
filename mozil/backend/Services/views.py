@@ -211,6 +211,8 @@ class childservicelist(GenericAPIView):
     # permission_classes = (permissions.IsAuthenticated,)
     def get(self,request):
         ParentServiceId=request.data.get('ParentServiceId')
+        print("request.data",request.data)
+
         childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
         if ParentServiceId is not None and ParentServiceId !='':
             childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
@@ -223,14 +225,31 @@ class childservicelist(GenericAPIView):
                 "status":"success"
                 }
         })
-    
+    def post(self,request):
+        ParentServiceId=request.data.get('ParentServiceId')
+        print("request.data",request.data)
+
+        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
+        if ParentServiceId is not None and ParentServiceId !='':
+            childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
+        serializer = ChildServicesSerializer(childservice_objs,many=True)
+        return Response({
+            "data" : serializer.data,
+            "response":{
+                "n":1,
+                "msg":"Child services found Successfully",
+                "status":"success"
+                }
+        })
+
+
 class childservice_list_pagination_api(GenericAPIView):
     # authentication_classes=[userJWTAuthentication]
     # permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPagination
     def post(self,request):
         ParentServiceId=request.data.get('ParentServiceId')
-        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('updatedAt')
+        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('Name')
         if ParentServiceId is not None and ParentServiceId !='':
             childservice_objs=childservice_objs.filter(ParentServiceId=ParentServiceId)
         search = request.data.get('search')
@@ -353,3 +372,66 @@ class parent_child_service_list(GenericAPIView):
                     "status":"success"
                     }
             })
+        
+class change_service_recomendation_status(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        
+        data['service_id']=str(request.data.get('service_id'))
+        if data['service_id'] is None or data['service_id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide service  id", "status":"error"}})
+        
+        update_obj = ParentServices.objects.filter(isActive=True, id=data['service_id']).first()
+
+        if update_obj is not None:
+            recomended_service_count=ParentServices.objects.filter(isActive=True,recomended=True).count()
+            if recomended_service_count >= 5 and not update_obj.recomended:
+                return Response({"data":'',"response": {"n": 0, "msg": "You can not recomended more than 5 services","status": "error"}})
+
+        
+            if update_obj.recomended:
+                data['recomended'] = False
+                msg="Service Not Recomended."
+            else:
+                data['recomended'] = True
+                msg="Service Recomended Successfully."
+
+            serializer =ParentServicesSerializer(update_obj,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": msg,"status":"success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        else:
+            return Response({"data":{},"response": {"n": 0, "msg": 'Service not found ',"status":"error"}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

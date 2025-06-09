@@ -8,15 +8,51 @@
 {% block layout %}
 <!-- Basic Layout -->
 <div class="card">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
+    <div class="row align-items-center">
+        <div class="col-lg-4">
             <h5 class="card-header">Services Provider Verification</h5>
         </div>
-        <div>
-            <div class="d-flex align-items-center">
-                <i class="ri-search-line ri-22px me-2"></i>
-                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
-                    aria-label="Search..." onkeyup="Pagination()" />
+        <div class="col-lg-8">
+            <div class="row align-items-center mx-2 justify-content-end">
+
+
+                <div class="d-flex align-items-center col-lg-3 my-2">
+                    <i class="ri-search-line ri-22px me-2"></i>
+                    <input type="text" id="search" class="form-control border-0 shadow-none bg-body"
+                        placeholder="Search..." aria-label="Search..." onkeyup="Pagination()" />
+                </div>
+                <div class="form-floating form-floating-outline col-lg-3 my-2">
+                    <select id="verification_status" class="form-select select2-init"
+                        aria-label="Default select example" onchange="Pagination()">
+                        <option value="">All</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Unverified">Unverified</option>
+                    </select>
+                    <label for="verification_status">Verification Status</label>
+                </div>
+
+                <div class="form-floating form-floating-outline col-lg-3 my-2">
+                    <select id="guarented_status" class="form-select select2-init" aria-label="Default select example"
+                        onchange="Pagination()">
+                        <option value="">All</option>
+                        <option value="Guarented">Guarented</option>
+                        <option value="Non-Guarented">Non-Guarented</option>
+
+
+                    </select>
+                    <label for="guarented_status">Mozil Guarented</label>
+                </div>
+                <!-- <div class="form-floating form-floating-outline col-lg-3 my-2">
+                    <select id="activation_status" class="form-select select2-init" aria-label="Default select example"
+                        onchange="Pagination()">
+                        <option value="">All</option>
+                        <option value="Active">Active</option>
+                        <option value="Deactive">Deactive</option>
+
+
+                    </select>
+                    <label for="activation_status">Activation Status</label>
+                </div> -->
             </div>
         </div>
     </div>
@@ -65,11 +101,40 @@
 
     function get_table_data(p) {
         var search = $('#search').val()
+        var verification_status = $('#verification_status').val()
+        var guarented_status = $('#guarented_status').val()
+        // var activation_status = $('#activation_status').val()
+        if (verification_status != '') {
+            if (verification_status == 'Verified') {
+                verification_status = true
+            } else {
+                verification_status = false
+            }
+        }
+        if (guarented_status != '') {
+            if (guarented_status == 'Guarented') {
+                guarented_status = true
+            } else {
+                guarented_status = false
+            }
+        }
+        // if (activation_status != '') {
+        //     if (activation_status == 'Active') {
+        //         activation_status = true
+        //     } else {
+        //         activation_status = false
+        //     }
+        // }
+
         if (search == undefined) {
             search = ''
         }
         var fd = new FormData()
         fd.append('p', p)
+        fd.append('verification_status',verification_status)
+        fd.append('guarented_status',guarented_status)
+        // fd.append('activation_status',activation_status)
+        
         fd.append('search', search)
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({

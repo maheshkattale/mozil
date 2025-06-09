@@ -21,24 +21,31 @@
                 <input type="text" class="form-control" id="heading" placeholder="Heading" value="{{advertisement.heading}}"/>
                 <label for="heading">Heading</label>
               </div>
-              <div class="form-floating form-floating-outline mb-6 col-6">
-                <input type="date" class="form-control" id="start_date" placeholder="Start Date" value="{{advertisement.start_date}}"/>
-                <label for="start_date">Start Date</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-6">
-                <input type="date" class="form-control" id="end_date" placeholder="End Date" value="{{advertisement.end_date}}"/>
-                <label for="end_date">End Date</label>
-              </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control datepicker" id="start_date" placeholder="Start Date" value="{{advertisement.formatted_start_date}}"/>
+              <label for="start_date">Start Date</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control datepicker" id="end_date" placeholder="End Date" value="{{advertisement.formatted_end_date}}"/>
+              <label for="end_date">End Date</label>
+            </div>
+
+
+
+
+
               <div class="form-floating form-floating-outline mb-6 col-12">
                 <input type="text" class="form-control" id="action_url" placeholder="Action Url" value="{{advertisement.action_url}}"/>
                 <label for="action_url">Action Url</label>
               </div>
               <div class="mb-4 col-12">
                 <label for="media" class="form-label">Media</label>
-                <input class="form-control" type="file" id="media">
+                <input class="form-control" type="file" id="media" accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                          onchange="validateImageInput(this)">
               </div>
               <div class="mb-4 col-12">
-                <img src="{{advertisement.media}}" alt="" width="" height="200">
+                <img src="{{advertisement.media}}" alt="" width="" height="200" id="preview_media" >
               </div>
               <div class="form-floating form-floating-outline mb-6 col-12">
                 <textarea id="short_description" class="form-control" placeholder="Please enter short description." style="height: 60px;">{{advertisement.short_description}}</textarea>
@@ -114,8 +121,8 @@
       var formData = new FormData();
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
       formData.append('heading', heading);
-      formData.append('start_date', start_date);
-      formData.append('end_date', end_date);
+      formData.append('start_date', ddmmyyyytoyyyymmdd(start_date));
+      formData.append('end_date', ddmmyyyytoyyyymmdd(end_date));
       formData.append('action_url', action_url);
       formData.append('short_description', short_description);
       formData.append('long_description', long_description);

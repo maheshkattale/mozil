@@ -37,6 +37,9 @@ class User(AbstractBaseUser,TrackingModel):
     role = models.ForeignKey(Role,on_delete=models.CASCADE,null=True,blank=True)
     source = models.CharField(max_length=255,null=True,blank=True)
     status = models.BooleanField(default=True,null=True,blank=True)
+    profile_picture = models.FileField(upload_to='users/profile_picture/', blank=True, null=True,verbose_name='profile_picture Image')
+    
+
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
@@ -92,7 +95,9 @@ class ServiceProvider(TrackingModel):
     business_logo = models.FileField(upload_to='service_provider/business_logo/', blank=True, null=True,verbose_name='business_logo Image')
     business_name = models.CharField(max_length=255,null=True,blank=True)
     average_rating = models.CharField(max_length=255,null=True,blank=True)
-
+    business_registration_number = models.CharField(max_length=255,null=True,blank=True)
+    address = models.TextField(null=True, blank=True)
+    region = models.CharField(max_length=255,null=True,blank=True)
 
 
 class ServiceProviderWeeklySchedule(TrackingModel):

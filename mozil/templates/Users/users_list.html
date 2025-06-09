@@ -8,18 +8,31 @@
 {% block layout %}
 <!-- Basic Layout -->
 <div class="card">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
+    <div class="row justify-content-between align-items-center">
+        <div class="col-lg-4">
             <h5 class="card-header">Users</h5>
         </div>
-        <div>
-            <div class="">
-              <div class="d-flex align-items-center">
-                <i class="ri-search-line ri-22px me-2"></i>
-                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
-                  aria-label="Search..." onkeyup="Pagination()" />
-              </div>
+        <div class="col-lg-8">
+
+            <div class="row justify-content-end mx-2">
+                <div class="d-flex align-items-center col-lg-3">
+                    <i class="ri-search-line ri-22px me-2"></i>
+                    <input type="text" id="search" class="form-control border-0 shadow-none bg-body"
+                        placeholder="Search..." aria-label="Search..." onkeyup="Pagination()" />
+                </div>
+                <div class="form-floating form-floating-outline col-lg-3 my-2">
+                    <select id="activation_status" class="form-select select2-init" aria-label="Default select example"
+                        onchange="Pagination()">
+                        <option value="">All</option>
+                        <option value="Active">Active</option>
+                        <option value="Deactive">Deactive</option>
+
+
+                    </select>
+                    <label for="activation_status">Activation Status</label>
+                </div>
             </div>
+
         </div>
     </div>
     <div class="table-responsive text-nowrap">
@@ -55,21 +68,32 @@
 
         Pagination()
     });
+    
     function Pagination() {
         var testflag = true;
         $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
         get_table_data(1);
 
     }
-    
+
     function get_table_data(p) {
         var search = $('#search').val()
         if (search == undefined) {
             search = ''
         }
+        var activation_status = $('#activation_status').val()
+        if (activation_status != '') {
+            if (activation_status == 'Active') {
+                activation_status = true
+            } else {
+                activation_status = false
+            }
+        }
         var fd = new FormData()
         fd.append('p', p)
         fd.append('searchtext', search)
+        fd.append('activation_status', activation_status)
+
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({
             url: hosturl + "/api/User/user_list_pagination_api",
@@ -118,8 +142,8 @@
                                         </td>
                                         <td>
                                             <div class="form-check form-switch mb-2">
-                                            <input class="form-check-input" type="checkbox" id="status${o.id}" ${o.status?`checked`:``}  onchange="change_status('${o.id}',this)">
-                                            <label class="form-check-label" for="status${o.id}" >${o.status?`Active`:`Deactive`}</label>
+                                            <input class="form-check-input" type="checkbox" id="status${o.id}" ${o.status ? `checked` : ``}  onchange="change_status('${o.id}',this)">
+                                            <label class="form-check-label" for="status${o.id}" >${o.status ? `Active` : `Deactive`}</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -129,7 +153,7 @@
            
                       `
 
-                      counter += 1
+                        counter += 1
                     });
                     $('#users_table_body').html(infohtml);
                     var totalfilter = Math.ceil(parseInt(response.count) / 10);
@@ -174,8 +198,8 @@
 
     }
 
-    function change_status(id,input) {
-        
+    function change_status(id, input) {
+
 
         swal({
             title: "Are you sure?",
@@ -199,12 +223,12 @@
                         dataType: 'json',
                         beforeSend: function () {
 
-    
+
 
                         },
                         success: function (response) {
                             if (response['response']['n'] == 1) {
-                                $('#status'+id).prop('checked',response['data']['status'])
+                                $('#status' + id).prop('checked', response['data']['status'])
                                 const label = $(`label[for="status${id}"]`);
                                 if (response['data']['status']) {
                                     label.text('Active');
@@ -236,14 +260,14 @@
                         }
                     });
 
-                }else{
-                    if (input.checked){
-                        $('#status'+id).prop('checked',false)
-                    }else{
-                        $('#status'+id).prop('checked',true)
+                } else {
+                    if (input.checked) {
+                        $('#status' + id).prop('checked', false)
+                    } else {
+                        $('#status' + id).prop('checked', true)
 
                     }
-          
+
                 }
             })
     }

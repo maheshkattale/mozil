@@ -16,6 +16,7 @@ from django.core.mail import EmailMessage
 from mozil.settings import EMAIL_HOST_USER
 from User.common import CustomPagination
 from django.db.models import Q
+from datetime import datetime
 
 # Create your views here.
 class advertisement_list_pagination_api(GenericAPIView):
@@ -98,6 +99,17 @@ class addadvertisement(GenericAPIView):
         if data['end_date'] is None or data['end_date'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide advertisement end date", "status":"error"}})
         
+
+
+        # Check if the start date is before the end date
+        if data['start_date'] > data['end_date']:
+            return Response({ "data":{},"response":{"n":0,"msg":"Start date cannot be after end date", "status":"error"}})
+        # Check if the start date is in the past
+        today = datetime.now().strftime('%Y-%m-%d')  # adjust format if needed
+        if data['start_date'] < today:
+            return Response({ "data":{},"response":{"n":0,"msg":"Start date cannot be in the past", "status":"error"}})
+        
+
         media=request.FILES.get('media')       
         if media is not None and media !='' and media !='undefined' :
             data['media']=media 
@@ -148,7 +160,7 @@ class advertisementbyid(GenericAPIView):
         id = request.data.get('advertisement_id')
         advertisement_obj = AdvertisementsMaster.objects.filter(id=id,isActive=True).first()
         if advertisement_obj is not None:
-            serializer = AdvertisementsMasterSerializer(advertisement_obj)
+            serializer = CustomAdvertisementsMasterSerializer(advertisement_obj)
             return Response({"data":serializer.data,"response": {"n": 1, "msg": "Advertisement found successfully","status": "success"}})
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Advertisement Not Found","status": "error"}})
@@ -171,6 +183,10 @@ class updateadvertisement(GenericAPIView):
         if data['end_date'] is None or data['end_date'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide advertisement end date", "status":"error"}})
         
+        # Check if the start date is before the end date
+        if data['start_date'] > data['end_date']:
+            return Response({ "data":{},"response":{"n":0,"msg":"Start date cannot be after end date", "status":"error"}})
+
         media=request.FILES.get('media')       
         if media is not None and media !='' and media !='undefined' :
             data['media']=media 

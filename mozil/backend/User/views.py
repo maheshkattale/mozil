@@ -25,7 +25,7 @@ from Services.serializers import *
 from django.db.models import F, FloatField, ExpressionWrapper,Q
 from django.db.models.functions import Radians, Power, Sin, Cos, ATan2, Sqrt
 import math
-
+from helpers.validations import hosturl
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 
@@ -198,17 +198,18 @@ class ChangePassword(GenericAPIView):
 class forgetpasswordmail(GenericAPIView):
     def post(self,request):
         data={}
-        data['Email']=request.data.get('Email')
-        userdata = User.objects.filter(email=data['Email'],isActive=True,PasswordSet=True,status=True).first()
+        data['email']=request.data.get('email')
+        print("request.data",request.data)
+        userdata = User.objects.filter(email=data['email'],isActive=True,status=True).first()
         if userdata is not None:
-            email =   data['Email']
-            data2 = {'user_id':userdata.id,'user_email':userdata.email,'frontend_url':frontend_url}
+            email =   data['email']
+            data2 = {'user_id':userdata.id,'user_email':userdata.email,'frontend_url':hosturl}
             html_mail = render_to_string('mails/reset_password.html',data2)
             
             mailMsg = EmailMessage(
                 'Forgot Password?',
                  html_mail,
-                'no-reply@onerooftech.com',
+                'maheshkattale1926@gmail.com',
                 [email],
                 )
             mailMsg.content_subtype ="html"
@@ -485,6 +486,17 @@ class user_list_pagination_api(GenericAPIView):
             UserMaster_objs = User.objects.filter(Q(Username__icontains=searchtext,isActive=True)| Q(mobileNumber__icontains =searchtext,isActive=True)).order_by('Username')
         else:
             UserMaster_objs = User.objects.filter(isActive=True).order_by('Username')
+        activation_status=request.data.get('activation_status')
+        if activation_status is not None and activation_status !='':
+            if activation_status == 'true':
+
+                UserMaster_objs = UserMaster_objs.filter(status=True)
+            elif activation_status == 'false':
+
+                UserMaster_objs = UserMaster_objs.filter(status=False)     
+
+
+
         page4 = self.paginate_queryset(UserMaster_objs)
         serializer = CustomUserSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
@@ -726,6 +738,7 @@ class create_new_service_provider(GenericAPIView):
         if request_data['Username'] is None or request_data['Username'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
         data['Username']=request.data.get('Username')
+        data['region']=request.data.get('region')
         
         data['textPassword']=request.data.get('textPassword')
         if data['textPassword'] is None or data['textPassword'] =='':
@@ -737,7 +750,8 @@ class create_new_service_provider(GenericAPIView):
         data['email']=request.data.get('email')
         if data['email'] is None or data['email'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide email id", "status":"error"}})
-        
+
+
         data['password'] = data['textPassword']
         data['isActive'] = True
 
@@ -764,6 +778,10 @@ class create_new_service_provider(GenericAPIView):
                 if data['child_service'] is None or data['child_service'] =='':
                     return Response({ "data":{},"response":{"n":0,"msg":"Please select child service", "status":"error"}})
                 
+                data['business_registration_number']=request.data.get('business_registration_number')
+                if data['business_registration_number'] is None or data['business_registration_number'] =='':
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please provide user business registration number", "status":"error"}})
+                
                 data['mobile_number']= request.data.get('mobileNumber')
                 data['alternate_mobile_number'] = request.data.get('alternate_mobile_number')
                 data['description'] = request.data.get('description')
@@ -779,7 +797,13 @@ class create_new_service_provider(GenericAPIView):
             
                 business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).first()        
                 if business_name_obj is not None:
-                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}}) 
+
+
+                business_registration_number_obj = ServiceProvider.objects.filter(isActive=True, business_registration_number=data['business_registration_number'].lower()).first()        
+                if business_registration_number_obj is not None:
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business registration number already registered", "status": "error"}})
+                        
                 else:
                     serializer1.save()
                     userid = serializer1.data['id']
@@ -856,6 +880,8 @@ class update_service_provider_basic_details(GenericAPIView):
             return Response({ "data":{},"response":{"n":0,"msg":"Service provider not found", "status":"error"}})
 
         data['Username']=request.data.get('Username')
+        data['address']=request.data.get('address')
+        data['region']=request.data.get('region')
 
         if data['Username'] is None or data['Username'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide owner name", "status":"error"}})
@@ -886,7 +912,19 @@ class update_service_provider_basic_details(GenericAPIView):
 
                 business_name_obj = ServiceProvider.objects.filter(isActive=True, business_name=data['business_name'].lower()).exclude(id=str(update_obj.id)).first()        
                 if business_name_obj is not None:
-                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}})        
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business name already exist", "status": "error"}}) 
+
+                business_registration_number=request.data.get('business_registration_number')
+                if business_registration_number is None or business_registration_number =='':
+                    return Response({ "data":{},"response":{"n":0,"msg":"Please provide business registration number", "status":"error"}})
+                else:
+                    data['business_registration_number']=str(request.data.get('business_registration_number')).lower()
+
+
+
+                business_registration_number_obj = ServiceProvider.objects.filter(isActive=True, business_registration_number=data['business_registration_number'].lower()).exclude(id=str(update_obj.id)).first()        
+                if business_registration_number_obj is not None:
+                    return Response({"data":'',"response": {"n": 0, "msg": "Business registration number already exist", "status": "error"}})        
                 else:
                     parent_service=request.data.get('parent_service')
                     if parent_service is None or parent_service =='':
@@ -938,6 +976,34 @@ class service_provider_list_pagination_api(GenericAPIView):
             service_provider_objs = ServiceProvider.objects.filter(Q(business_name__icontains=search,isActive=True)| Q(mobile_number__icontains =search,isActive=True)).order_by('business_name')
         else:
             service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('business_name')
+        print("request.data",request.data)
+        verification_status= request.data.get("verification_status")
+        if verification_status is not None and verification_status != '':
+            if verification_status == 'true':
+                service_provider_objs = service_provider_objs.filter(license_verification_status=True)
+            elif verification_status == 'false':
+                service_provider_objs = service_provider_objs.filter(license_verification_status=False)
+
+        guarented_status=request.data.get('guarented_status')
+        if guarented_status is not None and guarented_status !='':
+            if guarented_status == 'true':
+                service_provider_objs = service_provider_objs.filter(mozil_guarented=True)
+            elif guarented_status == 'false':
+                service_provider_objs = service_provider_objs.filter(mozil_guarented=False)                
+
+
+        activation_status=request.data.get('activation_status')
+        if activation_status is not None and activation_status !='':
+            if activation_status == 'true':
+                active_service_provider_user_ids=list(User.objects.filter(status=True,role=2).values_list('id',flat=True))
+
+                service_provider_objs = service_provider_objs.filter(userid__in=active_service_provider_user_ids)
+            elif activation_status == 'false':
+                deactive_service_provider_user_ids=list(User.objects.filter(status=False,role=2).values_list('id',flat=True))
+
+                service_provider_objs = service_provider_objs.filter(userid__in=deactive_service_provider_user_ids)     
+
+
         page4 = self.paginate_queryset(service_provider_objs)
         serializer = CustomServiceProviderSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
@@ -2369,6 +2435,7 @@ class service_finder(GenericAPIView):
         service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
         
         # Get filter parameters from request
+
         lattitude = request.data.get('lattitude')
         longitude = request.data.get('longitude')
         parent_service = request.data.get('parent_service')
@@ -2377,6 +2444,10 @@ class service_finder(GenericAPIView):
         mozil_guarented = request.data.get('mozil_guarented')
         average_rating = request.data.get('average_rating')
         search=request.data.get('search')
+        region=request.data.get('region')
+
+
+
         if search is not None and search !='':
             parent_service_ids=list(ParentServices.objects.filter(Name__icontains=search,isActive=True).values_list('id',flat=True))
             child_service_ids=list(ChildServices.objects.filter(Name__icontains=search,isActive=True).values_list('id',flat=True))
@@ -2414,6 +2485,8 @@ class service_finder(GenericAPIView):
             service_provider_objs = service_provider_objs.filter(mozil_guarented=mozil_guarented)
         if average_rating:
             service_provider_objs = service_provider_objs.filter(average_rating__gte=average_rating)
+        if region is not None and region !='':
+            service_provider_objs = service_provider_objs.filter(region=region)
         
         # Apply distance filter if coordinates are provided
         if lattitude and longitude:

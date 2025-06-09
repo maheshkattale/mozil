@@ -69,6 +69,8 @@ INSTALLED_APPS = [
     'Services',
     'User',
     'Plans',
+    'Masters',
+    'Dashboard',
 
     'Frontend_Dashboard',
     'Frontend_Services',

@@ -22,11 +22,11 @@
                 <label for="Name">Name</label>
               </div>
               <div class="form-floating form-floating-outline mb-6 col-6">
-                <input type="text" class="form-control" id="days" placeholder="Days Count"  value="{{plan.days}}"/>
+                <input type="text" class="form-control" id="days" placeholder="Days Count"  value="{{plan.days}}" onkeyup="IsValidNumberInput(this)" maxlength="5"/>
                 <label for="days">Days Count</label>
               </div>
               <div class="form-floating form-floating-outline mb-6 col-6">
-                <input type="text" class="form-control" id="amount" placeholder="Amount"  value="{{plan.amount}}"/>
+                <input type="text" class="form-control" id="amount" placeholder="Amount"  value="{{plan.amount}}" onkeyup="IsValidNumberInput(this)" maxlength="9"/>
                 <label for="amount">Amount</label>
               </div>
               <div class="form-floating form-floating-outline mb-6 col-12">

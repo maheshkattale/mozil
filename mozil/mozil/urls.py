@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/PaymentHistory/', include('PaymentHistory.urls')),
     path('api/Advertisements/', include('Advertisements.urls')),
     path('api/ReviewsAndRating/', include('ReviewsAndRating.urls')),
+    path('api/Masters/', include('Masters.urls')),
+    path('api/Dashboard/', include('Dashboard.urls')),
     
     #frontend
     path('',include(('Frontend_User.urls', 'Frontend_User'),namespace='Frontend_User')),

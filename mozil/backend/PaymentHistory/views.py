@@ -37,6 +37,7 @@ class purchase_plan(GenericAPIView):
             data['amount']=plan_serializer.data['amount']
             data['userid']=str(request.user.id)
             data['plan_id']=plan_serializer.data['id']
+            data['status']='success'
 
             serializer=ServiceProviderPaymentHistorySerializer(data=data)
             if serializer.is_valid():
