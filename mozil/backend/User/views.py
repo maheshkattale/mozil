@@ -754,6 +754,7 @@ class create_new_service_provider(GenericAPIView):
 
         data['password'] = data['textPassword']
         data['isActive'] = True
+        data['role'] = 2
 
 
         emailobj = User.objects.filter(isActive=True, email=data['email']).first()

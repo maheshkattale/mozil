@@ -136,7 +136,6 @@ class dashboard_analytics_api(GenericAPIView):
         return Response({
             "total_service_providers": total_service_providers,
             "unverified_service_providers": unverified_service_providers,
-         
             "profit_loss_statement": profit_loss_statement,
             "weekly_overview_data": weekly_overview_data,
             "current_month_total_plans_sales": format_indian_rupees(current_month_plans_sales+current_month_cunsumer_plans_sales),

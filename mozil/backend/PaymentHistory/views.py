@@ -30,6 +30,13 @@ class purchase_plan(GenericAPIView):
         id = request.data.get('plan_id')
         if id is None or id =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide plan id", "status":"error"}})
+        user_obj = User.objects.filter(id=str(request.user.id),isActive=True).first()
+        if user_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "User Not Found","status": "error"}})
+        print("ruser_obj.role_id",user_obj.role_id)
+
+        if str(user_obj.role_id) != '2':
+            return Response({"data":'',"response": {"n": 0, "msg": "You are not authorized to purchase plan","status": "error"}})
 
         plan_obj = ServiceProviderPlanMaster.objects.filter(id=id,isActive=True).first()
         if plan_obj is not None:
@@ -38,6 +45,16 @@ class purchase_plan(GenericAPIView):
             data['userid']=str(request.user.id)
             data['plan_id']=plan_serializer.data['id']
             data['status']='success'
+
+            # check_plan = ServiceProviderPaymentHistory.objects.filter(userid=str(request.user.id),plan_id=plan_serializer.data['id'],isActive=True).first()
+            # if check_plan is not None:
+            #     return Response({"data":'',"response": {"n": 0, "msg": "You have already purchased this plan","status": "error"}})
+            
+            data['isActive']=True
+            
+
+
+
 
             serializer=ServiceProviderPaymentHistorySerializer(data=data)
             if serializer.is_valid():

@@ -35,8 +35,8 @@ class service_provider_plan_list_pagination_api(GenericAPIView):
         return self.get_paginated_response(serializer.data)
     
 class service_provider_plan_list(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     def get(self,request):
         plans_objs = ServiceProviderPlanMaster.objects.filter(isActive=True).order_by('Name')
         serializer = ServiceProviderPlanMasterSerializer(plans_objs,many=True)
