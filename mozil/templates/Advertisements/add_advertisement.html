@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}Advertisements - Forms{% endblock %}
+
+{% block layout %}
+<!-- Basic Layout -->
+<div class="row">
+    <div class="col-xl">
+      <div class="card mb-12">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Add Advertisements</h5> <small class="text-body float-end"></small>
+        </div>
+        <div class="card-body">
+          <form>
+            {% csrf_token %}
+            <div class="row">
+              <div class="form-floating form-floating-outline mb-6 col-12">
+                <input type="text" class="form-control" id="heading" placeholder="Heading" />
+                <label for="heading">Heading</label>
+              </div>
+              <div class="form-floating form-floating-outline mb-6 col-6">
+                <input type="date" class="form-control" id="start_date" placeholder="Start Date" />
+                <label for="start_date">Start Date</label>
+              </div>
+              <div class="form-floating form-floating-outline mb-6 col-6">
+                <input type="date" class="form-control" id="end_date" placeholder="End Date" />
+                <label for="end_date">End Date</label>
+              </div>
+              <div class="form-floating form-floating-outline mb-6 col-12">
+                <input type="text" class="form-control" id="action_url" placeholder="Action Url" />
+                <label for="action_url">Action Url</label>
+              </div>
+              <div class="mb-4">
+                <label for="media" class="form-label">Media</label>
+                <input class="form-control" type="file" id="media">
+              </div>
+              <div class="form-floating form-floating-outline mb-6 col-12">
+                <textarea id="short_description" class="form-control" placeholder="Please enter short description." style="height: 60px;"></textarea>
+                <label for="short_description">Short Description</label>
+              </div>
+              <div class="form-floating form-floating-outline mb-6 col-12">
+                <textarea id="long_description" class="form-control" placeholder="Please enter long description." style="height: 60px;"></textarea>
+                <label for="long_description">Long Description</label>
+              </div>
+
+            </div>
+
+            <div class="btn btn-primary" onclick="return validation()">Submit</div>
+            <div class="btn btn-danger">Cancel</div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Merged -->
+
+</div>
+{% endblock layout %}
+
+{% block page_js %}
+{{block.super}}
+
+<script>
+  
+  function validation() {
+    var heading = $("#heading").val().trim();
+    var start_date = $("#start_date").val();
+    var end_date = $("#end_date").val();
+    var action_url = $("#action_url").val().trim();
+    var short_description = $("#short_description").val().trim();
+    var long_description = $("#long_description").val().trim();
+    var media = $('#media')[0].files[0];
+
+
+    if (IsValid(heading)) {
+      swal({
+            icon: "error",
+            title: "",
+            text: "Please enter valid heading",
+
+          });
+          
+      $("#heading").focus();
+      return false;
+    }
+    if (IsValid(start_date)) {
+      swal({
+            icon: "error",
+            title: "",
+            text: "Please enter valid start date",
+
+          });
+          
+      $("#start_date").focus();
+      return false;
+    }
+    if (IsValid(end_date)) {
+      swal({
+            icon: "error",
+            title: "",
+            text: "Please enter valid end date",
+
+          });
+      $("#end_date").focus();
+      return false;
+    }
+    if (IsValid(media)) {
+      swal({
+            icon: "error",
+            title: "",
+            text: "Please enter valid media",
+
+          });
+          
+      $("#media").focus();
+      return false;
+    }
+    else {
+      var formData = new FormData();
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      formData.append('heading', heading);
+      formData.append('start_date', start_date);
+      formData.append('end_date', end_date);
+      formData.append('action_url', action_url);
+      formData.append('short_description', short_description);
+      formData.append('long_description', long_description);
+      formData.append('media', media);
+
+
+      $.ajax({
+        url: hosturl + "/advertisement/add_advertisement",
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        beforeSend: function () {
+          swal({
+            icon: "info",
+            title: "",
+            text: "Loading...",
+            buttons: false,
+
+          });
+        },
+        success: function (response) {
+          console.log("----", response)
+          if (response.response.n == 1) {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            }).then(() => {
+                window.location.href = hosturl + '/advertisement/advertisements_list';
+              });
+
+
+          }
+          else {
+            swal({
+              icon: response.response.status,
+              title: "",
+              text: response.response.msg,
+              button: "Close",
+            });
+          }
+
+
+        }
+      });
+
+    }
+
+
+  }
+
+</script>
+{%endblock page_js %}

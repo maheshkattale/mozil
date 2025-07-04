@@ -13,6 +13,7 @@ class AdvertisementsMaster(TrackingModel):
     end_date = models.CharField(max_length=250,blank=True,null=True)
     short_description = models.TextField(blank=True,null=True)
     long_description = models.TextField(blank=True,null=True)
+    action_url = models.TextField(blank=True,null=True)
     media = models.FileField(upload_to='advertisement/media/', blank=True, null=True,verbose_name='media Image')
     status = models.CharField(default="Pending",max_length=250,blank=True,null=True)
     

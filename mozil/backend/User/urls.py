@@ -85,5 +85,6 @@ urlpatterns = [
     
     path('service_provider_filter', service_provider_filter.as_view(), name = 'service_provider_filter'),
     path('service_provider_filter_pagination_api', service_provider_filter_pagination_api.as_view(), name = 'service_provider_filter_pagination_api'),
+    path('service_finder', service_finder.as_view(), name = 'service_finder'),
 
 ]

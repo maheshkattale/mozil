@@ -20,7 +20,8 @@ import random
 from django.core.mail import send_mail
 from django.utils.timezone import make_aware
 from django.utils import timezone
-
+from Services.models import *
+from Services.serializers import *
 from django.db.models import F, FloatField, ExpressionWrapper,Q
 from django.db.models.functions import Radians, Power, Sin, Cos, ATan2, Sqrt
 import math
@@ -2126,6 +2127,91 @@ class service_provider_filter(GenericAPIView):
         else:
             return Response({
                     "data": [],
+                    "response": {"n": 0, "msg": "service providers not found", "status": "error"}
+                })
+
+class service_finder(GenericAPIView):
+    # authentication_classes = [userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    
+    def post(self, request):
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+        
+        # Get filter parameters from request
+        lattitude = request.data.get('lattitude')
+        longitude = request.data.get('longitude')
+        parent_service = request.data.get('parent_service')
+        child_service = request.data.get('child_service')
+        license_verification_status = request.data.get('license_verification_status')
+        mozil_guarented = request.data.get('mozil_guarented')
+        average_rating = request.data.get('average_rating')
+        
+        
+        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
+
+
+        # Apply basic filters
+        if parent_service:
+            service_provider_objs = service_provider_objs.filter(parent_service=parent_service)
+            childservice_objs=childservice_objs.filter(ParentServiceId=parent_service)
+
+        if child_service:
+            service_provider_objs = service_provider_objs.filter(child_service=child_service)
+        if license_verification_status:
+            service_provider_objs = service_provider_objs.filter(license_verification_status=license_verification_status)
+        if mozil_guarented:
+            service_provider_objs = service_provider_objs.filter(mozil_guarented=mozil_guarented)
+        if average_rating:
+            service_provider_objs = service_provider_objs.filter(average_rating__gte=average_rating)
+        
+        # Apply distance filter if coordinates are provided
+        if lattitude and longitude:
+            try:
+                lat = float(lattitude)
+                lng = float(longitude)
+                
+                # Earth radius in kilometers
+                earth_radius = 6371
+                
+                # Convert latitude and longitude from degrees to radians
+                lat_rad = Radians(F('lattitude'))
+                lng_rad = Radians(F('longitude'))
+                user_lat_rad = math.radians(lat)
+                user_lng_rad = math.radians(lng)
+                
+                # Haversine formula to calculate distance
+                dlat = user_lat_rad - lat_rad
+                dlng = user_lng_rad - lng_rad
+                
+                a = (Power(Sin(dlat / 2), 2) + 
+                     Cos(lat_rad) * Cos(user_lat_rad) * 
+                     Power(Sin(dlng / 2), 2))
+                
+                c = 2 * ATan2(Sqrt(a), Sqrt(1 - a))
+                distance = earth_radius * c
+                
+                # Filter for service providers within 1km
+                service_provider_objs = service_provider_objs.annotate(
+                    distance=ExpressionWrapper(distance, output_field=FloatField())
+                ).filter(distance__lte=1)
+                
+            except (ValueError, TypeError):
+                # Handle invalid coordinate values
+                pass
+        
+        # Paginate and return results
+        # print("service_provider_objs",service_provider_objs.count())
+        child_services_serializer = ChildServicesSerializer(childservice_objs,many=True)
+
+        if service_provider_objs.exists():
+            serializer1 = CustomServiceProviderSerializer(service_provider_objs, many=True)
+            return Response({
+                    "data": {'service_providers':serializer1.data,'child_services':child_services_serializer.data},
+                    "response": {"n": 1, "msg": "service providers found successfully", "status": "success"}
+                })
+        else:
+            return Response({
+                    "data": {'service_providers':[],'child_services':child_services_serializer.data},
                     "response": {"n": 0, "msg": "service providers not found", "status": "error"}
                 })
 
