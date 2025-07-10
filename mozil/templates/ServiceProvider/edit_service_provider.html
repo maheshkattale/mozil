@@ -2699,6 +2699,32 @@
       })
   }
 
+  function getChildServices(parent_service_id) {
+    debugger
+    if (parent_service_id) {
+      $.ajax({
+        url: hosturl + "/api/Services/childservicelist",
+        type: 'POST',
+        data: {
+          'ParentServiceId': parent_service_id,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        success: function (response) {
+          var childServiceSelect = $("#child_service");
+          childServiceSelect.empty();
+          childServiceSelect.append('<option value="">Select Child Service</option>');
+          $.each(response.data, function (index, service) {
+            childServiceSelect.append('<option value="' + service.id + '">' + service.Name + '</option>');
+          });
+        }
+      });
+    } else {
+      $("#child_service").empty().append('<option value="">Select Child Service</option>');
+    }
+  }
 
 </script>
 {%endblock page_js %}
+
+
