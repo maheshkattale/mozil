@@ -59,7 +59,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.1/jquery.twbsPagination.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <!-- Add these in your head section -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Add this before your closing body tag -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 
 <body>
@@ -70,7 +76,7 @@
         <div class="app-brand demo">
           <a href="" class="app-brand-link">
             <span class="app-brand-logo demo me-1 w-100">
-              <img class="w-100 p-5" src="{% static 'assets/img/logo/mozil_logo1.png' %}" alt="">
+              <img class="w-100 pb-2" src="{% static 'assets/img/logo/mozil_logo1.png' %}" alt="">
             </span>
             <span class="app-brand-text demo menu-text fw-semibold ms-2"></span>
           </a>
@@ -85,7 +91,7 @@
 
         <ul class="menu-inner py-1">
 
-          <li class="menu-item active">
+          <li class="menu-item">
             <a href="/dashboard/home" class="menu-link" target="">
               <i class="menu-icon tf-icons ri-dashboard-2-line"></i>
               <div class="text-truncate" data-i18n="Dashboard">Dashboard</div>
@@ -198,7 +204,7 @@
             </ul>
           </li>
           <li class="menu-item">
-            <a href="/reviews/reviews_list" class="menu-link" target="">
+            <a href="/reviews/reviews_and_rating_list" class="menu-link" target="">
               <i class="menu-icon tf-icons ri-star-half-line"></i>
               <div class="text-truncate" data-i18n="Reviews Management">Reviews Management</div>
               <span class="badge bg-label-primary fs-tiny rounded-pill ms-auto"></span>
@@ -231,13 +237,7 @@
           </div>
           <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
 
-            <div class="navbar-nav align-items-center">
-              <div class="nav-item d-flex align-items-center">
-                <i class="ri-search-line ri-22px me-2"></i>
-                <input type="text" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
-                  aria-label="Search...">
-              </div>
-            </div>
+
 
             <ul class="navbar-nav flex-row align-items-center ms-auto">
 
@@ -259,8 +259,8 @@
                           </div>
                         </div>
                         <div class="flex-grow-1">
-                          <h6 class="mb-0 small">John Doe</h6>
-                          <small class="text-muted">Admin</small>
+                          <h6 class="mb-0 small">{{user_name}}</h6>
+                          <small class="text-muted">{{role_name}}</small>
                         </div>
                       </div>
                     </a>
@@ -268,7 +268,7 @@
                   <li>
                     <div class="dropdown-divider"></div>
                   </li>
-                  <li>
+                  <!-- <li>
                     <a class="dropdown-item" href="javascript:void(0);">
                       <i class="ri-user-3-line ri-22px me-2"></i>
                       <span class="align-middle">My Profile</span>
@@ -289,7 +289,7 @@
                           class="flex-shrink-0 badge badge-center rounded-pill bg-danger h-px-20 d-flex align-items-center justify-content-center">4</span>
                       </span>
                     </a>
-                  </li>
+                  </li> -->
                   <li>
                     <div class="dropdown-divider"></div>
                   </li>
@@ -333,7 +333,8 @@
                       href="https://zentrotechnologies.com/" target="_blank" class="footer-link">Zentro</a>
                   </div>
                   <div class="d-none d-lg-inline-block">
-                    <a href="" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+                    <a href="mailto:zentrotechnologies@gmail.com?subject=Support Request&body=Please describe your issue here..."
+                      class="footer-link">Support</a>
                   </div>
                 </div>
               </div>
@@ -451,6 +452,116 @@
         });
       });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get current URL path
+      const currentPath = window.location.pathname;
+
+      // Select all menu links
+      const menuLinks = document.querySelectorAll('.menu-link');
+
+      // Loop through each menu link
+      menuLinks.forEach(link => {
+        const href = link.getAttribute('href');
+
+        // Check if the link's href matches the current path
+        if (href && currentPath.includes(href)) {
+          // Add active class to the parent menu-item
+          let parentItem = link.closest('.menu-item');
+          if (parentItem) {
+            parentItem.classList.add('active');
+
+            // If this is a submenu item, also open its parent menu
+            const menuToggle = parentItem.closest('.menu-sub')?.previousElementSibling;
+            if (menuToggle && menuToggle.classList.contains('menu-toggle')) {
+              menuToggle.closest('.menu-item').classList.add('active');
+            }
+          }
+        }
+      });
+
+      // Special case for dashboard which might be '/'
+      if (currentPath === '/' || currentPath === '/dashboard/home') {
+        const dashboardLink = document.querySelector('.menu-item a[href="/dashboard/home"]');
+        if (dashboardLink) {
+          dashboardLink.closest('.menu-item').classList.add('active');
+        }
+      }
+    }); 
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize Select2
+      $('.select2-init').select2({
+        // placeholder: "Select Parent Service",
+        allowClear: true,
+        width: '100%' // makes it responsive
+      });
+
+      // Optional: Fix for Bootstrap floating labels
+      $('.select2-init').on('select2:open', function () {
+        $(this).parent().find('label').addClass('active');
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      flatpickr(".datepicker", {
+        dateFormat: "d-m-Y",
+        allowInput: true
+      });
+    });
+  </script>
+  <script>
+    function initializePasswordTogglers() {
+      const togglers = document.querySelectorAll('.form-password-toggle i');
+
+      if (!togglers.length) return;
+
+      togglers.forEach(toggler => {
+        toggler.addEventListener('click', handlePasswordToggle);
+      });
+    }
+
+    /**
+     * Handle password toggle click event
+     * @param {Event} event - Click event
+     */
+    function handlePasswordToggle(event) {
+      event.preventDefault();
+
+      const icon = event.currentTarget;
+      const toggleContainer = icon.closest('.form-password-toggle');
+      const input = toggleContainer.querySelector('input');
+
+      if (!input) return;
+
+      const isVisible = input.type === 'text';
+
+      // Toggle input type
+      input.type = isVisible ? 'password' : 'text';
+
+      // Toggle icon classes
+      icon.classList.toggle('ri-eye-line', !isVisible);
+      icon.classList.toggle('ri-eye-off-line', isVisible);
+    }
+
+    // Initialize on DOM content loaded
+    document.addEventListener('DOMContentLoaded', initializePasswordTogglers);
+
+    // Optional: Also initialize when content is dynamically added
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(() => {
+          initializePasswordTogglers();
+        });
+      });
+
+      // observer.observe(document.body, {
+      //   childList: true,
+      //   subtree: true
+      // });
+    }
   </script>
   {% endblock page_js %}
 

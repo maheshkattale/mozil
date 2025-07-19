@@ -16,9 +16,7 @@ class UserlistSerializer(serializers.ModelSerializer):
 
 class CustomUserSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model= User
-        fields='__all__'
+
     Role_name = serializers.SerializerMethodField()
     def get_Role_name(self, obj):
         obj_id = obj.role_id
@@ -33,6 +31,26 @@ class CustomUserSerializer(serializers.ModelSerializer):
                 return None
         return None
     
+    
+
+
+    short_name = serializers.SerializerMethodField()
+    def get_short_name(self, obj):
+        Username = obj.Username
+        if Username is not None and Username !='' and Username !='None':
+
+            #convert user name to short Initials 
+            name_parts = Username.split()
+            
+            # Get initials from each part (handle cases with multiple spaces)
+            initials = [part[0].upper() for part in name_parts if part]
+            
+            # Join the initials (take first 2 if name has many parts)
+            shortname = ''.join(initials[:2]) if len(initials) > 1 else initials[0] if initials else ''
+            return shortname
+        else:
+
+            return 'NA'
     
     class Meta:
         model= User
@@ -154,7 +172,51 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
                 return None
         return None
 
+    weekly_schedule = serializers.SerializerMethodField()
+    def get_weekly_schedule(self, obj):
+        obj_id = str(obj.id)
+        if obj_id is not None and obj_id !='' and obj_id !='None':
+            try:
+                obj = ServiceProviderWeeklySchedule.objects.filter(service_provider_id=obj_id,isActive=True)
+                if obj.exists():
+                   weekly_schedule_serializer=ServiceProviderWeeklyScheduleSerializer(obj,many=True)
+                   return weekly_schedule_serializer.data
+                else:
+                    return []
+            except ServiceProviderWeeklySchedule.DoesNotExist:
+                return []
+        return []
 
+
+    highlights = serializers.SerializerMethodField()
+    def get_highlights(self, obj):
+        obj_id = str(obj.id)
+        if obj_id is not None and obj_id !='' and obj_id !='None':
+            try:
+                obj = ServiceProviderHighlights.objects.filter(service_provider_id=obj_id,isActive=True)
+                if obj.exists():
+                   highlights_serializer=ServiceProviderHighlightsSerializer(obj,many=True)
+                   return highlights_serializer.data
+                else:
+                    return []
+            except ServiceProviderHighlights.DoesNotExist:
+                return []
+        return []
+
+    portfolio = serializers.SerializerMethodField()
+    def get_portfolio(self, obj):
+        obj_id = str(obj.id)
+        if obj_id is not None and obj_id !='' and obj_id !='None':
+            try:
+                obj = ServiceProviderPortfolio.objects.filter(service_provider_id=obj_id,isActive=True)
+                if obj.exists():
+                   portfolio_serializer=CustomServiceProviderPortfolioSerializer(obj,many=True)
+                   return portfolio_serializer.data
+                else:
+                    return []
+            except ServiceProviderPortfolio.DoesNotExist:
+                return []
+        return []
 
     class Meta:
         model = ServiceProvider

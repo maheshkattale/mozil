@@ -4,11 +4,11 @@
 ******************************************************************************/
 
 .menu .app-brand.demo {
-  height: 64px;
+  height: 85px;
 }
 
 .dark-style .menu .app-brand.demo {
-  height: 64px;
+  height: 85px;
 }
 
 .app-brand-logo.demo svg {
@@ -144,4 +144,15 @@
 }
 .align-item-center{
   align-items: center;
+}
+/* Adjust Select2 to match your form-floating style */
+.select2-container--default .select2-selection--single {
+  height: calc(2.5rem + 8px)  !important;         
+}
+.select2-selection__rendered{
+  line-height: calc(2.5rem + 2px) !important;
+  padding:0 0.75rem !important;
+}
+.card,.card-group {
+  height: 100%;
 }

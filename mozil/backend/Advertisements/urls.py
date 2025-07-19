@@ -9,6 +9,7 @@ urlpatterns = [
     path('advertisementdelete', advertisementdelete.as_view(), name = 'advertisementdelete'),
     path('advertisementbyid', advertisementbyid.as_view(), name = 'advertisementbyid'),
     path('updateadvertisement', updateadvertisement.as_view(), name = 'updateadvertisement'),
+    path('active_advertisement_list', active_advertisement_list.as_view(), name = 'active_advertisement_list'),
 
 
 ]

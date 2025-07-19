@@ -62,13 +62,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
     'Advertisements',
     'PaymentHistory',
     'ReviewsAndRating',
     'Services',
     'User',
     'Plans',
+    'Masters',
+    'Dashboard',
 
     'Frontend_Dashboard',
     'Frontend_Services',
@@ -76,8 +78,8 @@ INSTALLED_APPS = [
     'Frontend_Plans',
     'Frontend_PaymentHistory',
     'Frontend_Advertisements',
+    'Frontend_ReviewsAndRating',
 
-    
 
 ]
 

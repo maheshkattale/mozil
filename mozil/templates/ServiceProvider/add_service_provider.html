@@ -8,110 +8,163 @@
 {% block layout %}
 <!-- Basic Layout -->
 <div class="row">
-    <div class="col-xl">
-      <div class="card mb-12">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Add  Service Provider</h5> <small class="text-body float-end"></small>
-        </div>
-        <div class="card-body">
-          <form>
-            {% csrf_token %}
-            <div class="row">
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" class="form-control" id="name" placeholder="Name" />
-                <label for="name">Owner Name</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input class="form-control" type="email" placeholder="john@example.com" id="email" />
-                <label for="email">Email</label>
-              </div>
-              <div class="mb-5 col-4">
-                <div class="form-password-toggle">
-                  <div class="input-group input-group-merge">
-                    <div class="form-floating form-floating-outline">
-                      <input type="password" id="password" class="form-control" name="password" placeholder="" aria-describedby="password" />
-                      <label for="password">Password</label>
-                    </div>
-                    <span class="input-group-text cursor-pointer"><i class="ri-eye-off-line ri-20px"></i></span>
+  <div class="col-xl">
+    <div class="card mb-12">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Add Service Provider</h5> <small class="text-body float-end"></small>
+      </div>
+      <div class="card-body">
+        <form>
+          {% csrf_token %}
+          <div class="row">
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="name" placeholder="Name"
+                onkeyup="IsValidAlphaSpaceInput(this)" />
+              <label for="name">Owner Name</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input class="form-control" type="email" placeholder="john@example.com" id="email"
+                onkeyup="IsValidEmailInput(this)" />
+              <label for="email">Email</label>
+            </div>
+            <div class="mb-5 col-4">
+
+
+
+
+              <div class="form-password-toggle">
+                <div class="input-group input-group-merge">
+                  <div class="form-floating form-floating-outline">
+                    <input type="password" id="password" class="form-control" name="password" placeholder=""
+                      aria-describedby="password" />
+                    <label for="password">Password</label>
                   </div>
+                  <span class="input-group-text cursor-pointer"><i class="ri-eye-off-line ri-20px"></i></span>
                 </div>
               </div>
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" id="mobile_number" class="form-control phone-mask" placeholder="658 799 8941" aria-label="658 799 8941" aria-describedby="mobile_number" />
-                <label class="" for="mobile_number">Phone No</label>
-              </div>
-
-              
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" id="alternate_mobile_number" class="form-control phone-mask" placeholder="658 799 8941" aria-label="658 799 8941" aria-describedby="alternate_mobile_number" />
-                <label class="" for="alternate_mobile_number">Alternate Phone No</label>
-              </div>
-
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" class="form-control" id="website" placeholder="website" />
-                <label for="website">website</label>
-              </div>
-
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <select id="parent_service" class="form-select"  aria-label="Default select example">
-                  <option value="">Select Parent Service</option>
-  
-                  {% for service in parent_services %}
-                    <option value="{{service.id}}">{{service.Name}}</option>
-                  {%endfor%}
-                </select>
-                <label for="parent_service">Parent Service</label>
-                
-              </div>
 
 
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <select id="child_service" class="form-select"  aria-label="Default select example">
-                  <option value="">Select Child Service</option>
-  
-                  {% for service in child_services %}
-                    <option value="{{service.id}}">{{service.Name}}</option>
-                  {%endfor%}
-                </select>
-                <label for="child_service">Child Service</label>
-                
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <textarea id="Description" class="form-control" placeholder="Please enter description." style="height: 60px;"></textarea>
-                <label for="Description">Description</label>
-              </div>
-
-
-
-
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" class="form-control" id="lattitude" placeholder="lattitude" />
-                <label for="lattitude">lattitude</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" class="form-control" id="longitude" placeholder="longitude" />
-                <label for="longitude">longitude</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" class="form-control" id="radius" placeholder="radius" />
-                <label for="radius">radius</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-4">
-                <input type="text" class="form-control" id="business_name" placeholder="business_Name" />
-                <label for="business_name">Business Name</label>
-              </div>
-              <div class="mb-4">
-                  <label for="business_logo" class="form-label">Business Logo</label>
-                  <input class="form-control" type="file" id="business_logo">
-              </div>
             </div>
-            <div class="btn btn-primary" onclick="return validation()">Submit</div>
-            <div class="btn btn-danger">Cancel</div>
-          </form>
-        </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" id="mobile_number" class="form-control phone-mask" placeholder="658 799 8941"
+                aria-label="658 799 8941" aria-describedby="mobile_number" onkeyup="IsValidPhoneInput(this)"
+                maxlength="10" />
+              <label class="" for="mobile_number">Phone No</label>
+            </div>
+
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" id="alternate_mobile_number" class="form-control phone-mask" placeholder="658 799 8941"
+                aria-label="658 799 8941" aria-describedby="alternate_mobile_number" onkeyup="IsValidPhoneInput(this)"
+                maxlength="10" />
+              <label class="" for="alternate_mobile_number">Alternate Phone No</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="website" placeholder="website"
+                onkeyup="IsValidURLInput(this)" />
+              <label for="website">website</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <select id="parent_service" class="form-select select2-init" aria-label="Default select example"
+                onchange="getChildServices(this.value)">
+                <option value="">Select Parent Service</option>
+
+                {% for service in parent_services %}
+                <option value="{{service.id}}">{{service.Name}}</option>
+                {%endfor%}
+              </select>
+              <label for="parent_service">Parent Service</label>
+
+            </div>
+
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <select id="child_service" class="form-select select2-init" aria-label="Default select example">
+                <option value="">Select Child Service</option>
+
+
+              </select>
+              <label for="child_service">Child Service</label>
+
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <textarea id="Description" class="form-control" placeholder="Please enter description."
+                style="height: 60px;"></textarea>
+              <label for="Description">Description</label>
+            </div>
+
+
+
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="lattitude" placeholder="lattitude"
+                onkeyup="IsValidLattitudeInput(this)" />
+              <label for="lattitude">lattitude</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="longitude" placeholder="longitude"
+                onkeyup="IsValidLongitudeInput(this)" />
+              <label for="longitude">longitude</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <select id="radius" class="form-select select2-init" aria-label="Default select example">
+                <option value="">Select Radius</option>
+                <option value="15000">15 Km (Region Wide)</option>
+                <option value="30000">15 Km - 30 Km (District Wide)</option>
+                <option value="100000">Country Wide</option>
+
+
+              </select>
+              <label for="radius">Radius</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="business_name" placeholder="business name" />
+              <label for="business_name">Business Name</label>
+            </div>
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="business_registration_number" placeholder="BRN Number" />
+              <label for="business_registration_number">Business Registration Number</label>
+            </div>
+
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <select id="region" class="form-select select2-init" aria-label="Default select example">
+                <option value="">Select Region</option>
+
+                {% for refion in regions %}
+                <option value="{{refion.id}}">{{refion.Name}}</option>
+                {%endfor%}
+              </select>
+              <label for="region">Region</label>
+
+            </div>
+
+
+
+            <div class="mb-4">
+              <label for="business_logo" class="form-label">Business Logo</label>
+              <input class="form-control" type="file" id="business_logo"
+                accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml" onchange="validateImageInput(this)" />
+              <div class="form-text">Upload business logo in png, jpg, jpeg format.</div>
+              <div class="form-text">Max file size: 2MB.</div>
+              <div class="form-text">Recommended size: 200x200 pixels.</div>
+              <div class="form-text">Note: Please upload a clear and high-resolution logo for better visibility.</div>
+              <div>
+                <img src="" id="preview_business_logo" alt=""
+                  style="display:none; max-width: 200px; max-height: 200px; margin-top: 10px;">
+              </div>
+
+            </div>
+          </div>
+          <div class="btn btn-primary" onclick="return validation()">Submit</div>
+          <div class="btn btn-danger">Cancel</div>
+        </form>
       </div>
     </div>
-    <!-- Merged -->
+  </div>
+  <!-- Merged -->
 
 </div>
 {% endblock layout %}
@@ -120,7 +173,7 @@
 {{block.super}}
 
 <script>
-  
+
   function validation() {
     var name = $("#name").val().trim();
     var email = $("#email").val().trim();
@@ -135,54 +188,70 @@
     var longitude = $("#longitude").val().trim();
     var radius = $("#radius").val().trim();
     var business_logo = $('#business_logo')[0].files[0];
+    var region = $("#region").val();
 
     var business_name = $("#business_name").val().trim();
+    var business_registration_number = $("#business_registration_number").val().trim();
 
     if (IsValid(name)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid name",
+        icon: "error",
+        title: "",
+        text: "Please enter valid name",
 
-          });
-          
+      });
+
       $("#name").focus();
       return false;
     }
+
     if (IsValid(email)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid email",
+        icon: "error",
+        title: "",
+        text: "Please enter valid email",
 
-          });
-          
+      });
+
       $("#email").focus();
       return false;
     }
-    
+
     if (IsValid(password)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid password",
+        icon: "error",
+        title: "",
+        text: "Please enter valid password",
 
-          });
-          
+      });
+
       $("#password").focus();
       return false;
     }
-    if (IsValid(mobile_number)) {
+    if (IsValidPhone(mobile_number)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid phone number",
+        icon: "error",
+        title: "",
+        text: "Please enter valid phone number",
 
-          });
-          
+      });
+
       $("#mobile_number").focus();
       return false;
     }
+    if (alternate_mobile_number.length > 0 && IsValidPhone(alternate_mobile_number)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid alternate phone number",
+
+      });
+
+      $("#alternate_mobile_number").focus();
+      return false;
+    }
+
+
     // if (IsValid(alternate_mobile_number)) {
     //   swal({
     //         icon: "error",
@@ -190,31 +259,31 @@
     //         text: "Please enter valid alternate phone number",
 
     //       });
-          
+
     //   $("#alternate_mobile_number").focus();
     //   return false;
     // }
 
     if (IsValid(parent_service)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please select parent service",
+        icon: "error",
+        title: "",
+        text: "Please select parent service",
 
-          });
-          
+      });
+
       $("#parent_service").focus();
       return false;
     }
-    
+
     if (IsValid(child_service)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please select child service",
+        icon: "error",
+        title: "",
+        text: "Please select child service",
 
-          });
-          
+      });
+
       $("#child_service").focus();
       return false;
     }
@@ -246,6 +315,8 @@
       formData.append('longitude', longitude);
       formData.append('radius', radius);
       formData.append('business_name', business_name);
+      formData.append('business_registration_number', business_registration_number);
+      formData.append('region', region);
 
       formData.append('business_logo', business_logo);
 
@@ -275,8 +346,8 @@
               text: response.response.msg,
               button: "Close",
             }).then(() => {
-                window.location.href = hosturl + '/service_provider_master';
-              });
+              window.location.href = hosturl + '/edit_service_provider/' + response.data.id;
+            });
 
 
           }
@@ -298,5 +369,30 @@
 
   }
 
+
+  function getChildServices(parent_service_id) {
+    debugger
+    if (parent_service_id) {
+      $.ajax({
+        url: hosturl + "/api/Services/childservicelist",
+        type: 'POST',
+        data: {
+          'ParentServiceId': parent_service_id,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        success: function (response) {
+          var childServiceSelect = $("#child_service");
+          childServiceSelect.empty();
+          childServiceSelect.append('<option value="">Select Child Service</option>');
+          $.each(response.data, function (index, service) {
+            childServiceSelect.append('<option value="' + service.id + '">' + service.Name + '</option>');
+          });
+        }
+      });
+    } else {
+      $("#child_service").empty().append('<option value="">Select Child Service</option>');
+    }
+  }
 </script>
 {%endblock page_js %}

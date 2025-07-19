@@ -16,13 +16,13 @@ from helpers.validations import hosturl
 # from Users.context_processers import ImageURL as imageURL
 login_url=hosturl+"/api/User/login"
 logout_url=hosturl+"/api/User/logout"
-forgot_password_url=hosturl+"/api/User/forgot_password"
+forgot_password_url=hosturl+"/api/User/forgetpasswordmail"
 get_parent_services_list_url=hosturl+"/api/Services/parentservicelist"
 get_child_services_list_url=hosturl+"/api/Services/childservicelist"
 add_service_provider_url=hosturl+"/api/User/create_new_service_provider"
 get_service_provider_details_url=hosturl+"/api/User/get_service_provider_details"
 edit_service_provider_url=hosturl+"/api/User/update_service_provider_basic_details"
-
+get_regions_list_url=hosturl+"/api/Masters/region_list"
 
 # Create your views here.
 def login(request):
@@ -36,10 +36,13 @@ def login(request):
 
         login_request = requests.post(login_url, data=data)
         login_response = login_request.json()
-
+        print("login_response",login_response)
         if login_response['response']['n'] == 1:
             token = login_response['data']['token']
             request.session['token'] = token 
+            request.session['role_id'] = login_response['data']['role'] 
+            request.session['role_name'] = login_response['data']['role_name']  
+            request.session['user_name'] = login_response['data']['username']   
             return HttpResponse(json.dumps(login_response),content_type='application/json')
         else:
             # messages.error(request, login_response['response']['msg'])
@@ -104,8 +107,9 @@ def add_service_provider(request):
             get_parent_service_response = get_parent_service_request.json()
             get_child_service_request = requests.get(get_child_services_list_url,headers=headers)
             get_child_service_response = get_child_service_request.json()
-
-            return render(request, 'ServiceProvider/add_service_provider.html',{'parent_services':get_parent_service_response['data'],'child_services':get_child_service_response['data']})
+            get_regions_request = requests.get(get_regions_list_url,headers=headers)
+            get_regions_response = get_regions_request.json()
+            return render(request, 'ServiceProvider/add_service_provider.html',{'parent_services':get_parent_service_response['data'],'child_services':get_child_service_response['data'],'regions':get_regions_response['data']})
     else:
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('Frontend_User:login') # change this.
@@ -125,9 +129,11 @@ def edit_service_provider(request,id):
             get_parent_service_response = get_parent_service_request.json()
             get_child_service_request = requests.get(get_child_services_list_url,headers=headers)
             get_child_service_response = get_child_service_request.json()
+            get_regions_request = requests.get(get_regions_list_url,headers=headers)
+            get_regions_response = get_regions_request.json()
             get_service_provider_details_request = requests.post(get_service_provider_details_url,data=data,headers=headers)
             get_service_provider_details_response = get_service_provider_details_request.json()
-            return render(request, 'ServiceProvider/edit_service_provider.html',{'parent_services':get_parent_service_response['data'],'child_services':get_child_service_response['data'],'obj':get_service_provider_details_response['data']})
+            return render(request, 'ServiceProvider/edit_service_provider.html',{'parent_services':get_parent_service_response['data'],'child_services':get_child_service_response['data'],'obj':get_service_provider_details_response['data'],'regions':get_regions_response['data']})
     else:
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('Frontend_User:login') # change this.

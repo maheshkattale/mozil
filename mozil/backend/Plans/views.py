@@ -26,13 +26,17 @@ class service_provider_plan_list_pagination_api(GenericAPIView):
 
     def post(self,request):
         plans_objs = ServiceProviderPlanMaster.objects.filter(isActive=True).order_by('-id')
+        search = request.data.get('search')
+        if search is not None and search != '':
+            plans_objs = plans_objs.filter(Q(Name__icontains=search) | Q(description__icontains=search)| Q(amount__icontains=search)| Q(days__icontains=search))
+
         page4 = self.paginate_queryset(plans_objs)
         serializer = ServiceProviderPlanMasterSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
     
 class service_provider_plan_list(GenericAPIView):
-    authentication_classes=[userJWTAuthentication]
-    permission_classes = (permissions.IsAuthenticated,)
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
     def get(self,request):
         plans_objs = ServiceProviderPlanMaster.objects.filter(isActive=True).order_by('Name')
         serializer = ServiceProviderPlanMasterSerializer(plans_objs,many=True)
@@ -77,7 +81,7 @@ class addplan(GenericAPIView):
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})           
         else:
-            return Response({ "data":{},"response":{"n":0,"msg":"plan already exist", "status":"error"}})
+            return Response({ "data":{},"response":{"n":0,"msg":"Plan already exist", "status":"error"}})
 
 class plandelete(GenericAPIView):
     authentication_classes=[userJWTAuthentication]

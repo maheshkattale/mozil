@@ -15,10 +15,7 @@
 <script src="{% static 'assets/vendor/libs/apex-charts/apexcharts.js' %}"></script>
 {% endblock vendor_js %}
 
-{% block page_js %}
-{{ block.super }}
-<script src="{% static 'assets/js/dashboards-analytics.js' %}"></script>
-{% endblock page_js %}
+
 
 {% block layout %}
 <div class="row gy-6">
@@ -26,13 +23,14 @@
   <div class="col-md-12 col-lg-4">
     <div class="card">
       <div class="card-body text-nowrap">
-        <h5 class="card-title mb-0 flex-wrap text-nowrap">Congratulations Norris! 🎉</h5>
-        <p class="mb-2">Best seller of the month</p>
-        <h4 class="text-primary mb-0">$42.8k</h4>
-        <p class="mb-2">78% of target 🚀</p>
-        <a href="javascript:;" class="btn btn-sm btn-primary">View Sales</a>
+        <h5 class="card-title mb-0 flex-wrap text-nowrap">Pending Service Provider Verifications</h5>
+        <h4 class="text-primary mb-0">Total <span id="total_service_providers_count">0</span></h4>
+        <p class="mb-2">Unverified Service Providers</p>
+        <p class="mb-2 text-danger"><span id="unverified_service_providers_count">0</span> Remaining</p>
+        <a href="/service_provider_verification" class="btn btn-sm btn-primary">View All</a>
       </div>
-      <img src="{% static 'assets/img/illustrations/trophy.png' %}" class="position-absolute bottom-0 end-0 me-5 mb-5" width="83" alt="view sales">
+      <img src="{% static 'assets/img/illustrations/shield_check_mark_connected_outline.jpg' %}"
+        class="position-absolute bottom-0 end-0 me-5 mb-5" width="83" alt="view sales">
     </div>
   </div>
   <!--/ Congratulations card -->
@@ -44,21 +42,20 @@
         <div class="d-flex align-items-center justify-content-between">
           <h5 class="card-title m-0 me-2">Transactions</h5>
           <div class="dropdown">
-            <button class="btn text-muted p-0" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn text-muted p-0" type="button" id="transactionID" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <i class="ri-more-2-line ri-24px"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
               <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-              <a class="dropdown-item" href="javascript:void(0);">Share</a>
-              <a class="dropdown-item" href="javascript:void(0);">Update</a>
             </div>
           </div>
         </div>
-        <p class="small mb-0"><span class="h6 mb-0">Total 48.5% Growth</span> 😎 this month</p>
+        <p class="small mb-0" id="profit_loss_statement"><span class="h6 mb-0">Total 0% Growth</span> 😎 this month</p>
       </div>
       <div class="card-body pt-lg-10">
         <div class="row g-6">
-          <div class="col-md-3 col-6">
+          <div class="col-md-4 col-6">
             <div class="d-flex align-items-center">
               <div class="avatar">
                 <div class="avatar-initial bg-primary rounded shadow-xs">
@@ -66,12 +63,12 @@
                 </div>
               </div>
               <div class="ms-3">
-                <p class="mb-0">Sales</p>
-                <h5 class="mb-0">245k</h5>
+                <p class="mb-0">Plans Subscribe</p>
+                <h5 class="mb-0" id="current_month_total_plans_sales"> 0</h5>
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-6">
+          <div class="col-md-4 col-6">
             <div class="d-flex align-items-center">
               <div class="avatar">
                 <div class="avatar-initial bg-success rounded shadow-xs">
@@ -80,36 +77,24 @@
               </div>
               <div class="ms-3">
                 <p class="mb-0">Customers</p>
-                <h5 class="mb-0">12.5k</h5>
+                <h5 class="mb-0" id="current_month_cunsumer_plans_sales">0</h5>
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-6">
+          <div class="col-md-4 col-6">
             <div class="d-flex align-items-center">
               <div class="avatar">
                 <div class="avatar-initial bg-warning rounded shadow-xs">
-                  <i class="ri-macbook-line ri-24px"></i>
+                  <i class="ri-store-line ri-24px"></i>
                 </div>
               </div>
               <div class="ms-3">
-                <p class="mb-0">Product</p>
-                <h5 class="mb-0">1.54k</h5>
+                <p class="mb-0">Service Providers</p>
+                <h5 class="mb-0" id="current_month_service_provider_plans_sales">0</h5>
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-6">
-            <div class="d-flex align-items-center">
-              <div class="avatar">
-                <div class="avatar-initial bg-info rounded shadow-xs">
-                  <i class="ri-money-dollar-circle-line ri-24px"></i>
-                </div>
-              </div>
-              <div class="ms-3">
-                <p class="mb-0">Revenue</p>
-                <h5 class="mb-0">$88k</h5>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -121,9 +106,10 @@
     <div class="card">
       <div class="card-header">
         <div class="d-flex justify-content-between">
-          <h5 class="mb-1">Weekly Overview</h5>
+          <h5 class="mb-1">Weekly Trending Services</h5>
           <div class="dropdown">
-            <button class="btn text-muted p-0" type="button" id="weeklyOverviewDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn text-muted p-0" type="button" id="weeklyOverviewDropdown" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <i class="ri-more-2-line ri-24px"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="weeklyOverviewDropdown">
@@ -150,13 +136,14 @@
   </div>
   <!--/ Weekly Overview Chart -->
 
-  <!-- Total Earnings -->
+  <!-- Top Selling Plans -->
   <div class="col-xl-4 col-md-6">
     <div class="card">
       <div class="card-header d-flex align-items-center justify-content-between">
-        <h5 class="card-title m-0 me-2">Total Earning</h5>
+        <h5 class="card-title m-0 me-2">Top Selling Plans</h5>
         <div class="dropdown">
-          <button class="btn text-muted p-0" type="button" id="totalEarnings" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn text-muted p-0" type="button" id="totalEarnings" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <i class="ri-more-2-line ri-24px"></i>
           </button>
           <div class="dropdown-menu dropdown-menu-end" aria-labelledby="totalEarnings">
@@ -190,7 +177,8 @@
               <div>
                 <h6 class="mb-2">$24,895.65</h6>
                 <div class="progress bg-label-primary" style="height: 4px;">
-                  <div class="progress-bar bg-primary" style="width: 75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar bg-primary" style="width: 75%" role="progressbar" aria-valuenow="75"
+                    aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
@@ -207,7 +195,8 @@
               <div>
                 <h6 class="mb-2">$8,6500.20</h6>
                 <div class="progress bg-label-info" style="height: 4px;">
-                  <div class="progress-bar bg-info" style="width: 75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar bg-info" style="width: 75%" role="progressbar" aria-valuenow="75"
+                    aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
@@ -224,7 +213,8 @@
               <div>
                 <h6 class="mb-2">$1,2450.80</h6>
                 <div class="progress bg-label-secondary" style="height: 4px;">
-                  <div class="progress-bar bg-secondary" style="width: 75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar bg-secondary" style="width: 75%" role="progressbar" aria-valuenow="75"
+                    aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
@@ -233,7 +223,7 @@
       </div>
     </div>
   </div>
-  <!--/ Total Earnings -->
+  <!--/ Top Selling Plans -->
 
   <!-- Four Cards -->
   <div class="col-xl-4 col-md-6">
@@ -251,7 +241,7 @@
         </div>
       </div>
       <!--/ Total Profit line chart -->
-      <!-- Total Profit Weekly Project -->
+      <!-- Total Profit Weekly  -->
       <div class="col-sm-6">
         <div class="card h-100">
           <div class="card-header d-flex align-items-center justify-content-between">
@@ -261,13 +251,12 @@
               </div>
             </div>
             <div class="dropdown">
-              <button class="btn text-muted p-0" type="button" id="totalProfitID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn text-muted p-0" type="button" id="totalProfitID" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 <i class="ri-more-2-line ri-24px"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="totalProfitID">
                 <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                <a class="dropdown-item" href="javascript:void(0);">Update</a>
               </div>
             </div>
           </div>
@@ -277,42 +266,43 @@
               <h4 class="mb-0 me-2">$25.6k</h4>
               <p class="text-success mb-0">+42%</p>
             </div>
-            <small>Weekly Project</small>
+            <small>OverAll Profit</small>
           </div>
         </div>
       </div>
-      <!--/ Total Profit Weekly Project -->
-      <!-- New Yearly Project -->
+      <!--/ Total Profit Weekly -->
+      <!-- New Yearly -->
       <div class="col-sm-6">
         <div class="card h-100">
           <div class="card-header d-flex align-items-center justify-content-between">
             <div class="avatar">
               <div class="avatar-initial bg-primary rounded-circle shadow-xs">
-                <i class="ri-file-word-2-line ri-24px"></i>
+                <i class="ri-group-line ri-24px"></i>
               </div>
             </div>
             <div class="dropdown">
-              <button class="btn text-muted p-0" type="button" id="newProjectID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn text-muted p-0" type="button" id="newUsersID" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 <i class="ri-more-2-line ri-24px"></i>
               </button>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="newProjectID">
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="newUsersID">
                 <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                <a class="dropdown-item" href="javascript:void(0);">Update</a>
+                <a class="dropdown-item" href="javascript:void(0);">Last 6 month</a>
+                <a class="dropdown-item" href="javascript:void(0);">This Year</a>
               </div>
             </div>
           </div>
           <div class="card-body">
-            <h6 class="mb-1">New Project</h6>
+            <h6 class="mb-1">New Users</h6>
             <div class="d-flex flex-wrap mb-1 align-items-center">
               <h4 class="mb-0 me-2">862</h4>
               <p class="text-danger mb-0">-18%</p>
             </div>
-            <small>Yearly Project</small>
+            <small>Montly Overview</small>
           </div>
         </div>
       </div>
-      <!--/ New Yearly Project -->
+      <!--/ New Yearly  -->
       <!-- Sessions chart -->
       <div class="col-sm-6">
         <div class="card h-100">
@@ -321,131 +311,16 @@
           </div>
           <div class="card-body">
             <div id="sessionsColumnChart" class="mb-3"></div>
-            <h6 class="text-center mb-0">Sessions</h6>
+            <h6 class="text-center mb-0">Searches Attempts</h6>
           </div>
         </div>
       </div>
       <!--/ Sessions chart -->
     </div>
   </div>
-  <!--/ Total Earning -->
+  <!--/ Top Selling Plan -->
 
-  <!-- Sales by Countries -->
-  <div class="col-xl-4 col-md-6">
-    <div class="card h-100">
-      <div class="card-header d-flex align-items-center justify-content-between">
-        <h5 class="card-title m-0 me-2">Sales by Countries</h5>
-        <div class="dropdown">
-          <button class="btn text-muted p-0" type="button" id="saleStatus" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="ri-more-2-line ri-24px"></i>
-          </button>
-          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="saleStatus">
-            <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
-            <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
-            <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <div class="d-flex align-items-center mb-4">
-            <div class="avatar me-4">
-              <div class="avatar-initial bg-label-success rounded-circle">US</div>
-            </div>
-            <div>
-              <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$8,656k</h6>
-                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success">25.8%</span>
-              </div>
-              <p class="mb-0">United states of america</p>
-            </div>
-          </div>
-          <div class="text-end">
-            <h6 class="mb-1">894k</h6>
-            <small class="text-muted">Sales</small>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div class="d-flex align-items-center mb-4">
-            <div class="avatar me-4">
-              <span class="avatar-initial bg-label-danger rounded-circle">UK</span>
-            </div>
-            <div>
-              <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$2,415k</h6>
-                <i class="ri-arrow-down-s-line ri-24px text-danger"></i>
-                <span class="text-danger">6.2%</span>
-              </div>
-              <p class="mb-0">United Kingdom</p>
-            </div>
-          </div>
-          <div class="text-end">
-            <h6 class="mb-1">645k</h6>
-            <small class="text-muted">Sales</small>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div class="d-flex align-items-center mb-4">
-            <div class="avatar me-4">
-              <span class="avatar-initial bg-label-warning rounded-circle">IN</span>
-            </div>
-            <div>
-              <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">865k</h6>
-                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success"> 12.4%</span>
-              </div>
-              <p class="mb-0">India</p>
-            </div>
-          </div>
-          <div class="text-end">
-            <h6 class="mb-1">148k</h6>
-            <small class="text-muted">Sales</small>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div class="d-flex align-items-center mb-4">
-            <div class="avatar me-4">
-              <span class="avatar-initial bg-label-secondary rounded-circle">JA</span>
-            </div>
-            <div>
-              <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$745k</h6>
-                <i class="ri-arrow-down-s-line ri-24px text-danger"></i>
-                <span class="text-danger">11.9%</span>
-              </div>
-              <p class="mb-0">Japan</p>
-            </div>
-          </div>
-          <div class="text-end">
-            <h6 class="mb-1">86k</h6>
-            <small class="text-muted">Sales</small>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div class="d-flex align-items-center">
-            <div class="avatar me-4">
-              <span class="avatar-initial bg-label-danger rounded-circle">KO</span>
-            </div>
-            <div>
-              <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$45k</h6>
-                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success">16.2%</span>
-              </div>
-              <p class="mb-0">Korea</p>
-            </div>
-          </div>
-          <div class="text-end">
-            <h6 class="mb-1">42k</h6>
-            <small class="text-muted">Sales</small>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--/ Sales by Countries -->
+
 
   <!-- Deposit / Withdraw -->
   <div class="col-xl-8">
@@ -453,14 +328,15 @@
       <div class="card mb-0">
         <div class="card-body card-separator">
           <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-            <h5 class="m-0 me-2">Deposit</h5>
+            <h5 class="m-0 me-2">Reviews And Rating</h5>
             <a class="fw-medium" href="javascript:void(0);">View all</a>
           </div>
           <div class="deposit-content pt-2">
             <ul class="p-0 m-0">
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/gumroad.png' %}" class="img-fluid" alt="gumroad" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/gumroad.png' %}" class="img-fluid" alt="gumroad"
+                    height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -472,7 +348,8 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/mastercard-2.png' %}" class="img-fluid" alt="mastercard" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/mastercard-2.png' %}" class="img-fluid"
+                    alt="mastercard" height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -484,7 +361,8 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/stripes.png' %}" class="img-fluid" alt="stripes" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/stripes.png' %}" class="img-fluid" alt="stripes"
+                    height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -496,7 +374,8 @@
               </li>
               <li class="d-flex mb-4 align-items-center pb-2">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/american-bank.png' %}" class="img-fluid" alt="american" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/american-bank.png' %}" class="img-fluid" alt="american"
+                    height="30" width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -508,7 +387,8 @@
               </li>
               <li class="d-flex align-items-center">
                 <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/citi.png' %}" class="img-fluid" alt="citi" height="30" width="30">
+                  <img src="{% static 'assets/img/icons/payments/citi.png' %}" class="img-fluid" alt="citi" height="30"
+                    width="30">
                 </div>
                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                   <div class="me-2">
@@ -522,81 +402,148 @@
           </div>
         </div>
       </div>
-      <div class="card mb-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-            <h5 class="m-0 me-2">Withdraw</h5>
-            <a class="fw-medium" href="javascript:void(0);">View all</a>
+
+    </div>
+  </div>
+  <!-- Deposit / Withdraw -->
+
+  <!-- Revenue by Regions -->
+  <div class="col-xl-4 col-md-6">
+    <div class="card h-100">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title m-0 me-2">Revenue by Regions</h5>
+        <div class="dropdown">
+          <button class="btn text-muted p-0" type="button" id="RevenueStatus" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="ri-more-2-line ri-24px"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="RevenueStatus">
+            <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+            <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
+            <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
           </div>
-          <div class="withdraw-content pt-2">
-            <ul class="p-0 m-0">
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/brands/google.png' %}" class="img-fluid" alt="google" height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Google Adsense</h6>
-                    <p class="mb-0">Paypal deposit</p>
-                  </div>
-                  <h6 class="text-danger mb-0">-$145</h6>
-                </div>
-              </li>
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/brands/github.png' %}" class="img-fluid" alt="github" height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Github Enterprise</h6>
-                    <p class="mb-0">Security &amp; compliance</p>
-                  </div>
-                  <h6 class="text-danger mb-0">-$1870</h6>
-                </div>
-              </li>
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/brands/slack.png' %}" class="img-fluid" alt="slack" height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Upgrade Slack Plan</h6>
-                    <p class="mb-0">Debit card deposit</p>
-                  </div>
-                  <h6 class="text-danger mb-0">$450</h6>
-                </div>
-              </li>
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/digital-ocean.png' %}" class="img-fluid" alt="digital" height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Digital Ocean</h6>
-                    <p class="mb-0">Cloud Hosting</p>
-                  </div>
-                  <h6 class="text-danger mb-0">-$540</h6>
-                </div>
-              </li>
-              <li class="d-flex align-items-center">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/brands/aws.png' %}" class="img-fluid" alt="aws" height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">AWS Account</h6>
-                    <p class="mb-0">Choosing a Cloud Platform</p>
-                  </div>
-                  <h6 class="text-danger mb-0">-$21</h6>
-                </div>
-              </li>
-            </ul>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mb-4">
+            <div class="avatar me-4">
+              <div class="avatar-initial bg-label-success rounded-circle">NM</div>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 mb-1">
+                <h6 class="mb-0">$8,656k</h6>
+                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
+                <span class="text-success">25.8%</span>
+              </div>
+              <p class="mb-0">North Mauritius</p>
+            </div>
+          </div>
+          <div class="text-end">
+            <h6 class="mb-1">894k</h6>
+            <small class="text-muted">Revenue</small>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mb-4">
+            <div class="avatar me-4">
+              <span class="avatar-initial bg-label-danger rounded-circle">PL</span>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 mb-1">
+                <h6 class="mb-0">$2,415k</h6>
+                <i class="ri-arrow-down-s-line ri-24px text-danger"></i>
+                <span class="text-danger">6.2%</span>
+              </div>
+              <p class="mb-0">Port Louis in Mauritius</p>
+            </div>
+          </div>
+          <div class="text-end">
+            <h6 class="mb-1">645k</h6>
+            <small class="text-muted">Revenue</small>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mb-4">
+            <div class="avatar me-4">
+              <span class="avatar-initial bg-label-warning rounded-circle">CM</span>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 mb-1">
+                <h6 class="mb-0">865k</h6>
+                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
+                <span class="text-success"> 12.4%</span>
+              </div>
+              <p class="mb-0">Centre Mauritius</p>
+            </div>
+          </div>
+          <div class="text-end">
+            <h6 class="mb-1">148k</h6>
+            <small class="text-muted">Revenue</small>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mb-4">
+            <div class="avatar me-4">
+              <span class="avatar-initial bg-label-secondary rounded-circle">EM</span>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 mb-1">
+                <h6 class="mb-0">$745k</h6>
+                <i class="ri-arrow-down-s-line ri-24px text-danger"></i>
+                <span class="text-danger">11.9%</span>
+              </div>
+              <p class="mb-0">East Mauritius</p>
+            </div>
+          </div>
+          <div class="text-end">
+            <h6 class="mb-1">86k</h6>
+            <small class="text-muted">Revenue</small>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mb-4">
+            <div class="avatar me-4">
+              <span class="avatar-initial bg-label-danger rounded-circle">WM</span>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 mb-1">
+                <h6 class="mb-0">$45k</h6>
+                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
+                <span class="text-success">16.2%</span>
+              </div>
+              <p class="mb-0">West Mauritius</p>
+            </div>
+          </div>
+          <div class="text-end">
+            <h6 class="mb-1">42k</h6>
+            <small class="text-muted">Revenue</small>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="avatar me-4">
+              <span class="avatar-initial bg-label-danger rounded-circle">SM</span>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 mb-1">
+                <h6 class="mb-0">$45k</h6>
+                <i class="ri-arrow-up-s-line ri-24px text-success"></i>
+                <span class="text-success">16.2%</span>
+              </div>
+              <p class="mb-0">South Mauritius</p>
+            </div>
+          </div>
+          <div class="text-end">
+            <h6 class="mb-1">42k</h6>
+            <small class="text-muted">Revenue</small>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Deposit / Withdraw -->
+  <!--/ Sales by Regions -->
+
 
   <!-- Data Tables -->
   <div class="col-12">
@@ -605,186 +552,257 @@
         <table class="table table-sm">
           <thead>
             <tr>
+              <th class="text-truncate">SR NO</th>
               <th class="text-truncate">User</th>
               <th class="text-truncate">Email</th>
+              <th class="text-truncate">Phone</th>
               <th class="text-truncate">Role</th>
               <th class="text-truncate">Status</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Jordan Stevenson</h6>
-                    <small class="text-truncate">@amiccoo</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">susanna.Lind57@gmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-vip-crown-line ri-22px text-primary me-2"></i>
-                  <span>Admin</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-warning rounded-pill">Pending</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/3.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Benedetto Rossiter</h6>
-                    <small class="text-truncate">@brossiter15</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">estelle.Bailey10@gmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-edit-box-line text-warning ri-22px me-2"></i>
-                  <span>Editor</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-success rounded-pill">Active</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/2.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Bentlee Emblin</h6>
-                    <small class="text-truncate">@bemblinf</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">milo86@hotmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-computer-line text-danger ri-22px me-2"></i>
-                  <span>Author</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-success rounded-pill">Active</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/5.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Bertha Biner</h6>
-                    <small class="text-truncate">@bbinerh</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">lonnie35@hotmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-edit-box-line text-warning ri-22px me-2"></i>
-                  <span>Editor</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-warning rounded-pill">Pending</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/4.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Beverlie Krabbe</h6>
-                    <small class="text-truncate">@bkrabbe1d</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">ahmad_Collins@yahoo.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-pie-chart-2-line ri-22px text-info me-2"></i>
-                  <span>Maintainer</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-success rounded-pill">Active</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/7.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Bradan Rosebotham</h6>
-                    <small class="text-truncate">@brosebothamz</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">tillman.Gleason68@hotmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-edit-box-line text-warning ri-22px me-2"></i>
-                  <span>Editor</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-warning rounded-pill">Pending</span></td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/6.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Bree Kilday</h6>
-                    <small class="text-truncate">@bkildayr</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">otho21@gmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-user-3-line ri-22px text-success me-2"></i>
-                  <span>Subscriber</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-success rounded-pill">Active</span></td>
-            </tr>
-            <tr class="border-transparent">
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-sm me-4">
-                    <img src="{% static 'assets/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle">
-                  </div>
-                  <div>
-                    <h6 class="mb-0 text-truncate">Breena Gallemore</h6>
-                    <small class="text-truncate">@bgallemore6</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-truncate">florencio.Little@hotmail.com</td>
-              <td class="text-truncate">
-                <div class="d-flex align-items-center">
-                  <i class="ri-user-3-line ri-22px text-success me-2"></i>
-                  <span>Subscriber</span>
-                </div>
-              </td>
-              <td><span class="badge bg-label-secondary rounded-pill">Inactive</span></td>
-            </tr>
+          <tbody id="users_table_body">
+
           </tbody>
         </table>
+        <div class=" d-flex justify-content-end m-3" id="secondpagination-demo2">
+          <ul id="pagination-demo2" class="pagination-sm"></ul>
+        </div>
       </div>
     </div>
   </div>
   <!--/ Data Tables -->
 </div>
 {% endblock layout %}
+{% block page_js %}
+{{block.super}}
+<script src="{% static 'assets/js/dashboards-analytics.js' %}"></script>
+
+
+
+<script>
+  $(document).ready(function () {
+
+    Pagination()
+  });
+
+  function Pagination() {
+    var testflag = true;
+    $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
+    get_table_data(1);
+
+  }
+
+  function get_table_data(p) {
+    var search = $('#search').val()
+    if (search == undefined) {
+      search = ''
+    }
+    var activation_status = $('#activation_status').val()
+    if (activation_status != '' && activation_status != undefined) {
+      if (activation_status == 'Active') {
+        activation_status = true
+      } else {
+        activation_status = false
+      }
+    }
+    var fd = new FormData()
+    fd.append('p', p)
+    fd.append('searchtext', search)
+    fd.append('activation_status', activation_status)
+
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+    $.ajax({
+      url: hosturl + "/api/User/user_list_pagination_api",
+      data: fd,
+      headers: { "Authorization": "Bearer {{token}}" },
+
+      type: 'POST',
+      processData: false,
+      contentType: false,
+      beforeSend: function () {
+        swal({
+          icon: "info",
+          title: "",
+          text: "Loading...",
+          buttons: false,
+
+        });
+      },
+      success: function (response) {
+        var infohtml = ''
+        swal.close()
+        console.log('response d', response)
+        if (response.count != 0) {
+          var counter = parseInt(p + "1") - parseInt(10)
+
+          $.each(response.results, function (i, o) {
+            infohtml += `
+                            
+                                                
+                                  <tr>
+                                        <td>
+                                            ${counter}
+                                        </td>
+                                        <td>                         
+                                          <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm me-4">
+                                              <img src="${o.profile_picture || hosturl + '/static/assets/img/avatars/1.png'}" alt="Avatar" class="rounded-circle">
+                                            </div>
+                                            <div>
+                                              <h6 class="mb-0 text-truncate">${o.Username || ''}</h6>
+                                              <small class="text-truncate">@${o.short_name || ''}</small>
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td class="text-truncate">
+                                            <div>${o.email || ''}</div>
+                                        </td>
+                                        <td class="text-truncate">
+                                            <div>${o.mobileNumber || ''}</div>
+                                        </td>
+                                        <td class="text-truncate">
+                                          <div class="d-flex align-items-center">
+                                            <i class="${o.role == 1 ? `ri-vip-crown-line text-primary` : o.role == 2 ? `ri-store-line text-warning` : `ri-user-3-line text-success`} ri-22px me-2"></i>
+                                            <span>${o.Role_name || 'NA'}</span>
+                                          </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-label-${o.status ? `success` : `secondary`} rounded-pill">${o.status ? `Active` : `Inactive`}</span>
+                                        </td>
+                                    </tr>
+                            
+
+                            
+           
+                      `
+
+            counter += 1
+          });
+          $('#users_table_body').html(infohtml);
+          var totalfilter = Math.ceil(parseInt(response.count) / 10);
+          $('#pagination-demo2').twbsPagination({
+            totalPages: totalfilter,
+            visiblePages: 3,
+            next: 'Next',
+            prev: 'Prev',
+            onPageClick: function (event, page) {
+              var testflag = true;
+              //fetch content and render here
+              filternamepageno = page
+              if (testflag == true) {
+                testflag = false;
+                get_table_data(page)
+              }
+              $('#page-content').text('Page ' + page) + ' content here';
+            }
+          })
+
+
+
+
+        } else {
+          infohtml = `
+                                <tr class="border-bottom text-center">
+                                    <td colspan="6">No Data found</td>
+                                </tr>
+                    `
+          $('#users_table_body').html(infohtml);
+
+          swal({
+            icon: "error",
+            title: "",
+            text: "No Data Found !",
+            button: "Close",
+          });
+        }
+
+      }
+    })
+
+  }
+
+
+  function get_dashboard_data() {
+    $.ajax({
+      url: hosturl + "/api/Dashboard/dashboard_analytics_api",
+      headers: { "Authorization": "Bearer {{token}}" },
+      type: 'GET',
+      // beforeSend: function () {
+      //   swal({
+      //     icon: "info",
+      //     title: "",
+      //     text: "Loading...",
+      //     buttons: false,
+      //   });
+      // },
+      success: function (response) {
+        // swal.close()
+        console.log('response', response)
+        animateCounter($('#unverified_service_providers_count'), response.unverified_service_providers);
+
+        $('#total_service_providers_count').text(`${response.total_service_providers}`)
+        $('#profit_loss_statement').html(`<span class="h6 mb-0">Total ${response.profit_loss_statement}% Growth</span> 😎 this month`)
+        $('#current_month_total_plans_sales').text(`${response.current_month_total_plans_sales}`)
+        $('#current_month_cunsumer_plans_sales').text(`${response.current_month_cunsumer_plans_sales}`)
+        $('#current_month_service_provider_plans_sales').text(`${response.current_month_service_provider_plans_sales}`)
+
+        // Initialize the chart with the data
+        // initWeeklyOverviewChart(response.weekly_overview_data);
+      }
+    });
+  }
+  // Call the function to fetch and display the dashboard data
+  get_dashboard_data();
+  // Function to initialize the weekly overview chart
+  function animateCounter(element, target, duration = 2000) {
+    const start = 0;
+    const increment = target / (duration / 16); // 16ms is roughly 1 frame at 60fps
+    let current = start;
+
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        clearInterval(timer);
+        current = target;
+      }
+      element.text(Math.floor(current));
+    }, 10);
+  }
+
+  function initWeeklyOverviewChart(data) {
+    var options = {
+      series: [{
+        name: 'Weekly Overview',
+        data: data
+      }],
+      chart: {
+        type: 'area',
+        height: 350,
+        toolbar: {
+          show: false
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      xaxis: {
+        type: 'datetime',
+        categories: ['2023-10-01', '2023-10-02', '2023-10-03', '2023-10-04', '2023-10-05', '2023-10-06', '2023-10-07']
+      },
+      tooltip: {
+        x: {
+          format: 'dd/MM/yy HH:mm'
+        }
+      }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#weeklyOverviewChart"), options);
+    chart.render();
+  }
+
+
+</script>
+{%endblock page_js %}

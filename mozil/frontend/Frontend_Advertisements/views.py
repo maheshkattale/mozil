@@ -58,6 +58,7 @@ def edit_advertisement(request,id):
             data={'advertisement_id':id}
             get_advertisement_request = requests.post(get_advertisement_url, data=data,headers=headers,)
             get_advertisement_response = get_advertisement_request.json()
+            print("get_advertisement_response",get_advertisement_response)
             return render(request, 'Advertisements/edit_advertisement.html',{'advertisement':get_advertisement_response['data']})
     else:
         messages.error(request, 'Session expired. Please log in again.')

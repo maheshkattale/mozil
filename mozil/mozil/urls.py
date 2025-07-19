@@ -29,6 +29,9 @@ urlpatterns = [
     path('api/Plans/', include('Plans.urls')),
     path('api/PaymentHistory/', include('PaymentHistory.urls')),
     path('api/Advertisements/', include('Advertisements.urls')),
+    path('api/ReviewsAndRating/', include('ReviewsAndRating.urls')),
+    path('api/Masters/', include('Masters.urls')),
+    path('api/Dashboard/', include('Dashboard.urls')),
     
     #frontend
     path('',include(('Frontend_User.urls', 'Frontend_User'),namespace='Frontend_User')),
@@ -37,5 +40,6 @@ urlpatterns = [
     path('plan/',include(('Frontend_Plans.urls', 'Frontend_Plans'),namespace='Frontend_Plans')),
     path('payment_history/',include(('Frontend_PaymentHistory.urls', 'Frontend_PaymentHistory'),namespace='Frontend_PaymentHistory')),
     path('advertisement/',include(('Frontend_Advertisements.urls', 'Frontend_Advertisements'),namespace='Frontend_Advertisements')),
+    path('reviews/',include(('Frontend_ReviewsAndRating.urls', 'Frontend_ReviewsAndRating'),namespace='Frontend_ReviewsAndRating')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

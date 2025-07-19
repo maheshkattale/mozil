@@ -12,7 +12,12 @@
         <div>
             <h5 class="card-header">Parent Services</h5>
         </div>
-        <div>
+        <div class="d-flex justify-content-end">
+            <div class="d-flex align-items-center">
+                <i class="ri-search-line ri-22px me-2"></i>
+                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
+                    aria-label="Search..." onkeyup="Pagination()" />
+            </div>
             <a class="btn btn-primary waves-effect waves-light m-4" href="/services/add_parent_services">Add Service</a>
         </div>
     </div>
@@ -22,6 +27,7 @@
                 <tr>
                     <th>Service Name</th>
                     <th>Description</th>
+                    <th>Recomended</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -55,10 +61,14 @@
         get_table_data(1);
 
     }
-    
-    function get_table_data(p) {
 
+    function get_table_data(p) {
+        var search = $('#search').val()
+        if (search == undefined) {
+            search = ''
+        }
         var fd = new FormData()
+        fd.append('search', search)
         fd.append('p', p)
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({
@@ -91,8 +101,14 @@
                             
                                                 
                                     <tr>
-                                        <td> ${o.icon_image ?`<img src="${hosturl + o.icon_image  }" width="35" height="35" class="mx-1" >`:``}<span>${o.Name || ''}</span></td>
+                                        <td> ${o.icon_image ? `<img src="${hosturl + o.icon_image}" width="35" height="35" class="mx-1" >` : ``}<span>${o.Name || ''}</span></td>
                                         <td>${o.Description || ''}</td>
+                                        <td>
+                                            <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="status${o.id}" ${o.recomended ? `checked` : ``}  onchange="change_status('${o.id}',this)">
+                                            <label class="form-check-label" for="status${o.id}" >${o.recomended ? `Yes` : `No`}</label>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -112,7 +128,7 @@
            
                       `
 
-                      counter += 1
+                        counter += 1
                     });
                     $('#parent_service_table_body').html(infohtml);
                     var totalfilter = Math.ceil(parseInt(response.count) / 10);
@@ -185,7 +201,7 @@
                         dataType: 'json',
                         beforeSend: function () {
 
-    
+
 
                         },
                         success: function (response) {
@@ -225,6 +241,83 @@
                 }
             })
     }
+
+
+    function change_status(id, input) {
+
+
+        swal({
+            title: "Are you sure?",
+            text: "you want to change status.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: hosturl + "/api/Services/change_service_recomendation_status",
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer {{token}}'
+                        },
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            'service_id': id
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+
+
+
+                        },
+                        success: function (response) {
+                            if (response['response']['n'] == 1) {
+                                $('#status' + id).prop('checked', response['data']['status'])
+                                const label = $(`label[for="status${id}"]`);
+                                if (response['data']['status']) {
+                                    label.text('Yes');
+                                } else {
+                                    label.text('No');
+                                }
+                                swal({
+                                    icon: "success",
+                                    title: "",
+                                    text: response['response']['msg'],
+                                    button: "Close",
+                                })
+                            }
+                            else {
+                                swal({
+                                    icon: "error",
+                                    title: "",
+                                    text: response['response']['msg'],
+                                    button: "Close",
+                                }).then(() => {
+                                    // Code to execute after the user closes the SweetAlert dialog
+                                    location.reload(); // Reload the page
+                                });
+                            }
+
+
+
+
+                        }
+                    });
+
+                } else {
+                    if (input.checked) {
+                        $('#status' + id).prop('checked', false)
+                    } else {
+                        $('#status' + id).prop('checked', true)
+
+                    }
+
+                }
+            })
+    }
+
+
 
 
 </script>
