@@ -96,6 +96,8 @@ urlpatterns = [
 
     path('parent_service_suggestive_search', parent_service_suggestive_search.as_view(), name = 'parent_service_suggestive_search'),
     path('get_service_provider_media_list', get_service_provider_media_list.as_view(), name = 'get_service_provider_media_list'),
+    path('top_rated_service_providers', top_rated_service_providers.as_view(), name = 'top_rated_service_providers'),
+
 
 
 ]
