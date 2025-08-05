@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay Now - Order {{ order_id }}</title>
+    <style>
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    {% if error %}
+        <h2 style="color: red;">{{ error }}</h2>
+        <p>{{ details }}</p>
+    {% else %}
+        <iframe src="{{ mips_url }}"></iframe>
+    {% endif %}
+</body>
+</html>
