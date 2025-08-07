@@ -87,8 +87,9 @@ class ServiceProvider(TrackingModel):
     alternate_mobile_number = models.CharField(max_length=255,null=True,blank=True)
     description = models.TextField(null=True, blank=True)
     website = models.TextField(null=True, blank=True)
-    lattitude = models.CharField(max_length=255,null=True,blank=True)
-    longitude = models.CharField(max_length=255,null=True,blank=True)
+# In your ServiceProvider model
+    lattitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     radius = models.CharField(max_length=255,null=True,blank=True)
     license_verification_status = models.BooleanField(default=False,null=True,blank=True)
     mozil_guarented = models.BooleanField(default=False,null=True,blank=True)

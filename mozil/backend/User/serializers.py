@@ -218,6 +218,12 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
                 return []
         return []
 
+    distance = serializers.SerializerMethodField()
+
+    def get_distance(self, obj):
+        # Return the annotated distance if it exists
+        return getattr(obj, 'distance', None)
+
     class Meta:
         model = ServiceProvider
         fields ="__all__"
