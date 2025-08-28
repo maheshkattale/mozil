@@ -18,7 +18,4 @@ urlpatterns = [
     path('users_list', v.users_list, name='users_list'),
     path('privacy_policy', v.privacy_policy, name='privacy_policy'),
     path('terms_and_conditions', v.terms_and_conditions, name='terms_and_conditions'),
-
-
-
 ]
