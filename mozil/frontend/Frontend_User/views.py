@@ -162,11 +162,13 @@ def users_list(request):
         return redirect('Frontend_User:login') # change this.
     
 
+def privacy_policy(request):
 
 
+    return render(request, 'info/privacy-policy.html')
 
-
-
+def terms_and_conditions(request):
+    return render(request, 'info/terms-and-conditions.html')
 
 
 
