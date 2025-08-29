@@ -26,13 +26,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(os.path.join(settings.BASE_DIR, "backend"))
 sys.path.append(os.path.join(settings.BASE_DIR, "frontend"))
 
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER='maheshkattale1926@gmail.com'
+# EMAIL_HOST_PASSWORD='oczp wqwv ofak ikut'
+# EMAIL_PORT = 587
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER='maheshkattale1926@gmail.com'
-EMAIL_HOST_PASSWORD='oczp wqwv ofak ikut'
-EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST = 'mail.zentrotechnologies.com'   # Your domain's SMTP server
+EMAIL_PORT = 465                              # SSL port
+EMAIL_USE_SSL = True                          # Use SSL
+EMAIL_USE_TLS = False                         # Do NOT use both TLS and SSL
+EMAIL_HOST_USER = 'no-reply@zentrotechnologies.com'  # Full email address
+EMAIL_HOST_PASSWORD = 'Zentro@7888'   # Enter mailbox password
+DEFAULT_FROM_EMAIL = 'no-reply@zentrotechnologies.com'
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/

@@ -8,6 +8,6 @@ urlpatterns = [
     # path('addregion', addregion.as_view(), name = 'addregion'),
     # path('regiondelete', regiondelete.as_view(), name = 'regiondelete'),
     # path('regionbyid', regionbyid.as_view(), name = 'regionbyid'),
-    # path('updateregion', updateregion.as_view(), name = 'updateregion'),
+    path('updateregion', updateregion.as_view(), name = 'updateregion'),
 
 ]

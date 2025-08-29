@@ -12,4 +12,7 @@ class ServiceProviderPaymentHistory(TrackingModel):
     amount = models.CharField(max_length=250,blank=True,null=True)
     status = models.CharField(max_length=250,blank=True,null=True)
     userid = models.CharField(max_length=250,blank=True,null=True)
+    valid_till_date = models.CharField(max_length=250,blank=True,null=True)
+    days = models.CharField(max_length=250,blank=True,null=True)
+    transaction_id = models.CharField(max_length=250,blank=True,null=True)
 

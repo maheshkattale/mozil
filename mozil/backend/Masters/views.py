@@ -49,3 +49,38 @@ class region_list(GenericAPIView):
                 }
         })
     
+
+class updateregion(GenericAPIView):
+
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+
+
+    def post(self,request):
+        id=request.data.get('id')
+        region_obj = RegionMaster.objects.filter(id=id,isActive=True).first()
+        if region_obj is not None:
+            data=request.data.copy()
+            image=request.FILES.get('image')       
+            if image is not None and image !='' and image !='undefined' :
+                data['image']=image 
+
+
+                
+            serializer = RegionMasterSerializer(region_obj,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+
+                return Response({
+                    "data" : serializer.data,
+                    "response":{
+                        "n":1,
+                        "msg":"Region updated Successfully",
+                        "status":"success"
+                        }
+                })
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}}) 
+        else:
+            return Response({"data" : {},"response":{"n":0,"msg":"region not found","status":"error"}}) 

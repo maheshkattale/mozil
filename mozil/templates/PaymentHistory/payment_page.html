@@ -1,49 +1,28 @@
-<!-- templates/payments/payment_page.html -->
-{% extends 'payment_base.html' %}
-
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Complete Your Payment</h2>
-            <div class="card mb-4">
-                <div class="card-header">
-                    Order Summary
-                </div>
-                <div class="card-body">
-                    <p><strong>Order ID:</strong> {{ order_id }}</p>
-                    <p><strong>Amount:</strong> {{ amount }} {{ currency }}</p>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    Secure Payment
-                </div>
-                <div class="card-body">
-                    <div id="payment-container">
-                        <iframe 
-                            src="{{ payment_url }}" 
-                            style="width:100%; height:500px; border:none;"
-                            id="mips-payment-frame"
-                            title="Secure Payment Gateway">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-// Optional: Add JavaScript to handle payment completion
-document.addEventListener('DOMContentLoaded', function() {
-    window.addEventListener('message', function(event) {
-        // Handle messages from the iframe if MIPS supports this
-        if (event.data === 'payment_completed') {
-            window.location.href = "{% url 'Frontend_PaymentHistory:payment_success' %}";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay Now - Order {{ order_id }}</title>
+    <style>
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
         }
-    });
-});
-</script>
-{% endblock %}
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    {% if error %}
+        <h2 style="color: red;">{{ error }}</h2>
+        <p>{{ details }}</p>
+    {% else %}
+        <iframe src="{{ mips_url }}"></iframe>
+    {% endif %}
+</body>
+</html>

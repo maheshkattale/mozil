@@ -10,4 +10,7 @@ urlpatterns = [
     path('planbyid', planbyid.as_view(), name = 'planbyid'),
     path('updateplan', updateplan.as_view(), name = 'updateplan'),
 
+
+    path('service_provider_latest_suscribed_plan', service_provider_latest_suscribed_plan.as_view(), name = 'service_provider_latest_suscribed_plan'),
+
 ]

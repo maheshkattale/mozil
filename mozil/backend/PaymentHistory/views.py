@@ -20,6 +20,7 @@ from User.common import CustomPagination
 from django.db.models import Q
 from User.models import *
 from User.serializers import *
+from datetime import date, timedelta
 
 # Create your views here.
 class purchase_plan(GenericAPIView):
@@ -45,6 +46,10 @@ class purchase_plan(GenericAPIView):
             data['userid']=str(request.user.id)
             data['plan_id']=plan_serializer.data['id']
             data['status']='success'
+            data['days']=plan_serializer.data['days']
+            valid_till_date = (date.today() + timedelta(days=int(plan_serializer.data['days']))).strftime('%Y-%m-%d')
+            data['valid_till_date']=valid_till_date
+            print("valid_till_date",valid_till_date)
 
             # check_plan = ServiceProviderPaymentHistory.objects.filter(userid=str(request.user.id),plan_id=plan_serializer.data['id'],isActive=True).first()
             # if check_plan is not None:

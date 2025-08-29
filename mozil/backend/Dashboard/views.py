@@ -43,7 +43,8 @@ class recomended_services_api(GenericAPIView):
             if service_id:
                 services = ParentServices.objects.filter(
                     isActive=True,
-                    id=service_id
+                    id=service_id,
+                    recomended=True,
                 ).order_by('-id')
             else:
                 services = ParentServices.objects.filter(isActive=True).order_by('-id')
@@ -53,7 +54,7 @@ class recomended_services_api(GenericAPIView):
 
 
             
-                    
+        services=services.filter(recomended=True)            
         if services.exists():
             serializer = ParentServicesSerializer(services, many=True)
             for service in serializer.data:

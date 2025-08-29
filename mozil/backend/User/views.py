@@ -24,6 +24,7 @@ from Services.models import *
 from Services.serializers import *
 from django.db.models import F, FloatField, ExpressionWrapper,Q
 from django.db.models.functions import Radians, Power, Sin, Cos, ATan2, Sqrt
+
 import math
 from helpers.validations import hosturl
 from django.template.loader import render_to_string
@@ -209,7 +210,7 @@ class forgetpasswordmail(GenericAPIView):
             mailMsg = EmailMessage(
                 'Forgot Password?',
                  html_mail,
-                'maheshkattale1926@gmail.com',
+                'no-reply@zentrotechnologies.com',
                 [email],
                 )
             mailMsg.content_subtype ="html"
@@ -2209,20 +2210,19 @@ class send_verification_otp_mail(GenericAPIView):
         html_content = render_to_string('Mails/otp_email_template.html', {'otp': otp})
         msg = EmailMultiAlternatives(
             subject="Your OTP Verification Code",
-            body=f"Your OTP code is {otp}. It will expire in 10 minutes.",  # Fallback text version
-            from_email="maheshkattale1926@gmail.com",
+            body=f"Your OTP code is {otp}. It will expire in 10 minutes.",
+            from_email="no-reply@zentrotechnologies.com",
             to=[email],
         )
         msg.attach_alternative(html_content, "text/html")
-        msg.send(fail_silently=False)
-        # Send OTP via email
-        # send_mail(
-        #     subject="Your OTP Verification Code",
-        #     message=f"Your OTP code is {otp}. It will expire in 10 minutes.",
-        #     from_email="maheshkattale1926@gmail.com",  # Update this
-        #     recipient_list=[email],
-        #     fail_silently=False,
-        # )
+
+        try:
+            msg.send(fail_silently=False)
+            print("Email sent to", email)
+        except Exception as e:
+            print("EMAIL SEND ERROR:", e)
+
+
 
         return Response({
             "data": {"email": email}, 
@@ -2427,6 +2427,8 @@ class service_provider_filter(GenericAPIView):
                     "data": [],
                     "response": {"n": 0, "msg": "Service providers not found", "status": "error"}
                 })
+from django.db.models.expressions import ExpressionWrapper
+from django.db.models.functions import Cast  # Add this import
 
 class service_finder(GenericAPIView):
     # authentication_classes = [userJWTAuthentication]
@@ -2436,7 +2438,6 @@ class service_finder(GenericAPIView):
         service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
         
         # Get filter parameters from request
-
         lattitude = request.data.get('lattitude')
         longitude = request.data.get('longitude')
         parent_service = request.data.get('parent_service')
@@ -2444,34 +2445,27 @@ class service_finder(GenericAPIView):
         license_verification_status = request.data.get('license_verification_status')
         mozil_guarented = request.data.get('mozil_guarented')
         average_rating = request.data.get('average_rating')
-        search=request.data.get('search')
-        region=request.data.get('region')
+        search = request.data.get('search')
+        region = request.data.get('region')
+        range_meter = request.data.get('range_meter', 15000)  # Default 1km if not provided
 
-
-
-        if search is not None and search !='':
-            parent_service_ids=list(ParentServices.objects.filter(Name__icontains=search,isActive=True).values_list('id',flat=True))
-            child_service_ids=list(ChildServices.objects.filter(Name__icontains=search,isActive=True).values_list('id',flat=True))
-            service_provider_ids1=list(ServiceProvider.objects.filter(business_name__icontains=search,isActive=True).values_list('id',flat=True))
-            service_provider_ids2=list(ServiceProviderOfferedServices.objects.filter(short_description__icontains=search,isActive=True).values_list('service_provider_id',flat=True))
-            service_provider_ids3=list(ServiceProviderHighlights.objects.filter(name__icontains=search,isActive=True).values_list('service_provider_id',flat=True))
-            service_provider_ids=service_provider_ids1+service_provider_ids2+service_provider_ids3
-            if parent_service_ids !=[]:
-                service_provider_objs=service_provider_objs.filter(parent_service__in=parent_service_ids)
-
-            if child_service_ids !=[]:
-                service_provider_objs=service_provider_objs.filter(child_service__in=child_service_ids)
-
-            if child_service_ids !=[]:
-                service_provider_objs=service_provider_objs.filter(child_service__in=child_service_ids)
+        # Search functionality
+        if search is not None and search != '':
+            parent_service_ids = list(ParentServices.objects.filter(Name__icontains=search, isActive=True).values_list('id', flat=True))
+            child_service_ids = list(ChildServices.objects.filter(Name__icontains=search, isActive=True).values_list('id', flat=True))
+            service_provider_ids1 = list(ServiceProvider.objects.filter(business_name__icontains=search, isActive=True).values_list('id', flat=True))
+            service_provider_ids2 = list(ServiceProviderOfferedServices.objects.filter(short_description__icontains=search, isActive=True).values_list('service_provider_id', flat=True))
+            service_provider_ids3 = list(ServiceProviderHighlights.objects.filter(name__icontains=search, isActive=True).values_list('service_provider_id', flat=True))
+            service_provider_ids = service_provider_ids1 + service_provider_ids2 + service_provider_ids3
             
-            if service_provider_ids !=[]:
-                service_provider_objs=service_provider_objs.filter(id__in=service_provider_ids)
+            if parent_service_ids:
+                service_provider_objs = service_provider_objs.filter(parent_service__in=parent_service_ids)
+            if child_service_ids:
+                service_provider_objs = service_provider_objs.filter(child_service__in=child_service_ids)
+            if service_provider_ids:
+                service_provider_objs = service_provider_objs.filter(id__in=service_provider_ids)
 
-
-            
         childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
-
 
         # Apply basic filters
         if parent_service:
@@ -2498,7 +2492,7 @@ class service_finder(GenericAPIView):
             service_provider_objs = service_provider_objs.filter(mozil_guarented=mozil_guarented)
         if average_rating:
             service_provider_objs = service_provider_objs.filter(average_rating__gte=average_rating)
-        if region is not None and region !='':
+        if region is not None and region != '':
             service_provider_objs = service_provider_objs.filter(region=region)
         
         # Apply distance filter if coordinates are provided
@@ -2506,35 +2500,150 @@ class service_finder(GenericAPIView):
             try:
                 lat = float(lattitude)
                 lng = float(longitude)
+                range_km = float(range_meter) / 1000  # Convert meters to kilometers
                 
-                # Earth radius in kilometers
-                earth_radius = 6371
+                # Filter out records with invalid coordinates
+                valid_providers = service_provider_objs
+    
                 
-                # Convert latitude and longitude from degrees to radians
-                lat_rad = Radians(F('lattitude'))
-                lng_rad = Radians(F('longitude'))
-                user_lat_rad = math.radians(lat)
-                user_lng_rad = math.radians(lng)
+                # Only proceed if we have providers with valid coordinates
+                if valid_providers.exists():
+                    # Earth radius in kilometers
+                    earth_radius = 6371
                 
-                # Haversine formula to calculate distance
-                dlat = user_lat_rad - lat_rad
-                dlng = user_lng_rad - lng_rad
+                    # Calculate distance for valid providers
+                    service_provider_objs = valid_providers.annotate(
+                        distance=ExpressionWrapper(
+                            earth_radius * 2 * ATan2(
+                                Sqrt(
+                                    Power(Sin((Radians(lat) - Radians(Cast(F('lattitude'), FloatField()))) / 2), 2) +
+                                    Cos(Radians(Cast(F('lattitude'), FloatField()))) * 
+                                    Cos(Radians(lat)) * 
+                                    Power(Sin((Radians(lng) - Radians(Cast(F('longitude'), FloatField()))) / 2), 2)
+                                ),
+                                Sqrt(1 - (
+                                    Power(Sin((Radians(lat) - Radians(Cast(F('lattitude'), FloatField()))) / 2), 2) +
+                                    Cos(Radians(Cast(F('lattitude'), FloatField()))) * 
+                                    Cos(Radians(lat)) * 
+                                    Power(Sin((Radians(lng) - Radians(Cast(F('longitude'), FloatField()))) / 2), 2)
+                                )
+                                )
+                            ),
+                            output_field=FloatField()
+                        )
+                    ).filter(distance__lte=range_km).order_by('distance')
                 
-                a = (Power(Sin(dlat / 2), 2) + 
-                     Cos(lat_rad) * Cos(user_lat_rad) * 
-                     Power(Sin(dlng / 2), 2))
+            except (ValueError, TypeError) as e:
+                print(f"Error calculating distance: {e}")
+
+
+        child_services_serializer = ChildServicesSerializer(childservice_objs, many=True)
+
+        if service_provider_objs.exists():
+            serializer1 = CustomServiceProviderSerializer(service_provider_objs, many=True)
+            return Response({
+                "data": {'service_providers': serializer1.data, 'child_services': child_services_serializer.data},
+                "response": {"n": 1, "msg": "service providers found successfully", "status": "success"}
+            })
+        else:
+            return Response({
+                "data": {'service_providers': [], 'child_services': child_services_serializer.data},
+                "response": {"n": 0, "msg": "service providers not found", "status": "error"}
+            })
+
+
+class top_rated_service_providers(GenericAPIView):
+    # authentication_classes = [userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    
+    def post(self, request):
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True).exclude(average_rating__isnull=True).order_by('-average_rating')
+        # Get filter parameters from request
+        # Get filter parameters from request
+        lattitude = request.data.get('lattitude')
+        longitude = request.data.get('longitude')
+        parent_service = request.data.get('parent_service')
+        child_service = request.data.get('child_service')
+        license_verification_status = request.data.get('license_verification_status')
+        mozil_guarented = request.data.get('mozil_guarented')
+        average_rating = request.data.get('average_rating')
+        search = request.data.get('search')
+        region = request.data.get('region')
+        range_meter = request.data.get('range_meter', 15000)  # Default 1km if not provided
+
+        # Search functionality
+        if search is not None and search != '':
+            parent_service_ids = list(ParentServices.objects.filter(Name__icontains=search, isActive=True).values_list('id', flat=True))
+            child_service_ids = list(ChildServices.objects.filter(Name__icontains=search, isActive=True).values_list('id', flat=True))
+            service_provider_ids1 = list(ServiceProvider.objects.filter(business_name__icontains=search, isActive=True).values_list('id', flat=True))
+            service_provider_ids2 = list(ServiceProviderOfferedServices.objects.filter(short_description__icontains=search, isActive=True).values_list('service_provider_id', flat=True))
+            service_provider_ids3 = list(ServiceProviderHighlights.objects.filter(name__icontains=search, isActive=True).values_list('service_provider_id', flat=True))
+            service_provider_ids = service_provider_ids1 + service_provider_ids2 + service_provider_ids3
+            
+            if parent_service_ids:
+                service_provider_objs = service_provider_objs.filter(parent_service__in=parent_service_ids)
+            if child_service_ids:
+                service_provider_objs = service_provider_objs.filter(child_service__in=child_service_ids)
+            if service_provider_ids:
+                service_provider_objs = service_provider_objs.filter(id__in=service_provider_ids)
+
+        childservice_objs = ChildServices.objects.filter(isActive=True).order_by('id')
+
+        # Apply basic filters
+        if parent_service:
+            service_provider_objs = service_provider_objs.filter(parent_service=parent_service)
+            childservice_objs = childservice_objs.filter(ParentServiceId=parent_service)
+        if child_service:
+            service_provider_objs = service_provider_objs.filter(child_service=child_service)
+        if license_verification_status:
+            service_provider_objs = service_provider_objs.filter(license_verification_status=license_verification_status)
+        if mozil_guarented:
+            service_provider_objs = service_provider_objs.filter(mozil_guarented=mozil_guarented)
+        if average_rating:
+            service_provider_objs = service_provider_objs.filter(average_rating__gte=average_rating)
+        if region is not None and region != '':
+            service_provider_objs = service_provider_objs.filter(region=region)
+        
+        # Apply distance filter if coordinates are provided
+        if lattitude and longitude:
+            try:
+                lat = float(lattitude)
+                lng = float(longitude)
+                range_km = float(range_meter) / 1000  # Convert meters to kilometers
                 
-                c = 2 * ATan2(Sqrt(a), Sqrt(1 - a))
-                distance = earth_radius * c
+                # Filter out records with invalid coordinates
+                valid_providers = service_provider_objs
+    
                 
-                # Filter for service providers within 1km
-                service_provider_objs = service_provider_objs.annotate(
-                    distance=ExpressionWrapper(distance, output_field=FloatField())
-                ).filter(distance__lte=1)
+                # Only proceed if we have providers with valid coordinates
+                if valid_providers.exists():
+                    # Earth radius in kilometers
+                    earth_radius = 6371
                 
-            except (ValueError, TypeError):
-                # Handle invalid coordinate values
-                pass
+                    # Calculate distance for valid providers
+                    service_provider_objs = valid_providers.annotate(
+                        distance=ExpressionWrapper(
+                            earth_radius * 2 * ATan2(
+                                Sqrt(
+                                    Power(Sin((Radians(lat) - Radians(Cast(F('lattitude'), FloatField()))) / 2), 2) +
+                                    Cos(Radians(Cast(F('lattitude'), FloatField()))) * 
+                                    Cos(Radians(lat)) * 
+                                    Power(Sin((Radians(lng) - Radians(Cast(F('longitude'), FloatField()))) / 2), 2)
+                                ),
+                                Sqrt(1 - (
+                                    Power(Sin((Radians(lat) - Radians(Cast(F('lattitude'), FloatField()))) / 2), 2) +
+                                    Cos(Radians(Cast(F('lattitude'), FloatField()))) * 
+                                    Cos(Radians(lat)) * 
+                                    Power(Sin((Radians(lng) - Radians(Cast(F('longitude'), FloatField()))) / 2), 2)
+                                )
+                                )
+                            ),
+                            output_field=FloatField()
+                        )
+                    ).filter(distance__lte=range_km).order_by('distance')
+                
+            except (ValueError, TypeError) as e:
+                print(f"Error calculating distance: {e}")
         
         # Paginate and return results
         # print("service_provider_objs",service_provider_objs.count())

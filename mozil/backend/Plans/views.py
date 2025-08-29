@@ -16,7 +16,8 @@ from django.core.mail import EmailMessage
 from mozil.settings import EMAIL_HOST_USER
 from User.common import CustomPagination
 from django.db.models import Q
-
+from PaymentHistory.models import *
+from PaymentHistory.serializers import *
 # Create your views here.
 class service_provider_plan_list_pagination_api(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
@@ -148,3 +149,60 @@ class updateplan(GenericAPIView):
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "Plan Not Found","status": "error"}})
+
+
+class service_provider_latest_suscribed_plan(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request):
+        
+
+        latest_plan_obj=ServiceProviderPaymentHistory.objects.filter(userid=str(request.user.id),status='success',isActive=True).order_by('-createdAt').first()
+        if latest_plan_obj is not None:
+            plan_id=latest_plan_obj.plan_id
+            if plan_id is not None and plan_id !='':
+                plans_objs = ServiceProviderPlanMaster.objects.filter(id=plan_id).first()
+                if plans_objs is not None:
+                    serializer = ServiceProviderPlanMasterSerializer(plans_objs)
+                    plan_data=serializer.data
+                    
+                    
+
+
+
+                    return Response({
+                        "data" : plan_data,
+                        "response":{
+                            "n":1,
+                            "msg":"Plans found Successfully",
+                            "status":"success"
+                            }
+                    })
+                else:
+                    return Response({
+                        "data" : {},
+                        "response":{
+                            "n":0,
+                            "msg":"Plans not found ",
+                            "status":"error"
+                            }
+                    })
+
+            else:
+                return Response({
+                    "data" : {},
+                    "response":{
+                        "n":0,
+                        "msg":"Plans not found ",
+                        "status":"error"
+                        }
+                })
+        else:
+            return Response({
+                "data" : {},
+                "response":{
+                    "n":0,
+                    "msg":"Plans not found ",
+                    "status":"error"
+                    }
+            })
