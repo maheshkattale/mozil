@@ -35,7 +35,11 @@ class CustomChildServicesSerializer(serializers.ModelSerializer):
     class Meta:
         model= ChildServices
         fields='__all__'
-
+class ServiceSearchLogSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model= ServiceSearchLog
+        fields='__all__'
 
 
 

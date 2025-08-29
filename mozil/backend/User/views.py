@@ -2477,9 +2477,21 @@ class service_finder(GenericAPIView):
         if parent_service:
             service_provider_objs = service_provider_objs.filter(parent_service=parent_service)
             childservice_objs=childservice_objs.filter(ParentServiceId=parent_service)
+            ServiceSearchLog.objects.create(
+                ParentServiceId=parent_service,
+                search_text=search if search is not None else '',
+            )
+
+
+
+
 
         if child_service:
             service_provider_objs = service_provider_objs.filter(child_service=child_service)
+            ServiceSearchLog.objects.create(
+                ChildServiceId=child_service,
+                search_text=search if search is not None else '',
+            )
         if license_verification_status:
             service_provider_objs = service_provider_objs.filter(license_verification_status=license_verification_status)
         if mozil_guarented:

@@ -30,6 +30,8 @@ from django.db.models import Q
 from django.db.models import F, FloatField
 from django.db.models.functions import Cast
 from helpers.custom_functions import *
+from django.db.models import Count
+
 # Create your views here.
 class recomended_services_api(GenericAPIView):
     # authentication_classes=[userJWTAuthentication]
@@ -106,6 +108,27 @@ class dashboard_analytics_api(GenericAPIView):
                 profit_loss_statement = '100+ '
             else:
                 profit_loss_statement = 0
+        weekly_trending_services_data=[]
+        top_five_trending_services = (
+            ServiceSearchLog.objects
+            .exclude(ParentServiceId__isnull=True)  # Exclude null ParentServiceId
+            .exclude(ParentServiceId='')           # Exclude empty ParentServiceId
+            .values('ParentServiceId')             # Group by ParentServiceId
+            .annotate(search_count=Count('ParentServiceId'))  # Count searches for each service
+            .order_by('-search_count')             # Order by search count descending
+            [:5]                                   # Get top 5
+        )
+        print("top_five_trending_services",top_five_trending_services)
+        for service in top_five_trending_services:
+            total_searchs=ServiceSearchLog.objects.filter(
+                ParentServiceId=service.id,
+                isActive=True
+            ).count()
+            weekly_trending_services_data.append({
+                'service_id': service.id,
+                'service_name': service.Name,
+                'total_searchs': total_searchs
+            })
 
         weekly_overview_data = []
         for i in range(7):
