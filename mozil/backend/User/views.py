@@ -24,7 +24,7 @@ from Services.models import *
 from Services.serializers import *
 from django.db.models import F, FloatField, ExpressionWrapper,Q
 from django.db.models.functions import Radians, Power, Sin, Cos, ATan2, Sqrt
-
+from PaymentHistory.views import mark_1_month_free_subscription
 import math
 from helpers.validations import hosturl
 from django.template.loader import render_to_string
@@ -814,6 +814,11 @@ class create_new_service_provider(GenericAPIView):
                     serializer2 = ServiceProviderSerializer(data=data)
                     if serializer2.is_valid():
                         serializer2.save()
+                        free_subscription = mark_1_month_free_subscription(serializer1.data['id'])
+                        if free_subscription:
+                            return Response({"data": serializer2.data, "response": {"n": 1, "msg": "Thank you for joining Mozil!\nYour registration is complete and your free plan has been activated for 30 days. Start exploring all the features available to you.", "status": "success"}})
+
+
                         return Response({"data":serializer2.data,"response": {"n": 1, "msg": "Service  Provider details registered successfully","status":"success"}})
                     else:
                         first_key, first_value = next(iter(serializer2.errors.items()))
@@ -1298,6 +1303,10 @@ class register_new_service_provider(GenericAPIView):
                     serializer2 = ServiceProviderSerializer(data=data)
                     if serializer2.is_valid():
                         serializer2.save()
+                        free_subscription = mark_1_month_free_subscription(serializer1.data['id'])
+                        if free_subscription:
+                            return Response({"data": serializer2.data, "response": {"n": 1, "msg": "Thank you for joining Mozil!\nYour registration is complete and your free plan has been activated for 30 days. Start exploring all the features available to you.", "status": "success"}})
+
                         return Response({"data":serializer2.data,"response": {"n": 1, "msg": "Service  Provider details registered successfully","status":"success"}})
                     else:
                         first_key, first_value = next(iter(serializer2.errors.items()))
@@ -1362,6 +1371,10 @@ class register_consumer_as_service_provider(GenericAPIView):
                     serializer2 = ServiceProviderSerializer(data=data)
                     if serializer2.is_valid():
                         serializer2.save()
+                        free_subscription = mark_1_month_free_subscription(serializer1.data['id'])
+                        if free_subscription:
+                            return Response({"data": serializer2.data, "response": {"n": 1, "msg": "Thank you for joining Mozil!\nYour registration is complete and your free plan has been activated for 30 days. Start exploring all the features available to you.", "status": "success"}})
+
                         return Response({"data":serializer2.data,"response": {"n": 1, "msg": "Service  Provider details registered successfully","status":"success"}})
                     else:
                         first_key, first_value = next(iter(serializer2.errors.items()))

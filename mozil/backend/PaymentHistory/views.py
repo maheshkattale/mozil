@@ -21,6 +21,7 @@ from django.db.models import Q
 from User.models import *
 from User.serializers import *
 from datetime import date, timedelta
+from django.utils import timezone
 
 # Create your views here.
 class purchase_plan(GenericAPIView):
@@ -144,11 +145,35 @@ class service_provider_purchased_plan_list_pagination_api(GenericAPIView):
         #     return Response({"data":'',"response": {"n": 0, "msg": "Plan Not Found","status": "error"}})
 
 
+def mark_1_month_free_subscription(user_id):
+    # Get the current date
+    current_date = timezone.now()
 
+    # Calculate the date 1 month from now in yyyy-mm-dd format
+    one_month_later = current_date + timezone.timedelta(days=30)
+    # Check if the user already has an active free plan
 
-
-
-
+    free_plan_id='0'
+    check_already_exist_free_plan=ServiceProviderPaymentHistory.objects.filter(
+        userid=user_id,
+        plan_id=free_plan_id,
+        isActive=True
+    ).exists()
+    if check_already_exist_free_plan:
+        return Response({"data": '', "response": {"n": 0, "msg": "Free plan already exists", "status": "error"}})
+        # Update the subscription status for the service provider
+    else:
+        ServiceProviderPaymentHistory.objects.create(
+            plan_id=free_plan_id,
+            amount=0,
+            days=30,
+            transaction_id='',
+            userid=user_id,
+            isActive=True,
+            valid_till_date=one_month_later
+        )
+        return Response({"data": '', "response": {"n": 1, "msg": "Free plan activated successfully", "status": "success"}})
+    
 
 
 
