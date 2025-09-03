@@ -33,6 +33,8 @@ urlpatterns = [
     path('userlist', userlist.as_view(), name = 'userlist'),
     path('userupdate', userupdate.as_view(), name = 'userupdate'),
     path('userdelete', userdelete.as_view(), name = 'userdelete'),
+    path('delete_user_account', delete_user_account.as_view(), name = 'delete_user_account'),
+
     path('userdeleteundo', userdeleteundo.as_view(), name = 'userdeleteundo'),
     path('userbyid', userbyid.as_view(), name = 'userbyid'),
 

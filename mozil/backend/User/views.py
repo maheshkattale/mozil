@@ -2906,5 +2906,38 @@ class get_service_provider_media_list(GenericAPIView):
             return Response({"data":[],"response": {"n": 0, "msg": "Please provide service provider id","status": "error"}})
 
 
+class delete_user_account(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data = {}
+        userID = str(request.user.id)
+        existemp = User.objects.filter(id=userID,isActive=True).first()
+        if existemp is not None:
+
+            data['isActive'] = False
+            serializer = UserSerializer(existemp,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+
+                if existemp.role_id == 1:
+                    print("existemp.role_id",existemp.role_id)
+                elif existemp.role_id == 2:
+                    #delete service provider form service provider table
+                    service_provider_obj=ServiceProvider.objects.filter(userid=userID,isActive=True).first()
+                    if service_provider_obj is not None:
+                        service_provider_obj.isActive=False
+                        service_provider_obj.save()
+                elif existemp.role_id == 3:
+                    # delete customer form customer table
+                    print("existemp.role_id",existemp.role_id)
+
+
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "User account deleted successfully","status": "success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        else:
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found ","status": "error"}})
 
 
