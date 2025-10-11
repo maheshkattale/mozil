@@ -101,6 +101,18 @@ class CustomServiceProviderSerializer(serializers.ModelSerializer):
                 return None
         return None
     
+    business_logo = serializers.SerializerMethodField()
+
+    def get_business_logo(self, obj):
+        business_logo = obj.business_logo
+        if not business_logo:
+            return '/static/assets/img/backgrounds/dummy.jpg'
+        try:
+            return business_logo.url  # ✅ Return the URL, not the file content
+        except Exception:
+            return '/static/assets/img/backgrounds/dummy.jpg'
+
+
     email = serializers.SerializerMethodField()
     def get_email(self, obj):
         obj_id = str(obj.userid)
