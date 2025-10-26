@@ -119,7 +119,6 @@ class dashboard_analytics_api(GenericAPIView):
             .order_by('-search_count')             # Order by search count descending
             [:5]                                   # Get top 5
         )
-        print("top_five_trending_services",top_five_trending_services)
         for service in top_five_trending_services:
             total_searchs=ServiceSearchLog.objects.filter(
                 ParentServiceId=service.id,

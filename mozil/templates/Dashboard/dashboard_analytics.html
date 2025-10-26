@@ -102,20 +102,21 @@
   <!--/ Transactions -->
 
   <!-- Weekly Overview Chart -->
-  <div class="col-xl-4 col-md-6">
-    <div class="card">
+  <div class="col-xl-4 col-md-6 h-100">
+    <div class="card h-100">
       <div class="card-header">
         <div class="d-flex justify-content-between">
           <h5 class="mb-1">Weekly Trending Services</h5>
-          
+
         </div>
       </div>
       <div class="card-body pt-lg-2">
         <div id="weeklyTrendingServicesChart"></div>
         <div class="mt-1 mt-md-3">
           <div class="d-flex align-items-center gap-4">
-            <h4 class="mb-0" id="trending_service_growth_percentage">45%</h4>
-            <p class="mb-0" id="trending_service_message">Your sales performance is 45% 😎 better compared to last month</p>
+            <h4 class="mb-0" id="trending_service_growth_percentage"><i class="ri-arrow-up-line me-1"></i></h4>
+            <p class="mb-0" id="trending_service_message">Your top 5 trending services 😎 ,Based on last week searches.
+            </p>
           </div>
           <div class="d-grid mt-3 mt-md-4">
             <!-- <button class="btn btn-primary" type="button">Details</button> -->
@@ -127,7 +128,7 @@
   <!--/ Weekly Overview Chart -->
 
   <!-- Top Selling Plans -->
-  <div class="col-xl-4 col-md-6">
+  <!-- <div class="col-xl-4 col-md-6">
     <div class="card">
       <div class="card-header d-flex align-items-center justify-content-between">
         <h5 class="card-title m-0 me-2">Top Selling Plans</h5>
@@ -212,12 +213,14 @@
         </ul>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--/ Top Selling Plans -->
+
+
 
   <!-- Four Cards -->
   <div class="col-xl-4 col-md-6">
-    <div class="row gy-6">
+    <div class="row h-100">
       <!-- Total Profit line chart -->
       <div class="col-sm-6">
         <div class="card h-100">
@@ -233,7 +236,7 @@
       <!--/ Total Profit line chart -->
       <!-- Total Profit Weekly  -->
       <div class="col-sm-6">
-        <div class="card h-100">
+        <div class="card h-100 ">
           <div class="card-header d-flex align-items-center justify-content-between">
             <div class="avatar">
               <div class="avatar-initial bg-secondary rounded-circle shadow-xs">
@@ -263,7 +266,7 @@
       <!--/ Total Profit Weekly -->
       <!-- New Yearly -->
       <div class="col-sm-6">
-        <div class="card h-100">
+        <div class="card h-100  mt-2">
           <div class="card-header d-flex align-items-center justify-content-between">
             <div class="avatar">
               <div class="avatar-initial bg-primary rounded-circle shadow-xs">
@@ -295,7 +298,7 @@
       <!--/ New Yearly  -->
       <!-- Sessions chart -->
       <div class="col-sm-6">
-        <div class="card h-100">
+        <div class="card h-100 mt-2">
           <div class="card-header pb-0">
             <h4 class="mb-0">2,856</h4>
           </div>
@@ -309,100 +312,12 @@
     </div>
   </div>
   <!--/ Top Selling Plan -->
-
-
-
-  <!-- Deposit / Withdraw -->
-  <div class="col-xl-8">
-    <div class="card-group">
-      <div class="card mb-0">
-        <div class="card-body card-separator">
-          <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-            <h5 class="m-0 me-2">Reviews And Rating</h5>
-            <a class="fw-medium" href="javascript:void(0);">View all</a>
-          </div>
-          <div class="deposit-content pt-2">
-            <ul class="p-0 m-0">
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/gumroad.png' %}" class="img-fluid" alt="gumroad"
-                    height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Gumroad Account</h6>
-                    <p class="mb-0">Sell UI Kit</p>
-                  </div>
-                  <h6 class="text-success mb-0">+$4,650</h6>
-                </div>
-              </li>
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/mastercard-2.png' %}" class="img-fluid"
-                    alt="mastercard" height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Mastercard</h6>
-                    <p class="mb-0">Wallet deposit</p>
-                  </div>
-                  <h6 class="text-success mb-0">+$92,705</h6>
-                </div>
-              </li>
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/stripes.png' %}" class="img-fluid" alt="stripes"
-                    height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Stripe Account</h6>
-                    <p class="mb-0">iOS Application</p>
-                  </div>
-                  <h6 class="text-success mb-0">+$957</h6>
-                </div>
-              </li>
-              <li class="d-flex mb-4 align-items-center pb-2">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/american-bank.png' %}" class="img-fluid" alt="american"
-                    height="30" width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">American Bank</h6>
-                    <p class="mb-0">Bank Transfer</p>
-                  </div>
-                  <h6 class="text-success mb-0">+$6,837</h6>
-                </div>
-              </li>
-              <li class="d-flex align-items-center">
-                <div class="flex-shrink-0 me-4">
-                  <img src="{% static 'assets/img/icons/payments/citi.png' %}" class="img-fluid" alt="citi" height="30"
-                    width="30">
-                </div>
-                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                  <div class="me-2">
-                    <h6 class="mb-0">Bank Account</h6>
-                    <p class="mb-0">Wallet deposit</p>
-                  </div>
-                  <h6 class="text-success mb-0">+$446</h6>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <!-- Deposit / Withdraw -->
-
   <!-- Revenue by Regions -->
   <div class="col-xl-4 col-md-6">
     <div class="card h-100">
       <div class="card-header d-flex align-items-center justify-content-between">
         <h5 class="card-title m-0 me-2">Revenue by Regions</h5>
-        <div class="dropdown">
+        <!-- <div class="dropdown">
           <button class="btn text-muted p-0" type="button" id="RevenueStatus" data-bs-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             <i class="ri-more-2-line ri-24px"></i>
@@ -412,8 +327,10 @@
             <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
             <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
           </div>
-        </div>
+        </div> -->
       </div>
+
+
       <div class="card-body">
         <div class="d-flex justify-content-between">
           <div class="d-flex align-items-center mb-4">
@@ -422,15 +339,15 @@
             </div>
             <div>
               <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$8,656k</h6>
+                <h6 class="mb-0" id="north_mauritius_monthly_revenue">0.00</h6>
                 <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success">25.8%</span>
+                <span class="text-success" id="north_mauritius_monthly_revenue_difference">0.00%</span>
               </div>
               <p class="mb-0">North Mauritius</p>
             </div>
           </div>
           <div class="text-end">
-            <h6 class="mb-1">894k</h6>
+            <h6 class="mb-1" id="north_mauritius_total_revenue">0.00</h6>
             <small class="text-muted">Revenue</small>
           </div>
         </div>
@@ -441,15 +358,15 @@
             </div>
             <div>
               <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$2,415k</h6>
+                <h6 class="mb-0" id="port_louis_monthly_revenue">0.00</h6>
                 <i class="ri-arrow-down-s-line ri-24px text-danger"></i>
-                <span class="text-danger">6.2%</span>
+                <span class="text-danger" id="port_louis_monthly_revenue_difference">0.00%</span>
               </div>
               <p class="mb-0">Port Louis in Mauritius</p>
             </div>
           </div>
           <div class="text-end">
-            <h6 class="mb-1">645k</h6>
+            <h6 class="mb-1" id="port_louis_total_revenue">0.00</h6>
             <small class="text-muted">Revenue</small>
           </div>
         </div>
@@ -460,15 +377,15 @@
             </div>
             <div>
               <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">865k</h6>
+                <h6 class="mb-0" id="centre_mauritius_monthly_revenue">0.00</h6>
                 <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success"> 12.4%</span>
+                <span class="text-success" id="centre_mauritius_monthly_revenue_difference"> 0.0%</span>
               </div>
               <p class="mb-0">Centre Mauritius</p>
             </div>
           </div>
           <div class="text-end">
-            <h6 class="mb-1">148k</h6>
+            <h6 class="mb-1" id="centre_mauritius_total_revenue">0.00</h6>
             <small class="text-muted">Revenue</small>
           </div>
         </div>
@@ -479,15 +396,15 @@
             </div>
             <div>
               <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$745k</h6>
+                <h6 class="mb-0" id="east_mauritius_monthly_revenue">0.00</h6>
                 <i class="ri-arrow-down-s-line ri-24px text-danger"></i>
-                <span class="text-danger">11.9%</span>
+                <span class="text-danger" id="east_mauritius_monthly_revenue_difference">0.00%</span>
               </div>
               <p class="mb-0">East Mauritius</p>
             </div>
           </div>
           <div class="text-end">
-            <h6 class="mb-1">86k</h6>
+            <h6 class="mb-1" id="east_mauritius_total_revenue">0.00</h6>
             <small class="text-muted">Revenue</small>
           </div>
         </div>
@@ -498,15 +415,15 @@
             </div>
             <div>
               <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$45k</h6>
+                <h6 class="mb-0" id="west_mauritius_monthly_revenue">0.00</h6>
                 <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success">16.2%</span>
+                <span class="text-success" id="west_mauritius_monthly_revenue_difference">0.00%</span>
               </div>
               <p class="mb-0">West Mauritius</p>
             </div>
           </div>
           <div class="text-end">
-            <h6 class="mb-1">42k</h6>
+            <h6 class="mb-1" id="west_mauritius_total_revenue">0.00</h6>
             <small class="text-muted">Revenue</small>
           </div>
         </div>
@@ -517,22 +434,79 @@
             </div>
             <div>
               <div class="d-flex align-items-center gap-1 mb-1">
-                <h6 class="mb-0">$45k</h6>
+                <h6 class="mb-0" id="south_mauritius_monthly_revenue">0.00</h6>
                 <i class="ri-arrow-up-s-line ri-24px text-success"></i>
-                <span class="text-success">16.2%</span>
+                <span class="text-success" id="south_mauritius_monthly_revenue_difference">0.00%</span>
               </div>
               <p class="mb-0">South Mauritius</p>
             </div>
           </div>
           <div class="text-end">
-            <h6 class="mb-1">42k</h6>
-            <small class="text-muted">Revenue</small>
+            <h6 class="mb-1">0.00</h6>
+            <small class="text-muted" id="south_mauritius_total_revenue">Revenue</small>
           </div>
         </div>
       </div>
     </div>
   </div>
   <!--/ Sales by Regions -->
+
+
+  <!-- Deposit / Withdraw -->
+
+
+  <div class="col-xl-12">
+    <div class="card mb-0">
+      <div class="card-body card-separator">
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+          <h5 class="m-0 me-2"> Reviews & Ratings</h5>
+          <a class="fw-medium text-primary" href="/reviews/reviews_and_rating_list">View all</a>
+        </div>
+
+        <div class="reviews-content pt-2">
+          <ul class="p-0 m-0 list-unstyled" id="reviewsandrating">
+
+            <!-- Review 1 -->
+            <li class="d-flex mb-4 align-items-start pb-2 border-bottom">
+              <div class="flex-shrink-0 me-4">
+                <img src="{% static 'assets/img/avatars/1.png' %}" class="rounded-circle" alt="user" width="45"
+                  height="45">
+              </div>
+              <div class="d-flex w-100 flex-wrap align-items-start justify-content-between gap-2">
+                <div class="me-2">
+                  <h6 class="mb-1">Rohit Sharma</h6>
+                  <div class="text-warning mb-1">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                  </div>
+                  <p class="mb-0 text-muted small">“Very good experience! The delivery was on time and product quality
+                    was excellent.”</p>
+                  <small class="text-secondary">2 days ago</small>
+                </div>
+                <button class="btn btn-sm btn-outline-danger"><i class="ri-delete-bin-6-line me-1"></i></button>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+
+        <div class="d-flex justify-content-end m-3">
+          <ul id="reviews-pagination" class="pagination pagination-sm mb-0"></ul>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Deposit / Withdraw -->
+
+
 
 
   <!-- Data Tables -->
@@ -554,8 +528,8 @@
 
           </tbody>
         </table>
-        <div class=" d-flex justify-content-end m-3" id="secondpagination-demo2">
-          <ul id="pagination-demo2" class="pagination-sm"></ul>
+        <div class="d-flex justify-content-end m-3">
+          <ul id="users-pagination" class="pagination pagination-sm mb-0"></ul>
         </div>
       </div>
     </div>
@@ -571,145 +545,19 @@
 
 <script>
   $(document).ready(function () {
-
-    Pagination()
+    // Initialize both paginations independently
+    initUserPagination();
+    initReviewPagination();
   });
 
-  function Pagination() {
-    var testflag = true;
-    $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
-    get_table_data(1);
-
+  function initUserPagination() {
+    loadUserTable(1);
   }
 
-  function get_table_data(p) {
-    var search = $('#search').val()
-    if (search == undefined) {
-      search = ''
-    }
-    var activation_status = $('#activation_status').val()
-    if (activation_status != '' && activation_status != undefined) {
-      if (activation_status == 'Active') {
-        activation_status = true
-      } else {
-        activation_status = false
-      }
-    }
-    var fd = new FormData()
-    fd.append('p', p)
-    fd.append('searchtext', search)
-    fd.append('activation_status', activation_status)
-
-    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
-    $.ajax({
-      url: hosturl + "/api/User/user_list_pagination_api",
-      data: fd,
-      headers: { "Authorization": "Bearer {{token}}" },
-
-      type: 'POST',
-      processData: false,
-      contentType: false,
-      beforeSend: function () {
-        swal({
-          icon: "info",
-          title: "",
-          text: "Loading...",
-          buttons: false,
-
-        });
-      },
-      success: function (response) {
-        var infohtml = ''
-        swal.close()
-        console.log('response d', response)
-        if (response.count != 0) {
-          var counter = parseInt(p + "1") - parseInt(10)
-
-          $.each(response.results, function (i, o) {
-            infohtml += `
-                            
-                                                
-                                  <tr>
-                                        <td>
-                                            ${counter}
-                                        </td>
-                                        <td>                         
-                                          <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-sm me-4">
-                                              <img src="${o.profile_picture || hosturl + '/static/assets/img/avatars/1.png'}" alt="Avatar" class="rounded-circle">
-                                            </div>
-                                            <div>
-                                              <h6 class="mb-0 text-truncate">${o.Username || ''}</h6>
-                                              <small class="text-truncate">@${o.short_name || ''}</small>
-                                            </div>
-                                          </div>
-                                        </td>
-                                        <td class="text-truncate">
-                                            <div>${o.email || ''}</div>
-                                        </td>
-                                        <td class="text-truncate">
-                                            <div>${o.mobileNumber || ''}</div>
-                                        </td>
-                                        <td class="text-truncate">
-                                          <div class="d-flex align-items-center">
-                                            <i class="${o.role == 1 ? `ri-vip-crown-line text-primary` : o.role == 2 ? `ri-store-line text-warning` : `ri-user-3-line text-success`} ri-22px me-2"></i>
-                                            <span>${o.Role_name || 'NA'}</span>
-                                          </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-label-${o.status ? `success` : `secondary`} rounded-pill">${o.status ? `Active` : `Inactive`}</span>
-                                        </td>
-                                    </tr>
-                            
-
-                            
-           
-                      `
-
-            counter += 1
-          });
-          $('#users_table_body').html(infohtml);
-          var totalfilter = Math.ceil(parseInt(response.count) / 10);
-          $('#pagination-demo2').twbsPagination({
-            totalPages: totalfilter,
-            visiblePages: 3,
-            next: 'Next',
-            prev: 'Prev',
-            onPageClick: function (event, page) {
-              var testflag = true;
-              //fetch content and render here
-              filternamepageno = page
-              if (testflag == true) {
-                testflag = false;
-                get_table_data(page)
-              }
-              $('#page-content').text('Page ' + page) + ' content here';
-            }
-          })
-
-
-
-
-        } else {
-          infohtml = `
-                                <tr class="border-bottom text-center">
-                                    <td colspan="6">No Data found</td>
-                                </tr>
-                    `
-          $('#users_table_body').html(infohtml);
-
-          swal({
-            icon: "error",
-            title: "",
-            text: "No Data Found !",
-            button: "Close",
-          });
-        }
-
-      }
-    })
-
+  function initReviewPagination() {
+    loadReviews(1);
   }
+
 
 
   function get_dashboard_data() {
@@ -759,40 +607,289 @@
     }, 10);
   }
 
-  function initweeklyTrendingServicesChart(data) {
-    debugger
-    var options = {
-      series: [{
-        name: 'Weekly Overview',
-        data: data
-      }],
+  function initweeklyTrendingServicesChart(response) {
+    const chartData = Array.isArray(response)
+      ? response
+      : [0, 0, 0, 0, 0, 0, 0]; // fallback to safe array
+
+    const options = {
       chart: {
-        type: 'area',
-        height: 350,
-        toolbar: {
-          show: false
-        }
-      },
-      dataLabels: {
-        enabled: false
+        type: 'line',
+        height: 300,
+        toolbar: { show: false }
       },
       stroke: {
-        curve: 'smooth'
+        curve: 'smooth',
+        width: 3
       },
+      colors: ['#7367F0'],
+      series: [{
+        name: 'Weekly Overview',
+        data: chartData
+      }],
       xaxis: {
-        type: 'datetime',
-        categories: data
+        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        labels: {
+          style: { colors: '#888' }
+        }
+      },
+      yaxis: {
+        labels: {
+          style: { colors: '#888' }
+        }
+      },
+      grid: {
+        borderColor: '#f1f1f1'
       },
       tooltip: {
-        x: {
-          format: 'dd/MM/yy HH:mm'
-        }
+        theme: 'dark'
       }
     };
 
-    var chart = new ApexCharts(document.querySelector("#weeklyTrendingServicesChart"), options);
-    chart.render();
+    const chartElement = document.querySelector("#weeklyTrendingServicesChart");
+    if (chartElement) {
+      const chart = new ApexCharts(chartElement, options);
+      chart.render();
+    }
   }
+
+
+
+
+
+  function loadUserTable(page) {
+    let fd = new FormData();
+    fd.append('p', page);
+    fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    $.ajax({
+      url: hosturl + "/api/User/user_list_pagination_api",
+      method: "POST",
+      data: fd,
+      processData: false,
+      contentType: false,
+      headers: { "Authorization": "Bearer {{token}}" },
+      beforeSend: function () {
+        $('#users_table_body').html('<tr><td colspan="6" class="text-center text-muted py-3">Loading...</td></tr>');
+      },
+      success: function (response) {
+        let rows = '';
+        if (response.results.length > 0) {
+          let count = (page - 1) * 10 + 1;
+          $.each(response.results, function (i, o) {
+            rows += `
+            <tr>
+              <td>${count++}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-sm me-3">
+                    <img src="${o.profile_picture || '{% static "assets/img/avatars/1.png" %}'}" class="rounded-circle">
+                  </div>
+                  <div>
+                    <strong>${o.Username || 'N/A'}</strong><br>
+                    <small>@${o.short_name || ''}</small>
+                  </div>
+                </div>
+              </td>
+              <td>${o.email || '-'}</td>
+              <td>${o.phone || '-'}</td>
+              <td>${o.role || '-'}</td>
+              <td><span class="badge ${o.is_active ? 'bg-success' : 'bg-danger'}">${o.is_active ? 'Active' : 'Inactive'}</span></td>
+            </tr>`;
+          });
+        } else {
+          rows = `<tr><td colspan="6" class="text-center text-muted py-3">No records found</td></tr>`;
+        }
+
+        $('#users_table_body').html(rows);
+        renderPagination('#users-pagination', response.total_pages, page, loadUserTable);
+      },
+      error: function () {
+        $('#users_table_body').html('<tr><td colspan="6" class="text-center text-danger py-3">Failed to load data</td></tr>');
+      }
+    });
+  }
+
+  // ------------------- REVIEWS PAGINATION -------------------
+function loadReviews(page = 1) {
+
+    var search = $('#search').val();
+    if (search === '') search = ' ';
+    if(search==undefined) search=' ';
+    var fd = new FormData();
+    fd.append('search', search);
+    fd.append('p', page);
+    fd.append('page_size', 5);
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}');
+
+    $.ajax({
+        url: hosturl + "/api/ReviewsAndRating/reviews_and_rating_list_pagination_api?page_size=5?p=" + page,
+        data: fd,
+        headers: { "Authorization": "Bearer {{token}}" },
+        type: 'POST',
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+            swal({
+                icon: "info",
+                title: "",
+                text: "Loading...",
+                buttons: false,
+            });
+        },
+        success: function (response) {
+          console.log('response re', response)
+            swal.close();
+            var infohtml = '';
+
+            if (response.count && response.count != 0) {
+                $.each(response.results, function (i, o) {
+                    infohtml += `
+                        <li class="d-flex mb-4 align-items-start pb-2 border-bottom">
+                            <div class="flex-shrink-0 me-4">
+                                <img src="${o.user_image ? hosturl + o.user_image : '{% static "assets/img/avatars/1.png" %}'}" 
+                                     class="rounded-circle" alt="user" width="45" height="45">
+                            </div>
+                            <div class="d-flex w-100 align-items-start justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-1">${o.user_name || ''}</h6>
+                                    <div class="text-warning mb-1">
+                                            ${Array(5).fill(0).map((_, index) => `
+                                                <i class="text-danger ${index < o.rating_count ? 'ri-star-fill' : 'ri-star-line'}"></i>
+                                            `).join("\n")}
+
+                                    </div>
+                                    <p class="mb-0 text-muted small">“${o.description || ''}”</p>
+                                    <small class="text-secondary">${o.created_at ? o.created_at : ''}</small>
+                                </div>
+                                    <i class="ri-delete-bin-6-line me-1 cursor-pointer" onclick="delete_reviewsandrating('${o.id}')"></i>
+                            </div>
+                        </li>
+                    `;
+                });
+
+                $('#reviewsandrating').html(infohtml);
+
+                // Setup pagination
+                var totalPages = Math.ceil(parseInt(response.count) / 5);
+                $('#reviews-pagination').twbsPagination('destroy'); // destroy old instance
+                $('#reviews-pagination').twbsPagination({
+                    totalPages: totalPages,
+                    visiblePages: 3,
+                    startPage: page,
+                    next: 'Next',
+                    prev: 'Prev',
+                    onPageClick: function (event, pg) {
+                        if (pg !== page) {
+                            loadReviews(pg);
+                        }
+                    }
+                });
+            } else {
+                $('#reviewsandrating').html('<li class="text-center text-muted">No Data Found</li>');
+                swal({
+                    icon: "error",
+                    title: "",
+                    text: "No Data Found !",
+                    button: "Close",
+                });
+            }
+        }
+    });
+}
+
+  // ------------------- RENDER PAGINATION FUNCTION -------------------
+  function renderPagination(container, totalPages, currentPage, callback) {
+    let html = '';
+    if (totalPages > 1) {
+      html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="javascript:void(0);" onclick="${callback.name}(${currentPage - 1})">&laquo;</a>
+    </li>`;
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+        <a class="page-link" href="javascript:void(0);" onclick="${callback.name}(${i})">${i}</a>
+      </li>`;
+      }
+      html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <a class="page-link" href="javascript:void(0);" onclick="${callback.name}(${currentPage + 1})">&raquo;</a>
+    </li>`;
+    }
+    $(container).html(html);
+  }
+  function delete_reviewsandrating(id) {
+    swal({
+      title: "Are you sure?",
+      text: "you want to delete it .",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          $.ajax({
+            url: hosturl + "/api/ReviewsAndRating/reviews_and_ratingdelete",
+            type: 'POST',
+            headers: {
+              'Authorization': 'Bearer {{token}}'
+            },
+            data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              'reviews_and_rating_id': id
+            },
+            dataType: 'json',
+            beforeSend: function () {
+
+
+
+            },
+            success: function (response) {
+              // Pagination()
+              if (response['response']['n'] == 1) {
+                swal({
+                  icon: "success",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                }).then(() => {
+                  // Code to execute after the user closes the SweetAlert dialog
+                  initReviewPagination(); // Reload the page
+                });
+
+
+
+              }
+              else {
+                swal({
+                  icon: "error",
+                  title: "",
+                  text: response['response']['msg'],
+                  button: "Close",
+                }).then(() => {
+                  // Code to execute after the user closes the SweetAlert dialog
+                  location.reload(); // Reload the page
+                });
+              }
+
+
+
+
+            }
+          });
+
+        }
+      })
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 </script>

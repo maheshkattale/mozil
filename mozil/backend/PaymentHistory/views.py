@@ -35,7 +35,6 @@ class purchase_plan(GenericAPIView):
         user_obj = User.objects.filter(id=str(request.user.id),isActive=True).first()
         if user_obj is None:
             return Response({"data":'',"response": {"n": 0, "msg": "User Not Found","status": "error"}})
-        print("ruser_obj.role_id",user_obj.role_id)
 
         if str(user_obj.role_id) != '2':
             return Response({"data":'',"response": {"n": 0, "msg": "You are not authorized to purchase plan","status": "error"}})
@@ -50,7 +49,6 @@ class purchase_plan(GenericAPIView):
             data['days']=plan_serializer.data['days']
             valid_till_date = (date.today() + timedelta(days=int(plan_serializer.data['days']))).strftime('%Y-%m-%d')
             data['valid_till_date']=valid_till_date
-            print("valid_till_date",valid_till_date)
 
             # check_plan = ServiceProviderPaymentHistory.objects.filter(userid=str(request.user.id),plan_id=plan_serializer.data['id'],isActive=True).first()
             # if check_plan is not None:
