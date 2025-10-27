@@ -220,11 +220,13 @@ class forgetpasswordmail(GenericAPIView):
         else:
             return Response({"data":{},"response":{"n": 0,"msg" : "User not found", "status":"error"}})
 
+
+
 class setnewpassword(GenericAPIView):
     def post(self,request):
         data={}
-        data['id']=request.data.get('id')
-        empdata = User.objects.filter(id=data['id'],isActive=True,status=True).first()
+        data['email']=request.data.get('email')
+        empdata = User.objects.filter(email=data['email'],isActive=True,status=True).first()
         if empdata is not None:
             data['Password']=request.data.get('Password')
             data['cfpassword']=request.data.get('cfpassword')
@@ -519,6 +521,7 @@ class userbyid(GenericAPIView):
             return Response({"data":serializer_data,"response": {"n": 1, "msg": "User shown successfully","status": "success"}})
         else:
             return Response({"data":'',"response": {"n": 0, "msg": "User not found  ","status": "success"}})
+
 
 class userupdate(GenericAPIView):
     authentication_classes=[userJWTAuthentication]
