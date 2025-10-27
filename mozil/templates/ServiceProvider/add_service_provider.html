@@ -338,7 +338,7 @@
           });
         },
         success: function (response) {
-          console.log("----", response)
+          // console.log("----", response)
           if (response.response.n == 1) {
             swal({
               icon: response.response.status,
@@ -371,7 +371,6 @@
 
 
   function getChildServices(parent_service_id) {
-    debugger
     if (parent_service_id) {
       $.ajax({
         url: hosturl + "/api/Services/childservicelist",

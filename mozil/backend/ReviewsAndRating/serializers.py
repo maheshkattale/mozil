@@ -18,8 +18,6 @@ class CustomReviewsAndRatingSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     def get_user_name(self, obj):
         obj_id = str(obj.userid)
-        print("obj_id",obj_id)
-
         if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = User.objects.filter(id=obj_id).first()

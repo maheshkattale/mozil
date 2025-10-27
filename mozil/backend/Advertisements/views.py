@@ -62,7 +62,6 @@ class active_advertisement_list(GenericAPIView):
             end_date__gte=today    # end date is greater than or equal to today
         ).order_by('id')
         search = request.GET.get('search')
-        print("search",search)
         if search:
             advertisements_objs = advertisements_objs.filter(
                 Q(heading__icontains=search) |
@@ -86,7 +85,6 @@ class addadvertisement(GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         data={}
-        print("request.data",request.data)
         data['heading']=str(request.data.get('heading')).lower()
         if data['heading'] is None or data['heading'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide advertisement heading", "status":"error"}})

@@ -48,9 +48,10 @@ class reviews_and_rating_list_pagination_api(GenericAPIView):
 
     def post(self,request):
         reviews_and_ratings_objs = ReviewsAndRating.objects.filter(isActive=True).order_by('-id')
-        search = request.data.get('search')
+        search = request.data.get('search').strip() if request.data.get('search') else None
+        print("reviews_and_ratings_objs",reviews_and_ratings_objs.count())
         if search is not None and search != '':
-            reviews_and_ratings_objs = reviews_and_ratings_objs.filter(Q(description__icontains=search) | Q(rating_count__icontains=search))
+            reviews_and_ratings_objs = reviews_and_ratings_objs.filter(Q(description__icontains=search) | Q(rating_count__icontains=search)).order_by('-id')
 
         page4 = self.paginate_queryset(reviews_and_ratings_objs)
         serializer = CustomReviewsAndRatingSerializer(page4,many=True)
@@ -184,7 +185,7 @@ class reviews_and_ratingdelete(GenericAPIView):
                 service_provider_obj = ServiceProvider.objects.filter(id=reviews_and_rating_obj.service_provider_id,isActive=True).first()
                 if service_provider_obj is not None:
                     data1={}
-                    data1['average_rating'] = make_new_average_rating['average_rating']
+                    data1['average_rating'] = make_new_average_rating['rating_count__avg']
                     serializer2 = ServiceProviderSerializer(service_provider_obj,data=data1,partial=True)
                     if serializer2.is_valid():
                         serializer2.save()
@@ -255,11 +256,10 @@ class updatereviews_and_rating(GenericAPIView):
                         print("error",serializer1.errors)
 
                 make_new_average_rating = ReviewsAndRating.objects.filter(service_provider_id=data['service_provider_id'],isActive=True).aggregate(Avg('rating_count'))
-                print("make_new_average_rating",make_new_average_rating)
                 service_provider_obj = ServiceProvider.objects.filter(id=data['service_provider_id'],isActive=True).first()
                 if service_provider_obj is not None:
                     data1={}
-                    data1['average_rating'] = make_new_average_rating['average_rating']
+                    data1['average_rating'] = make_new_average_rating['rating_count__avg']
                     serializer2 = ServiceProviderSerializer(service_provider_obj,data=data1,partial=True)
                     if serializer2.is_valid():
                         serializer2.save()

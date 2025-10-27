@@ -70,7 +70,7 @@
       return false;
     }
     if (IsValid(days)) {
-      console.log("Days count is required")
+      // console.log("Days count is required")
       swal({
             icon: "error",
             title: "",
@@ -117,7 +117,7 @@
           });
         },
         success: function (response) {
-          console.log("----", response)
+          // console.log("----", response)
           if (response.response.n == 1) {
             swal({
               icon: response.response.status,

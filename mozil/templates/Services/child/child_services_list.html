@@ -92,12 +92,12 @@
             success: function (response) {
                 var infohtml = ''
                 swal.close()
-                console.log('response d', response)
+                // console.log('response d', response)
                 if (response.count != 0) {
                     var counter = parseInt(p + "1") - parseInt(10)
 
                     $.each(response.results, function (i, o) {
-                        console.log("o", o)
+                        // console.log("o", o)
                         infohtml += `
                             
                                                 

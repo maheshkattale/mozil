@@ -1938,12 +1938,12 @@
       success: function (response) {
         var infohtml = ''
         swal.close()
-        console.log('response p', response)
+        // console.log('response p', response)
         if (response.response.n == 1) {
           var counter = 1
 
           $.each(response.data, function (i, o) {
-            console.log("o.media_list.length", o.media_list.length)
+            // console.log("o.media_list.length", o.media_list.length)
             infohtml += `
           <div class="col-md-6 col-lg-4 my-3">
             <div class="card text-center h-100">
@@ -2700,7 +2700,6 @@
   }
 
   function getChildServices(parent_service_id) {
-    debugger
     if (parent_service_id) {
       $.ajax({
         url: hosturl + "/api/Services/childservicelist",

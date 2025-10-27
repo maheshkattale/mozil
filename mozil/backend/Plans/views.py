@@ -56,7 +56,6 @@ class addplan(GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self,request):
         data={}
-        print("request.data",request.data)
         data['Name']=str(request.data.get('Name')).lower()
         if data['Name'] is None or data['Name'] =='':
             return Response({ "data":{},"response":{"n":0,"msg":"Please provide plan name", "status":"error"}})

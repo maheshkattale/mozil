@@ -66,7 +66,6 @@ class CustomServiceProviderPaymentHistorySerializer(serializers.ModelSerializer)
         if obj_id is not None and obj_id !='' and obj_id !='None':
             try:
                 obj = ServiceProvider.objects.filter(userid=obj_id).first()
-                print("obj",obj,obj_id)
 
                 if obj is not None:
                    service_provider_serializer = CustomServiceProviderSerializer(obj)

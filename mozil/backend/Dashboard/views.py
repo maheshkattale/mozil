@@ -119,15 +119,20 @@ class dashboard_analytics_api(GenericAPIView):
             .order_by('-search_count')             # Order by search count descending
             [:5]                                   # Get top 5
         )
-        print("top_five_trending_services",top_five_trending_services)
         for service in top_five_trending_services:
+            print("service", service)
+            service_object = ParentServices.objects.filter(id=service['ParentServiceId']).first()
+            if service_object:
+                service_name = service_object.Name
+            else:
+                service_name = "Unknown Service"
             total_searchs=ServiceSearchLog.objects.filter(
-                ParentServiceId=service.id,
+                ParentServiceId=service['ParentServiceId'],
                 isActive=True
             ).count()
             weekly_trending_services_data.append({
-                'service_id': service.id,
-                'service_name': service.Name,
+                'service_id': service['ParentServiceId'],
+                'service_name': service_name,
                 'total_searchs': total_searchs
             })
 
