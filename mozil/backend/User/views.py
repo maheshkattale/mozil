@@ -2447,11 +2447,12 @@ from django.db.models.expressions import ExpressionWrapper
 from django.db.models.functions import Cast  # Add this import
 
 class service_finder(GenericAPIView):
+    
     # authentication_classes = [userJWTAuthentication]
     # permission_classes = (permissions.IsAuthenticated,)
     
     def post(self, request):
-        service_provider_objs = ServiceProvider.objects.filter(isActive=True).order_by('id')
+        service_provider_objs = ServiceProvider.objects.filter(isActive=True,license_verification_status=True).order_by('id')
         
         # Get filter parameters from request
         lattitude = request.data.get('lattitude')

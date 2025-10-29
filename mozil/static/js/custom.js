@@ -101,7 +101,7 @@ function IsValidPhone(value) {
   if (value == "" || value == null || value == undefined) {
     return true;
   } else {
-    var re = /^\+?[1-9]\d{9,14}$/; // E.164 format
+    var re = /^\+?[1-9]\d{7,14}$/; // E.164 format
     return !re.test(String(value).toLowerCase());
   }
 }
